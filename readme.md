@@ -45,15 +45,3 @@ The keystore included is needed to signe the app, the password is 123456
 Of course an other private key with a strong passphrase must be use in production / submit to a repo
 
 
-# Issues
-
-android: cannot download on most of the sits due to ssl error
-
- ERROR: Unable to download JSON metadata: <urlopen error [Errno 1] _ssl.c:503: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure> (caused by URLError(SSLError(1, '_ssl.c:503: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure'),))
-
-
-tryed with requirements:
-
- requirements = enum34,pyOpenSSL,openssl,ndg-httpsclient,pyasn1,requests[security],youtube-dl,kivy
-
-got same error
