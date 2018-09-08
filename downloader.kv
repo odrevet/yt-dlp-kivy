@@ -1,0 +1,61 @@
+#:import Window kivy.core.window.Window
+#:import Clipboard kivy.core.clipboard.Clipboard
+
+<LogPopup>:
+    auto_dismiss: False
+    title: 'Log'
+    BoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            Label:
+                id: log_label
+                text: root.log
+                size: self.texture_size
+                text_size: self.width, None
+                size_hint: 1, None
+                height: self.texture_size[1]
+        Button:
+            text: 'Close'
+            on_release: root.dismiss()
+            size_hint_y: None
+
+<DownloaderLayout>:
+    orientation: 'vertical'
+    BoxLayout:
+        size_hint_y: None
+        TextInput:
+            id: url_textinput
+            hint_text: 'Enter url here'
+            size_hint_y: None
+        Button:
+            on_press: url_textinput.text = Clipboard.paste()
+            size_hint: None, None
+            Image:
+                source: 'resources/clipboard.png'
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+    Button:
+        id: download_button
+        text:  'Click here to download to ' + app.output_dir
+        on_press: root.on_press_button_download(url_textinput.text, app.output_template)
+        size_hint_y: None
+    ScrollView:
+        BoxLayout:
+            id: downloads_status_bar_layout
+            orientation: 'vertical'
+            size_hint_y: None
+            height: Window.height
+
+<DownloadStatusBar>:
+    Label:
+        id: url_label
+        text: root.url
+        text_size: self.width, None
+        height: self.texture_size[1]
+    Label:
+        id: status_label
+        text: root.status
+    Button:
+        id: show_log_button
+        text: 'Show log'
+        on_release: root.on_release_show_log_button()
