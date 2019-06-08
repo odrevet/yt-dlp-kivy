@@ -24,12 +24,25 @@ This app can also be build for systems supported by the Kivy framework
 
 # build
 
-With buildozer, I use the docker image jedie/buildozer
+With buildozer: 
+
+```
+pip3 install buildozer 
+```  
+ 
+or under docker image jedie/buildozer
+
 
 # Android
 
 (need cython, javac)
 
+Under Ubuntu : 
+```
+sudo apt-get install cython openjdk-8-jdk
+```
+
+Build command: 
 ```
 buildozer android release
 ```
