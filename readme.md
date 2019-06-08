@@ -18,7 +18,9 @@ This app can also be build for systems supported by the Kivy framework
 
 # run
 
+```
  python main.py
+```
 
 # build
 
@@ -26,7 +28,11 @@ With buildozer, I use the docker image jedie/buildozer
 
 # Android
 
- buildozer android release
+(need cython)
+
+```
+buildozer android release
+```
 
 ## Utils script
 
