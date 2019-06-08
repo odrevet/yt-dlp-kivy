@@ -28,7 +28,7 @@ With buildozer, I use the docker image jedie/buildozer
 
 # Android
 
-(need cython)
+(need cython, javac)
 
 ```
 buildozer android release
