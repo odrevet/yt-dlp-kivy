@@ -35,11 +35,9 @@ or under docker image jedie/buildozer
 
 # Android
 
-(need cython, javac)
-
-Under Ubuntu : 
+Install dependencies under Ubuntu : 
 ```
-sudo apt-get install cython openjdk-8-jdk
+sudo apt-get install build-essential autoconf libtool cython openjdk-8-jdk aidl 
 ```
 
 Build command: 
