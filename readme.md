@@ -1,10 +1,6 @@
 User interface for youtube-dl using the Kivy framework
 
-For the moment, this is just a '''Proof Of Concept''' version, expect malfunctions (see Usage)
-
-# Why
-
-To use youtube-dl with a graphical interface on devices supported by KiVy (for example android)
+For the moment, this is just a '''Proof Of Concept''' version (see Usage)
 
 # Usage
 
