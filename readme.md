@@ -87,5 +87,5 @@ Define  variables shared by the utils scripts
 
 # Sources
 
-https://kivy.org/doc/stable/installation/installation-linux.html
-https://buildozer.readthedocs.io/en/latest/installation.html
+* https://kivy.org/doc/stable/installation/installation-linux.html
+* https://buildozer.readthedocs.io/en/latest/installation.html
