@@ -22,7 +22,7 @@ For the moment, this is just a '''Proof Of Concept''' version (see Usage)
 
 # run (Under Linux)
 
-    python main.py
+    python src/main.py
 
 
 # Android build (from Ubuntu)
