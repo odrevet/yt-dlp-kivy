@@ -52,7 +52,7 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.set_status(Status.PROCESSING)
       self.download_status_bar.append_log('Start of `' + self.name + '`\n')
 
-      #Redirect ytdl stdout to a string
+      # redirect ytdl stdout to a string
       sys_stdout = sys.stdout
       str_stdout = StringIO()
       sys.stdout = str_stdout
@@ -66,9 +66,9 @@ class DownloaderThread (threading.Thread):
          print(inst)
          pass
 
-      #redirect back stedout to system stdout
+      # redirect back stedout to system stdout
       sys.stdout = sys_stdout
-      log = str_stdout.getvalue()    #TODO: get output every n seconds
+      log = str_stdout.getvalue()  # TODO: get output periodicaly and refresh UI
 
       self.download_status_bar.append_log(log)
       self.download_status_bar.append_log('End of `' + self.name + '`\n')
@@ -82,11 +82,11 @@ class DownloaderLayout(BoxLayout):
       self.ids.downloads_status_bar_layout.add_widget(download_status_bar,
                                                       index=len(self.ids.downloads_status_bar_layout.children))
 
-      #arguments to pass to youtube-dl
+      # arguments to pass to youtube-dl
       ytdl_args = []
       ytdl_args.extend(('-o', output, url))
 
-      t = DownloaderThread(url, ytdl_args, download_status_bar)    #Run youtube-dl in a thread
+      t = DownloaderThread(url, ytdl_args, download_status_bar)    # run youtube-dl in a thread
       t.start()
 
 class DownloaderApp(App):
@@ -109,4 +109,4 @@ class DownloaderApp(App):
         return DownloaderLayout()
 
 if __name__ == '__main__':
-   DownloaderApp().run()    #TODO android: continue to download video when app is unfocused
+   DownloaderApp().run()    # TODO: under android, continue to download video when app is unfocused
