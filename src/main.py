@@ -52,14 +52,14 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.set_status(Status.PROCESSING)
       self.download_status_bar.append_log('Start of `' + self.name + '`\n')
 
-      #Redirect ytdl stdout to a string FIXME android: redirect output somehow prevent downloads
+      #Redirect ytdl stdout to a string
       sys_stdout = sys.stdout
       str_stdout = StringIO()
       sys.stdout = str_stdout
 
       try:
          youtube_dl.main(self.ytdl_args)
-      except SystemExit:    #ignore ytdl calls to sys.exit()
+      except SystemExit:
          print('System Exit...')
          pass
       except Exception as inst:
