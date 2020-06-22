@@ -53,9 +53,10 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.append_log('Start of `' + self.name + '`\n')
 
       # redirect ytdl stdout to a string
-      sys_stdout = sys.stdout
-      str_stdout = StringIO()
-      sys.stdout = str_stdout
+      if platform != 'android':
+         sys_stdout = sys.stdout
+         str_stdout = StringIO()
+         sys.stdout = str_stdout
 
       try:
          youtube_dl.main(self.ytdl_args)
@@ -66,9 +67,10 @@ class DownloaderThread (threading.Thread):
          print(inst)
          pass
 
-      # redirect back stedout to system stdout
-      sys.stdout = sys_stdout
-      log = str_stdout.getvalue()  # TODO: get output periodicaly and refresh UI
+      # redirect back stdout to system stdout
+      if platform != 'android':
+         sys.stdout = sys_stdout
+         log = str_stdout.getvalue()  # TODO: get output periodicaly and refresh UI
 
       self.download_status_bar.append_log(log)
       self.download_status_bar.append_log('End of `' + self.name + '`\n')
