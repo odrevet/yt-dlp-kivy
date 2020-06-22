@@ -75,7 +75,7 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.set_status(Status.DONE)
 
 class DownloaderLayout(BoxLayout):
-   def on_press_button_download(self, url, output_template):
+   def on_press_button_download(self, url, output):
       #Add UI status bar for this download
       download_status_bar = DownloadStatusBar()
       download_status_bar.url = url
@@ -89,7 +89,7 @@ class DownloaderLayout(BoxLayout):
       elif platform == 'linux':
          ytdl_args.append('--no-warnings')
 
-      ytdl_args.extend(('-o', output_template, url))    #common arguments
+      ytdl_args.extend(('-o', output, url))    #common arguments
 
       t = DownloaderThread(url, ytdl_args, download_status_bar)    #Run youtube-dl in a thread
       t.start()
@@ -97,7 +97,7 @@ class DownloaderLayout(BoxLayout):
 class DownloaderApp(App):
     output_dir = ''
     output_file = ''
-    output_template = ''
+    output = ''
 
     def get_output_dir(self):
        if platform == 'android':
@@ -110,7 +110,7 @@ class DownloaderApp(App):
     def build(self):
         self.output_dir = self.get_output_dir()
         self.output_file = '%(title)s.%(ext)s'
-        self.output_template = os.path.join(self.output_dir, self.output_file)
+        self.output = os.path.join(self.output_dir, self.output_file)
         return DownloaderLayout()
 
 if __name__ == '__main__':
