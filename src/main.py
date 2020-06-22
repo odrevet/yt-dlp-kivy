@@ -53,10 +53,9 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.append_log('Start of `' + self.name + '`\n')
 
       #Redirect ytdl stdout to a string FIXME android: redirect output somehow prevent downloads
-      if platform != 'android':
-         sys_stdout = sys.stdout
-         str_stdout = StringIO()
-         sys.stdout = str_stdout
+      sys_stdout = sys.stdout
+      str_stdout = StringIO()
+      sys.stdout = str_stdout
 
       try:
          youtube_dl.main(self.ytdl_args)
@@ -65,12 +64,11 @@ class DownloaderThread (threading.Thread):
       except Exception:     #ignore exception 'str' object has no attribute 'write'
          pass
 
-      if platform != 'android':
-         #redirect back stedout to system stdout
-         sys.stdout = sys_stdout
-         log = str_stdout.getvalue()    #TODO: get output every n seconds instead of waiting end of youtube_dl.main
-         self.download_status_bar.append_log(log)
+      #redirect back stedout to system stdout
+      sys.stdout = sys_stdout
+      log = str_stdout.getvalue()    #TODO: get output every n seconds
 
+      self.download_status_bar.append_log(log)
       self.download_status_bar.append_log('End of `' + self.name + '`\n')
       self.download_status_bar.set_status(Status.DONE)
 
@@ -79,15 +77,14 @@ class DownloaderLayout(BoxLayout):
       #Add UI status bar for this download
       download_status_bar = DownloadStatusBar()
       download_status_bar.url = url
-      self.ids.downloads_status_bar_layout.add_widget(download_status_bar, index=len(self.ids.downloads_status_bar_layout.children))
+      self.ids.downloads_status_bar_layout.add_widget(download_status_bar,
+                                                      index=len(self.ids.downloads_status_bar_layout.children))
 
       ytdl_args = []    #arguments to pass to youtube-dl
 
       #Plateforme specific arguments
       if platform == 'android':
          ytdl_args.extend(('--no-check-certificate', '--prefer-insecure'))
-      elif platform == 'linux':
-         ytdl_args.append('--no-warnings')
 
       ytdl_args.extend(('-o', output, url))    #common arguments
 
