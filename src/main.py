@@ -60,8 +60,10 @@ class DownloaderThread (threading.Thread):
       try:
          youtube_dl.main(self.ytdl_args)
       except SystemExit:    #ignore ytdl calls to sys.exit()
+         print('System Exit...')
          pass
-      except Exception:     #ignore exception 'str' object has no attribute 'write'
+      except Exception as inst:
+         print(inst)
          pass
 
       #redirect back stedout to system stdout
@@ -80,13 +82,9 @@ class DownloaderLayout(BoxLayout):
       self.ids.downloads_status_bar_layout.add_widget(download_status_bar,
                                                       index=len(self.ids.downloads_status_bar_layout.children))
 
-      ytdl_args = []    #arguments to pass to youtube-dl
-
-      #Plateforme specific arguments
-      if platform == 'android':
-         ytdl_args.extend(('--no-check-certificate', '--prefer-insecure'))
-
-      ytdl_args.extend(('-o', output, url))    #common arguments
+      #arguments to pass to youtube-dl
+      ytdl_args = []
+      ytdl_args.extend(('-o', output, url))
 
       t = DownloaderThread(url, ytdl_args, download_status_bar)    #Run youtube-dl in a thread
       t.start()
