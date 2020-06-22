@@ -30,10 +30,7 @@
         Button:
             on_press: url_textinput.text = Clipboard.paste()
             size_hint: None, None
-            Image:
-                source: 'resources/clipboard.png'
-                center_x: self.parent.center_x
-                center_y: self.parent.center_y
+            text: 'from\nclipboard'
     Button:
         id: download_button
         text:  'Click here to download to ' + app.output_dir

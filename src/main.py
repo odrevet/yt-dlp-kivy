@@ -7,6 +7,7 @@ from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
 from kivy.utils import platform
 from io import StringIO
+from os.path import expanduser, join, dirname
 from enum import Enum
 import threading
 import youtube_dl
@@ -98,8 +99,16 @@ class DownloaderApp(App):
     output_file = ''
     output_template = ''
 
+    def get_output_dir(self):
+       if platform == 'android':
+          return os.getenv('EXTERNAL_STORAGE')
+       elif platform == 'linux':
+          return expanduser("~")
+
+       return self.user_data_dir
+
     def build(self):
-        self.output_dir = self.user_data_dir
+        self.output_dir = self.get_output_dir()
         self.output_file = '%(title)s.%(ext)s'
         self.output_template = os.path.join(self.output_dir, self.output_file)
         return DownloaderLayout()

@@ -13,16 +13,16 @@ For the moment, this is just a '''Proof Of Concept''' version (see Usage)
 
 * youtube-dl
 
-	python -m pip install youtube_dl
+    python -m pip install youtube_dl
 
 * Kivy
 
-	python -m pip install --upgrade --user pip setuptools virtualenv
-	python -m pip install kivy
+    python -m pip install --upgrade --user pip setuptools virtualenv
+    python -m pip install kivy
 
 # run (Under Linux)
 
-	python main.py
+    python main.py
 
 
 # Android build (from Ubuntu)
@@ -31,7 +31,7 @@ see
 
 * install buildozer
 
-	pip3 install --user --upgrade buildozer
+    pip3 install --user --upgrade buildozer
 
 * Install dependencies
 
@@ -46,9 +46,13 @@ export PATH=$PATH:~/.local/bin/
 
 * Build command:
 
-	buildozer android release
+    buildozer android release
 
 At the first run, buildozer will install android depandancies such as ANT, SDK and NDK.
+
+* Build and install debug version
+
+    buildozer android debug deploy run
 
 ## Utils
 

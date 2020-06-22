@@ -1,15 +1,15 @@
 [app]
 
-title = Video Downloader
+title = youtube-dl Kivy
 
 # (str) Package name
-package.name = video_downloader
+package.name = youtube_dl_kivy
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = fr.free.drevet.olivier
+package.domain = fr.odrevet
 
 # (str) Source code where the main.py live
-source.dir = .
+source.dir = src
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
@@ -21,9 +21,9 @@ version = 0.1
 requirements = enum34,openssl,requests,youtube-dl,kivy
 
 # (str) Supported orientation (one of landscape, portrait or all)
-orientation = landscape
+orientation = all
 
-fullscreen = 1
+fullscreen = 0
 
 android.permissions = INTERNET
 
