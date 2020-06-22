@@ -27,6 +27,7 @@
             id: url_textinput
             hint_text: 'Enter url here'
             size_hint_y: None
+            multiline: False
         Button:
             on_press: url_textinput.text = Clipboard.paste()
             size_hint: None, None
