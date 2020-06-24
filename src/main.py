@@ -65,12 +65,7 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.set_status(Status.PROCESSING)
       self.download_status_bar.append_log('Start of `' + self.name + '`\n')
 
-      f = open("/sdcard/TEST.txt", "w")
-      f.write("write to file from kivy")
-      f.close()
-
-      # redirect ytdl stdout to a string
-      #if platform != 'android':
+      # to show ytdl output in the UI, redirect stdout to a string
       sys_stdout = sys.stdout
       str_stdout = StringIO()
       sys.stdout = str_stdout
@@ -85,8 +80,8 @@ class DownloaderThread (threading.Thread):
          pass
 
       # redirect back stdout to system stdout
-      #if platform != 'android':
       sys.stdout = sys_stdout
+
       log = str_stdout.getvalue()  # TODO: get output periodicaly and refresh UI
 
       self.download_status_bar.append_log(log)
