@@ -16,9 +16,6 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from android.storage import primary_external_storage_path
 from android.permissions import request_permissions, Permission
-request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
-                     Permission.READ_EXTERNAL_STORAGE])
-
 
 class Status(Enum):
    PROCESSING = 1
@@ -106,6 +103,9 @@ class DownloaderLayout(BoxLayout):
       self.dismiss_popup()
 
    def on_press_button_download(self, url, output):
+      request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
+                           Permission.READ_EXTERNAL_STORAGE])
+
       #Add UI status bar for this download
       download_status_bar = DownloadStatusBar()
       download_status_bar.url = url
