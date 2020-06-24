@@ -3,19 +3,21 @@ import sys
 import kivy
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
+from kivy.factory import Factory
 from kivy.utils import platform
 from io import StringIO
 from os.path import expanduser, join, dirname
 from enum import Enum
 import threading
 import youtube_dl
-from kivy.uix.floatlayout import FloatLayout
-from kivy.factory import Factory
-from kivy.properties import ObjectProperty
-from android.storage import primary_external_storage_path
-from android.permissions import request_permissions, Permission
+
+
+if platform == 'android':
+   from android.storage import primary_external_storage_path
+   from android.permissions import request_permissions, Permission
 
 class Status(Enum):
    PROCESSING = 1
@@ -103,8 +105,9 @@ class DownloaderLayout(BoxLayout):
       self.dismiss_popup()
 
    def on_press_button_download(self, url, output):
-      request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
-                           Permission.READ_EXTERNAL_STORAGE])
+      if platform == 'android':
+         request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
+                              Permission.READ_EXTERNAL_STORAGE])
 
       #Add UI status bar for this download
       download_status_bar = DownloadStatusBar()

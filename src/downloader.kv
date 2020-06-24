@@ -32,9 +32,9 @@
             on_press: url_textinput.text = Clipboard.paste()
             size_hint: None, None
             text: 'from\nclipboard'
-        Button:
-            text: 'Save'
-            on_release: root.show_save()
+        #Button:
+        #    text: 'Save'
+        #    on_release: root.show_save()
     Button:
         id: download_button
         text:  'Click here to download to ' + app.output # root.file_path
