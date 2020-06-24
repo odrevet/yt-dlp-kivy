@@ -25,7 +25,7 @@ orientation = all
 
 fullscreen = 0
 
-android.permissions = INTERNET
+android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
 
 
 [buildozer]
