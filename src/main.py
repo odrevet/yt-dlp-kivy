@@ -8,12 +8,13 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 from kivy.factory import Factory
 from kivy.utils import platform
+from kivy.clock import Clock
 from io import StringIO
 from os.path import expanduser, join, dirname
 from enum import Enum
+from functools import partial
 import threading
 import youtube_dl
-
 
 if platform == 'android':
    from android.storage import primary_external_storage_path
@@ -38,10 +39,7 @@ class SaveDialog(FloatLayout):
 class DownloadStatusBar(BoxLayout):
    url = StringProperty()
    status = StringProperty()
-   log = ''
-
-   def append_log(self, text):
-      self.log = self.log + text
+   log = StringProperty()
 
    def on_release_show_log_button(self):
       popup = LogPopup(self.log)
@@ -60,14 +58,19 @@ class DownloaderThread (threading.Thread):
        self.ytdl_args = ytdl_args
        self.download_status_bar = download_status_bar
 
+
+   def my_callback(self, strio_stdout, *largs):
+      self.download_status_bar.log = strio_stdout.getvalue()
+
    def run(self):
       self.download_status_bar.set_status(Status.PROCESSING)
-      self.download_status_bar.append_log('Start of `' + self.name + '`\n')
 
       # to show ytdl output in the UI, redirect stdout to a string
       sys_stdout = sys.stdout
-      str_stdout = StringIO()
-      sys.stdout = str_stdout
+      strio_stdout = StringIO()
+      sys.stdout = strio_stdout
+
+      Clock.schedule_interval(partial(self.my_callback, strio_stdout), 0.5)
 
       try:
          youtube_dl.main(self.ytdl_args)
@@ -81,10 +84,6 @@ class DownloaderThread (threading.Thread):
       # redirect back stdout to system stdout
       sys.stdout = sys_stdout
 
-      log = str_stdout.getvalue()  # TODO: get output periodicaly and refresh UI
-
-      self.download_status_bar.append_log(log)
-      self.download_status_bar.append_log('End of `' + self.name + '`\n')
       self.download_status_bar.set_status(Status.DONE)
 
 class DownloaderLayout(BoxLayout):
