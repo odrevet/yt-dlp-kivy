@@ -71,12 +71,6 @@
             id: filechooser
             on_selection: text_input.text = self.selection and self.selection[0] or ''
 
-        TextInput:
-            id: text_input
-            size_hint_y: None
-            height: 30
-            multiline: False
-
         BoxLayout:
             size_hint_y: None
             height: 30
@@ -86,4 +80,4 @@
 
             Button:
                 text: "Save"
-                on_release: root.save(filechooser.path, text_input.text)
+                on_release: root.save(filechooser.path)
