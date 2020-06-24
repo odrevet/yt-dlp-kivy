@@ -32,9 +32,12 @@
             on_press: url_textinput.text = Clipboard.paste()
             size_hint: None, None
             text: 'from\nclipboard'
+        Button:
+            text: 'Save'
+            on_release: root.show_save()
     Button:
         id: download_button
-        text:  'Click here to download to ' + app.output_dir
+        text:  'Click here to download to ' + app.output # root.file_path
         on_press: root.on_press_button_download(url_textinput.text, app.output)
         size_hint_y: None
     ScrollView:
@@ -57,3 +60,30 @@
         id: show_log_button
         text: 'Show log'
         on_release: root.on_release_show_log_button()
+
+<SaveDialog>:
+    text_input: text_input
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 30
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Save"
+                on_release: root.save(filechooser.path, text_input.text)
