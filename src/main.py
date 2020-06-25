@@ -28,6 +28,20 @@ class Status(Enum):
    DONE = 2
 
 class ActionBarMain(ActionBar):
+   def on_press_settings_button(self):
+      SettingsPopup().open()
+
+   def on_press_about_button(self):
+      AboutPopup().open()
+
+class SettingsPopup(Popup):
+   file_path = StringProperty("/sdcard")
+
+   def get_path(self, path, _):
+      self.file_path = path
+      self.dismiss_popup()
+
+class AboutPopup(Popup):
    pass
 
 class LogPopup(Popup):
@@ -41,6 +55,13 @@ class DownloadLocationDialog(FloatLayout):
     save = ObjectProperty(None)
     text_input = ObjectProperty(None)
     cancel = ObjectProperty(None)
+
+    def show_download_location_dialog(self):
+       content = DownloadLocationDialog(save=self.save, cancel=self.dismiss_popup)
+       self._popup = Popup(title="Save file", content=content,
+                           size_hint=(0.9, 0.9))
+       self._popup.open()
+
 
 class DownloadStatusBar(BoxLayout):
    url = StringProperty()
@@ -125,20 +146,6 @@ class DownloaderLayout(BoxLayout):
 
       t = DownloaderThread(url, ytdl_args, download_status_bar)    # run youtube-dl in a thread
       t.start()
-
-class Settings(BoxLayout):
-   file_path = StringProperty("/sdcard")
-
-   def show_download_location_dialog(self):
-      content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
-      self._popup = Popup(title="Save file", content=content,
-                          size_hint=(0.9, 0.9))
-      self._popup.open()
-
-   def get_path(self, path, _):
-      self.file_path = path
-      self.dismiss_popup()
-
 
 class RootLayout(BoxLayout):
    pass

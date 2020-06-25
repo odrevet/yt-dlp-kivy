@@ -14,10 +14,28 @@
             on_press:
         ActionButton:
             text: 'Settings'
-            on_press:
+            on_press: root.on_press_settings_button()
         ActionButton:
             text: 'About'
-            on_press:
+            on_press: root.on_press_about_button()
+
+<AboutPopup>:
+    auto_dismiss: False
+    title: 'About'
+    BoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            Label:
+                id: about_label
+                text: '2018 - 2020 Olivier Drevet'
+                size: self.texture_size
+                text_size: self.width, None
+                size_hint: 1, None
+                height: self.texture_size[1]
+        Button:
+            text: 'Close'
+            on_release: root.dismiss()
+            size_hint_y: None
 
 <LogPopup>:
     auto_dismiss: False
@@ -37,9 +55,10 @@
             on_release: root.dismiss()
             size_hint_y: None
 
-<Settings>:
-    orientation: 'horizontal'
+<SettingsPopup>:
+    title: 'Settings'
     BoxLayout:
+        orientation: 'horizontal'
         size_hint_y: None
         TextInput:
             id: download_location
@@ -63,9 +82,6 @@
             on_press: url_textinput.text = Clipboard.paste()
             size_hint: None, None
             text: 'from\nclipboard'
-        #Button:
-        #    text: 'Save'
-        #    on_release: root.show_save()
     Button:
         id: download_button
         text:  'Click here to download to ' + app.outtmpl # root.file_path
