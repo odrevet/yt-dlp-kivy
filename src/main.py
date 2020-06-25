@@ -33,7 +33,7 @@ class LogPopup(Popup):
       super(LogPopup, self).__init__(**kwargs)
       self.log = log
 
-class SaveDialog(FloatLayout):
+class DownloadLocationDialog(FloatLayout):
     save = ObjectProperty(None)
     text_input = ObjectProperty(None)
     cancel = ObjectProperty(None)
@@ -95,21 +95,14 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.set_status(Status.DONE)
 
 class DownloaderLayout(BoxLayout):
-   #file_path = StringProperty("/sdcard")
-
    def dismiss_popup(self):
       self._popup.dismiss()
 
-   #TODO move in a setting menu and use result in outtmpl
    def show_save(self):
       content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
       self._popup = Popup(title="Save file", content=content,
                           size_hint=(0.9, 0.9))
       self._popup.open()
-
-   def save(self, path, filename):
-      #self.file_path = path
-      self.dismiss_popup()
 
    def on_press_button_download(self, url, outtmpl):
       if platform == 'android':
@@ -134,6 +127,14 @@ class DownloaderLayout(BoxLayout):
 
       t = DownloaderThread(url, ytdl_args, download_status_bar)    # run youtube-dl in a thread
       t.start()
+
+class Settings(BoxLayout):
+   file_path = StringProperty("/sdcard")
+
+   def show_download_location_dialog(self, path, _):
+      self.file_path = path
+      self.dismiss_popup()
+
 
 class DownloaderApp(App):
    output_dir = ''

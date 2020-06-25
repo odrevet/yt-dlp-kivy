@@ -19,6 +19,19 @@
             on_release: root.dismiss()
             size_hint_y: None
 
+<Settings>:
+    orientation: 'horizontal'
+    BoxLayout:
+        size_hint_y: None
+        TextInput:
+            id: download_location
+            hint_text: 'Download location'
+            size_hint_y: None
+            multiline: False
+        Button:
+            text: 'Download location'
+            on_release: root.show_download_location_dialog()
+
 <DownloaderLayout>:
     orientation: 'vertical'
     BoxLayout:
@@ -61,7 +74,7 @@
         text: 'Show log'
         on_release: root.on_release_show_log_button()
 
-<SaveDialog>:
+<Downloadlocationdialog>:
     text_input: text_input
     BoxLayout:
         size: root.size
@@ -70,14 +83,12 @@
         FileChooserListView:
             id: filechooser
             on_selection: text_input.text = self.selection and self.selection[0] or ''
-
         BoxLayout:
             size_hint_y: None
             height: 30
             Button:
                 text: "Cancel"
                 on_release: root.cancel()
-
             Button:
                 text: "Save"
                 on_release: root.save(filechooser.path)
