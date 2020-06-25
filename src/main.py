@@ -11,6 +11,7 @@ from kivy.uix.popup import Popup
 from kivy.factory import Factory
 from kivy.utils import platform
 from kivy.clock import Clock
+from kivy.uix.actionbar import ActionBar
 from io import StringIO
 from os.path import expanduser, join, dirname
 from enum import Enum
@@ -25,6 +26,9 @@ if platform == 'android':
 class Status(Enum):
    PROCESSING = 1
    DONE = 2
+
+class ActionBarMain(ActionBar):
+   pass
 
 class LogPopup(Popup):
    log = StringProperty()
@@ -98,12 +102,6 @@ class DownloaderLayout(BoxLayout):
    def dismiss_popup(self):
       self._popup.dismiss()
 
-   def show_save(self):
-      content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
-      self._popup = Popup(title="Save file", content=content,
-                          size_hint=(0.9, 0.9))
-      self._popup.open()
-
    def on_press_button_download(self, url, outtmpl):
       if platform == 'android':
          #TODO permanently accept instead of asking each time the app is run
@@ -131,10 +129,19 @@ class DownloaderLayout(BoxLayout):
 class Settings(BoxLayout):
    file_path = StringProperty("/sdcard")
 
-   def show_download_location_dialog(self, path, _):
+   def show_download_location_dialog(self):
+      content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
+      self._popup = Popup(title="Save file", content=content,
+                          size_hint=(0.9, 0.9))
+      self._popup.open()
+
+   def get_path(self, path, _):
       self.file_path = path
       self.dismiss_popup()
 
+
+class RootLayout(BoxLayout):
+   pass
 
 class DownloaderApp(App):
    output_dir = ''
@@ -153,7 +160,7 @@ class DownloaderApp(App):
       self.output_dir = self.get_output_dir()
       self.output_file = '%(title)s.%(ext)s'
       self.outtmpl = os.path.join(self.output_dir, self.output_file)
-      return DownloaderLayout()
+      return RootLayout()
 
 if __name__ == '__main__':
-   DownloaderApp().run()    # TODO: under android, continue to download video when app is unfocused
+   DownloaderApp().run()

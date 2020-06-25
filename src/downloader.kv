@@ -1,6 +1,24 @@
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 
+<ActionBarMain>:
+    pos_hint: {'top':1}
+    ActionView:
+        use_separator: True
+        ActionPrevious:
+            app_icon: ''
+            with_previous: False
+        ActionOverflow:
+        ActionButton:
+            text: 'Clipboard'
+            on_press:
+        ActionButton:
+            text: 'Settings'
+            on_press:
+        ActionButton:
+            text: 'About'
+            on_press:
+
 <LogPopup>:
     auto_dismiss: False
     title: 'Log'
@@ -92,3 +110,11 @@
             Button:
                 text: "Save"
                 on_release: root.save(filechooser.path)
+
+<RootLayout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        ActionBarMain:
+        DownloaderLayout:
