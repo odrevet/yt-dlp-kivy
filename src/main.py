@@ -120,8 +120,6 @@ class DownloaderLayout(BoxLayout):
       #Plateforme specific arguments
       if platform == 'android':
          ytdl_args.extend(('--no-check-certificate', '--prefer-insecure'))
-      elif platform == 'linux':
-         ytdl_args.append('--no-warnings')
 
       t = DownloaderThread(url, ytdl_args, download_status_bar)    # run youtube-dl in a thread
       t.start()
