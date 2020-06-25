@@ -1,6 +1,8 @@
+from __future__ import unicode_literals
 import os
 import sys
 import kivy
+import traceback
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ObjectProperty
@@ -52,14 +54,14 @@ class DownloadStatusBar(BoxLayout):
          self.status = 'Done'
 
 class DownloaderThread (threading.Thread):
-   def __init__(self, name, ytdl_args, download_status_bar):
+   def __init__(self, url, ydl_opts, download_status_bar):
        threading.Thread.__init__(self)
-       self.name = name
-       self.ytdl_args = ytdl_args
+       self.url = url
+       self.ydl_opts = ydl_opts
        self.download_status_bar = download_status_bar
 
 
-   def my_callback(self, strio_stdout, *largs):
+   def callback_refresh_log(self, strio_stdout, *largs):
       self.download_status_bar.log = strio_stdout.getvalue()
 
    def run(self):
@@ -70,15 +72,21 @@ class DownloaderThread (threading.Thread):
       strio_stdout = StringIO()
       sys.stdout = strio_stdout
 
-      Clock.schedule_interval(partial(self.my_callback, strio_stdout), 0.5)
+      Clock.schedule_interval(partial(self.callback_refresh_log, strio_stdout), 0.5)
+
+      download_retcode = None
 
       try:
-         youtube_dl.main(self.ytdl_args)
+         with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
+            download_retcode = ydl.download([self.url])
+            print(f'Finished with retcode {download_retcode}')
       except SystemExit:
          print('System Exit...')
          pass
       except Exception as inst:
          print(inst)
+         tb = traceback.format_exc()
+         print(tb)
          pass
 
       # redirect back stdout to system stdout
@@ -87,12 +95,12 @@ class DownloaderThread (threading.Thread):
       self.download_status_bar.set_status(Status.DONE)
 
 class DownloaderLayout(BoxLayout):
-   #output = primary_external_storage_path()
-   file_path = StringProperty("/sdcard")
+   #file_path = StringProperty("/sdcard")
 
    def dismiss_popup(self):
       self._popup.dismiss()
 
+   #TODO move in a setting menu and use result in outtmpl
    def show_save(self):
       content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
       self._popup = Popup(title="Save file", content=content,
@@ -100,11 +108,12 @@ class DownloaderLayout(BoxLayout):
       self._popup.open()
 
    def save(self, path, filename):
-      self.file_path = os.path.join(path, filename)
+      #self.file_path = path
       self.dismiss_popup()
 
-   def on_press_button_download(self, url, output):
+   def on_press_button_download(self, url, outtmpl):
       if platform == 'android':
+         #TODO permanently accept instead of asking each time the app is run
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
                               Permission.READ_EXTERNAL_STORAGE])
 
@@ -114,14 +123,14 @@ class DownloaderLayout(BoxLayout):
       self.ids.downloads_status_bar_layout.add_widget(download_status_bar,
                                                       index=len(self.ids.downloads_status_bar_layout.children))
 
-      # arguments to pass to youtube-dl
-      ytdl_args = ['-o', output, url]
+      ytdl_args = {'outtmpl':outtmpl, 'ignoreerrors':True}
 
       #Plateforme specific arguments
       if platform == 'android':
-         ytdl_args.extend(('--no-check-certificate', '--prefer-insecure'))
+         ytdl_args['nocheckcertificate'] = True
+         ytdl_args['prefer_insecure'] = True
       elif platform == 'linux':
-         ytdl_args.append('--no-warnings')
+         ytdl_args['--no-warnings'] = True
 
       t = DownloaderThread(url, ytdl_args, download_status_bar)    # run youtube-dl in a thread
       t.start()
@@ -129,7 +138,7 @@ class DownloaderLayout(BoxLayout):
 class DownloaderApp(App):
    output_dir = ''
    output_file = ''
-   output = ''
+   outtmpl = ''
 
    def get_output_dir(self):
       if platform == 'android':
@@ -142,7 +151,7 @@ class DownloaderApp(App):
    def build(self):
       self.output_dir = self.get_output_dir()
       self.output_file = '%(title)s.%(ext)s'
-      self.output = os.path.join(self.output_dir, self.output_file)
+      self.outtmpl = os.path.join(self.output_dir, self.output_file)
       return DownloaderLayout()
 
 if __name__ == '__main__':

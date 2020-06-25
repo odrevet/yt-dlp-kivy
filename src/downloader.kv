@@ -37,8 +37,8 @@
         #    on_release: root.show_save()
     Button:
         id: download_button
-        text:  'Click here to download to ' + app.output # root.file_path
-        on_press: root.on_press_button_download(url_textinput.text, app.output)
+        text:  'Click here to download to ' + app.outtmpl # root.file_path
+        on_press: root.on_press_button_download(url_textinput.text, app.outtmpl)
         size_hint_y: None
     ScrollView:
         BoxLayout:
