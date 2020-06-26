@@ -14,8 +14,11 @@ from kivy.clock import Clock
 from kivy.uix.actionbar import ActionBar
 from io import StringIO
 from os.path import expanduser, join, dirname
-from enum import Enum
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
 from functools import partial
+from kivy.uix.button import Button
 import threading
 import youtube_dl
 
@@ -23,9 +26,8 @@ if platform == 'android':
    from android.storage import primary_external_storage_path
    from android.permissions import request_permissions, Permission
 
-class Status(Enum):
-   PROCESSING = 1
-   DONE = 2
+class RV(RecycleView):
+    pass
 
 class ActionBarMain(ActionBar):
    def on_press_settings_button(self):
@@ -97,33 +99,35 @@ class DownloadStatusBar(BoxLayout):
       elif status == Status.DONE:
          self.status = 'Done'
 
-class DownloaderThread (threading.Thread):
-   def __init__(self, url, ydl_opts, download_status_bar):
+class DownloaderThread(threading.Thread):
+   def __init__(self, url, ydl_opts, datum, rv):
        threading.Thread.__init__(self)
        self.url = url
        self.ydl_opts = ydl_opts
-       self.download_status_bar = download_status_bar
-
+       self.datum = datum
+       self.rv = rv
 
    def callback_refresh_log(self, strio_stdout, *largs):
-      self.download_status_bar.log = strio_stdout.getvalue()
+      self.datum['log'] = strio_stdout.getvalue()
+      self.rv.refresh_from_data()
 
    def run(self):
-      self.download_status_bar.set_status(Status.PROCESSING)
+      self.datum['status'] = 'Processing'
 
       # to show ytdl output in the UI, redirect stdout to a string
       sys_stdout = sys.stdout
       strio_stdout = StringIO()
       sys.stdout = strio_stdout
 
-      Clock.schedule_interval(partial(self.callback_refresh_log, strio_stdout), 0.5)
-
-      download_retcode = None
+      Clock.schedule_interval(partial(self.callback_refresh_log, strio_stdout), 0.25)
 
       try:
          with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
             download_retcode = ydl.download([self.url])
+            self.datum['status'] = f'Done ({download_retcode})'
             print(f'Finished with retcode {download_retcode}')
+            sys.stdout = sys_stdout
+            self.rv.refresh_from_data()
       except SystemExit:
          print('System Exit...')
          pass
@@ -133,11 +137,6 @@ class DownloaderThread (threading.Thread):
          print(tb)
          pass
 
-      # redirect back stdout to system stdout
-      sys.stdout = sys_stdout
-
-      self.download_status_bar.set_status(Status.DONE)
-
 class DownloaderLayout(BoxLayout):
    def dismiss_popup(self):
       self._popup.dismiss()
@@ -145,14 +144,11 @@ class DownloaderLayout(BoxLayout):
    def on_press_button_download(self, url, outtmpl):
       if platform == 'android':
          #TODO permanently accept instead of asking each time the app is run
-         request_permissions([Permission.WRITE_EXTERNAL_STORAGE,
-                              Permission.READ_EXTERNAL_STORAGE])
+         request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
       #Add UI status bar for this download
-      download_status_bar = DownloadStatusBar()
-      download_status_bar.url = url
-      self.ids.downloads_status_bar_layout.add_widget(download_status_bar,
-                                                      index=len(self.ids.downloads_status_bar_layout.children))
+      data = self.ids.rv.data
+      data.append({'url': url})
 
       ydl_opts = {'outtmpl':outtmpl,
                    'ignoreerrors':True,
@@ -167,7 +163,7 @@ class DownloaderLayout(BoxLayout):
          ydl_opts['--no-warnings'] = True
 
       # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts, download_status_bar)
+      t = DownloaderThread(url, ydl_opts, data[-1], self.ids.rv)
       t.start()
 
 class RootLayout(BoxLayout):

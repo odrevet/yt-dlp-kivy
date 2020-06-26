@@ -78,7 +78,7 @@
             hint_text: 'Enter url here'
             size_hint_y: None
             multiline: False
-            height: 30
+            height: 40
             text: app.url
             on_text: app.url = self.text
         Button:
@@ -87,13 +87,9 @@
             on_press: root.on_press_button_download(app.url, app.outtmpl)
             size_hint_y: None
             size_hint_x: 0.1
-            height: 30
-    ScrollView:
-        BoxLayout:
-            id: downloads_status_bar_layout
-            orientation: 'vertical'
-            size_hint_y: None
-            height: Window.height
+            height: 40
+    RV:
+        id: rv
 
 <DownloadStatusBar>:
     Label:
@@ -106,7 +102,7 @@
         text: root.status
     Button:
         id: show_log_button
-        text: 'Show log'
+        text: 'Log'
         on_release: root.on_release_show_log_button()
 
 <Downloadlocationdialog>:
@@ -127,6 +123,18 @@
             Button:
                 text: "Save"
                 on_release: root.save(filechooser.path)
+
+<RV>:
+    viewclass: 'DownloadStatusBar'
+    RecycleBoxLayout:
+        id: rbl
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: True
+        touch_multiselect: True
 
 <RootLayout>:
     BoxLayout:
