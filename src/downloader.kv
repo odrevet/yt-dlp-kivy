@@ -11,7 +11,7 @@
         ActionOverflow:
         ActionButton:
             text: 'Clipboard'
-            on_press:
+            on_press: app.url = Clipboard.paste()
         ActionButton:
             text: 'Settings'
             on_press: root.on_press_settings_button()
@@ -27,7 +27,7 @@
         ScrollView:
             Label:
                 id: about_label
-                text: '2018 - 2020 Olivier Drevet'
+                text: root.about_text
                 size: self.texture_size
                 text_size: self.width, None
                 size_hint: 1, None
@@ -78,15 +78,16 @@
             hint_text: 'Enter url here'
             size_hint_y: None
             multiline: False
+            height: 30
+            text: app.url
+            on_text: app.url = self.text
         Button:
-            on_press: url_textinput.text = Clipboard.paste()
-            size_hint: None, None
-            text: 'from\nclipboard'
-    Button:
-        id: download_button
-        text:  'Click here to download to ' + app.outtmpl # root.file_path
-        on_press: root.on_press_button_download(url_textinput.text, app.outtmpl)
-        size_hint_y: None
+            id: download_button
+            text:  'GO'
+            on_press: root.on_press_button_download(app.url, app.outtmpl)
+            size_hint_y: None
+            size_hint_x: 0.1
+            height: 30
     ScrollView:
         BoxLayout:
             id: downloads_status_bar_layout
@@ -133,4 +134,6 @@
         pos: root.pos
         orientation: "vertical"
         ActionBarMain:
+            id: action_bar_main
         DownloaderLayout:
+            id: main_layout

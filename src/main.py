@@ -42,7 +42,9 @@ class SettingsPopup(Popup):
       self.dismiss_popup()
 
 class AboutPopup(Popup):
-   pass
+   about_text = StringProperty(f'''Youtube-Dl Kivy Version 0.0.1 - 2018 - 2020 Olivier Drevet
+Kivy Version {kivy. __version__}
+Python Version {sys.version} {sys.version_info}''')
 
 class LogPopup(Popup):
    log = StringProperty()
@@ -57,7 +59,7 @@ class YdlLogger(object):
        pass
 
     def warning(self, msg):
-       print('DEBUG: ' + msg);
+       print('WARNING: ' + msg);
        pass
 
     def error(self, msg):
@@ -175,6 +177,8 @@ class DownloaderApp(App):
    output_dir = ''
    output_file = ''
    outtmpl = ''
+
+   url = StringProperty();
 
    def get_output_dir(self):
       if platform == 'android':
