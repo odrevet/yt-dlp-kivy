@@ -51,6 +51,23 @@ class LogPopup(Popup):
       super(LogPopup, self).__init__(**kwargs)
       self.log = log
 
+class YdlLogger(object):
+    def debug(self, msg):
+       print('DEBUG: ' + msg);
+       pass
+
+    def warning(self, msg):
+       print('DEBUG: ' + msg);
+       pass
+
+    def error(self, msg):
+       print('ERROR: ' + msg)
+
+
+def ydl_progress_hook(d):
+   if d['status'] == 'finished':
+      print('Done downloading')
+
 class DownloadLocationDialog(FloatLayout):
     save = ObjectProperty(None)
     text_input = ObjectProperty(None)
@@ -135,16 +152,20 @@ class DownloaderLayout(BoxLayout):
       self.ids.downloads_status_bar_layout.add_widget(download_status_bar,
                                                       index=len(self.ids.downloads_status_bar_layout.children))
 
-      ytdl_args = {'outtmpl':outtmpl, 'ignoreerrors':True}
+      ydl_opts = {'outtmpl':outtmpl,
+                   'ignoreerrors':True,
+                   'logger': YdlLogger(),
+                   'progress_hooks': [ydl_progress_hook]}
 
-      #Plateforme specific arguments
+      #Platform default arguments
       if platform == 'android':
-         ytdl_args['nocheckcertificate'] = True
-         ytdl_args['prefer_insecure'] = True
+         ydl_opts['nocheckcertificate'] = True
+         ydl_opts['prefer_insecure'] = True
       elif platform == 'linux':
-         ytdl_args['--no-warnings'] = True
+         ydl_opts['--no-warnings'] = True
 
-      t = DownloaderThread(url, ytdl_args, download_status_bar)    # run youtube-dl in a thread
+      # Run youtube-dl in a thread so the UI do not freeze
+      t = DownloaderThread(url, ydl_opts, download_status_bar)
       t.start()
 
 class RootLayout(BoxLayout):
