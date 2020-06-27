@@ -1,26 +1,28 @@
 from __future__ import unicode_literals
+
 import os
 import sys
-import kivy
+import threading
 import traceback
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.popup import Popup
-from kivy.factory import Factory
-from kivy.utils import platform
-from kivy.clock import Clock
-from kivy.uix.actionbar import ActionBar
+from functools import partial
 from io import StringIO
-from os.path import expanduser, join, dirname
+from os.path import dirname, expanduser, join
+
+import kivy
+import youtube_dl
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.factory import Factory
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.actionbar import ActionBar
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.popup import Popup
 from kivy.uix.recycleview import RecycleView
 from kivy.uix.scrollview import ScrollView
-from kivy.uix.gridlayout import GridLayout
-from functools import partial
-from kivy.uix.button import Button
-import threading
-import youtube_dl
+from kivy.utils import platform
 
 if platform == 'android':
    from android.storage import primary_external_storage_path
@@ -67,7 +69,7 @@ class YdlLogger(object):
    def error(self, msg):
       self.log += msg + "\n"
 
-def ydl_progress_hook(d):
+def ydl_progress_hook(d, out):
    if d['status'] == 'finished':
       print('Done downloading')
 
@@ -91,12 +93,6 @@ class DownloadStatusBar(BoxLayout):
    def on_release_show_log_button(self):
       popup = LogPopup(self.log)
       popup.open()
-
-   def set_status(self, status):
-      if status == Status.PROCESSING:
-         self.status = 'Processing'
-      elif status == Status.DONE:
-         self.status = 'Done'
 
 class DownloaderThread(threading.Thread):
    def __init__(self, url, ydl_opts, rv, logger):
@@ -123,10 +119,11 @@ class DownloaderThread(threading.Thread):
             print(f'Finished with retcode {download_retcode}')
             self.rv.refresh_from_data()
       except SystemExit:
-         self.logger.log += 'System Exit...\n'
+         self.logger.debug('System Exit')
          pass
       except Exception as inst:
-         self.logger.log = traceback.format_exc()
+         self.logger.error(inst)
+         self.logger.error(traceback.format_exc())
          pass
 
 class DownloaderLayout(BoxLayout):
