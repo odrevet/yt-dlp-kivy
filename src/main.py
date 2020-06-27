@@ -31,6 +31,7 @@ if platform == 'android':
 from settingsMenu import SettingsPopup
 from downloaderThread import DownloaderThread
 from about import AboutPopup
+from logger import YdlLogger, ydl_progress_hook
 
 class RV(RecycleView):
     pass
@@ -48,22 +49,6 @@ class LogPopup(Popup):
    def __init__(self, log, **kwargs):
       super(LogPopup, self).__init__(**kwargs)
       self.log = log
-
-class YdlLogger(object):
-   log = ''
-
-   def debug(self, msg):
-      self.log += msg + "\n"
-
-   def warning(self, msg):
-      self.log += msg + "\n"
-
-   def error(self, msg):
-      self.log += msg + "\n"
-
-def ydl_progress_hook(d):
-   if d['status'] == 'finished':
-      print('Done downloading')
 
 class DownloadStatusBar(BoxLayout):
    url = StringProperty()
