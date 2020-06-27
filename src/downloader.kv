@@ -113,7 +113,6 @@
         on_release: root.on_release_show_log_button()
 
 <Downloadlocationdialog>:
-    text_input: text_input
     BoxLayout:
         size: root.size
         pos: root.pos
@@ -129,7 +128,7 @@
                 on_release: root.cancel()
             Button:
                 text: "Save"
-                on_release: root.save(filechooser.path)
+                on_release: root.save(filechooser.path, None)
 
 <RV>:
     viewclass: 'DownloadStatusBar'

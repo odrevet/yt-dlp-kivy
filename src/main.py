@@ -75,9 +75,6 @@ class DownloadStatusBar(BoxLayout):
       popup.open()
 
 class DownloaderLayout(BoxLayout):
-   def dismiss_popup(self):
-      self._popup.dismiss()
-
    def on_press_button_download(self, url, outtmpl):
       if platform == 'android':
          #TODO permanently accept instead of asking each time the app is run

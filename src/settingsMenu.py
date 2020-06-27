@@ -7,19 +7,22 @@ from kivy.utils import platform
 
 class DownloadLocationDialog(FloatLayout):
     save = ObjectProperty(None)
-    text_input = ObjectProperty(None)
     cancel = ObjectProperty(None)
+    filename = ObjectProperty(None)
 
 class SettingsPopup(Popup):
-   file_path = StringProperty("/sdcard")
-   save = ObjectProperty(None)
+    path = StringProperty("/sdcard")
 
-   def show_download_location_dialog(self):
+    def dismiss_popup(self):
+      self._popup.dismiss()
+
+    def show_download_location_dialog(self):
       content = DownloadLocationDialog(save=self.save, cancel=self.dismiss_popup)
-      self._popup = Popup(title="Save file", content=content,
-                          size_hint=(0.9, 0.9))
+      self._popup = Popup(title="Save file", content=content, size_hint=(0.9, 0.9))
       self._popup.open()
 
-   def get_path(self, path, _):
-      self.file_path = path
+    def save(self, path, filename):
+      print(path)
+      self.path = path
+
       self.dismiss_popup()
