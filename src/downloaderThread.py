@@ -14,13 +14,13 @@ from kivy.clock import Clock
 
 
 class DownloaderThread(threading.Thread):
-   def __init__(self, url, ydl_opts, rv, logger):
+   def __init__(self, url, ydl_opts, rv):
        threading.Thread.__init__(self)
        self.url = url
        self.ydl_opts = ydl_opts
        self.datum = rv.data[-1]
        self.rv = rv
-       self.logger = logger
+       self.logger = ydl_opts['logger']
 
    def callback_refresh_log(self, *largs):
       self.datum['log'] = self.logger.log

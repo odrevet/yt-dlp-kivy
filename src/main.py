@@ -60,7 +60,7 @@ class DownloadStatusBar(BoxLayout):
       popup.open()
 
 class DownloaderLayout(BoxLayout):
-   def on_press_button_download(self, url, outtmpl):
+   def on_press_button_download(self, url, ydl_opts):
       if platform == 'android':
          #TODO permanently accept instead of asking each time the app is run
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
@@ -71,29 +71,23 @@ class DownloaderLayout(BoxLayout):
 
       logger = YdlLogger()
 
-      ydl_opts = {'outtmpl':outtmpl,
-                   'ignoreerrors':True,
-                   'logger': logger,
-                   'progress_hooks': [ydl_progress_hook]}
-
-      #Platform default arguments
-      if platform == 'android':
-         ydl_opts['nocheckcertificate'] = True
-         ydl_opts['prefer_insecure'] = True
+      ydl_opts = {**ydl_opts, **{'logger': logger,
+                                 'progress_hooks': [ydl_progress_hook]}}
 
       # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts, self.ids.rv, logger)
+      t = DownloaderThread(url, ydl_opts, self.ids.rv)
       t.start()
 
 class RootLayout(BoxLayout):
    pass
 
 class DownloaderApp(App):
-   output_dir = ''
-   output_file = ''
-   outtmpl = ''
-
+   ydl_opts = ObjectProperty({})
    url = StringProperty();
+
+   def set_param(self, id, value):
+      print(f'{id}:{value}')
+      self.ydl_opts[id]=value
 
    def get_output_dir(self):
       if platform == 'android':
@@ -104,9 +98,8 @@ class DownloaderApp(App):
       return self.user_data_dir
 
    def build(self):
-      self.output_dir = self.get_output_dir()
-      self.output_file = '%(title)s.%(ext)s'
-      self.outtmpl = os.path.join(self.output_dir, self.output_file)
+      self.ydl_opts['outtmpl'] = os.path.join(self.get_output_dir(), '%(title)s.%(ext)s')
+
       return RootLayout()
 
 if __name__ == '__main__':

@@ -16,15 +16,15 @@ class DownloadLocationDialog(FloatLayout):
 
 
 '''
-    username:          Username for authentication purposes.
-    password:          Password for authentication purposes.
-    videopassword:     Password for accessing a video.
-    ap_mso:            Adobe Pass multiple-system operator identifier.
-    ap_username:       Multiple-system operator account username.
-    ap_password:       Multiple-system operator account password.
-    usenetrc:          Use netrc for authentication instead.
-    verbose:           Print additional info to stdout.
-    quiet:             Do not print messages to stdout.
+    * username:          Username for authentication purposes.
+    * password:          Password for authentication purposes.
+    . videopassword:     Password for accessing a video.
+    . ap_mso:            Adobe Pass multiple-system operator identifier.
+    . ap_username:       Multiple-system operator account username.
+    . ap_password:       Multiple-system operator account password.
+    . usenetrc:          Use netrc for authentication instead.
+    * verbose:           Print additional info to stdout.
+    . quiet:             Do not print messages to stdout.
     no_warnings:       Do not print out anything for warnings.
     forceurl:          Force printing final URL.
     forcetitle:        Force printing title.
@@ -85,8 +85,8 @@ class DownloadLocationDialog(FloatLayout):
                        Videos already present in the file are not downloaded
                        again.
     cookiefile:        File name where cookies should be read from and dumped to.
-    nocheckcertificate:Do not verify SSL certificates
-    prefer_insecure:   Use HTTP instead of HTTPS to retrieve information.
+    * nocheckcertificate:Do not verify SSL certificates
+    * prefer_insecure:   Use HTTP instead of HTTPS to retrieve information.
                        At the moment, this is only supported by YouTube.
     proxy:             URL of the proxy server to use
     geo_verification_proxy:  URL of the proxy to use for IP address verification

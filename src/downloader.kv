@@ -70,51 +70,38 @@
         TextInput:
             id: download_location
             hint_text: 'Download location'
-            size_hint_y: None
             multiline: False
         Button:
             text: 'Select directory'
             on_release: root.show_download_location_dialog()
 
-        CheckBox:
-        Label:
-            text: '...'
-            
-        CheckBox:
-        Label:
-            text: '...'
+        TextInput: 
+            key: 'username'
+        Label: 
+            text: 'Username for authentication purposes.'
+
+        TextInput: 
+            key: 'password'
+        Label: 
+            text: 'Password for authentication purposes.'
 
         CheckBox:
+            key: 'verbose'
+            on_active: app.set_param(self.key, self.active)
         Label:
-            text: '...'
+            text: 'Print additional info'
 
         CheckBox:
+            key: 'nocheckcertificate'
+            on_active: app.set_param(self.key, self.active)
         Label:
-            text: '...'
+            text: 'Do not verify SSL certificates'
 
         CheckBox:
+            key: 'prefer_insecure'
+            on_active: app.set_param(self.key, self.active)
         Label:
-            text: '...'
-
-        CheckBox:
-        Label:
-            text: '...'
-            
-        CheckBox:
-        Label:
-            text: '...'
-
-        CheckBox:
-        Label:
-            text: '...'
-
-        CheckBox:
-        Label:
-            text: '...'
-
-        CheckBox:
-        Label:
-            text: '...'
+            text: 'Use HTTP instead of HTTPS to retrieve information.\nAt the moment, this is only supported by YouTube.'
 
 
 <DownloaderLayout>:
@@ -131,7 +118,7 @@
         Button:
             id: download_button
             text:  'GO'
-            on_press: root.on_press_button_download(app.url, app.outtmpl)
+            on_press: root.on_press_button_download(app.url, app.ydl_opts)
             size_hint_y: None
             size_hint_x: 0.1
     RV:
