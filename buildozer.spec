@@ -18,7 +18,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = enum34,openssl,requests,youtube-dl,kivy
+requirements = openssl,requests,youtube-dl,kivy
 
 # (str) Supported orientation (one of landscape, portrait or all)
 orientation = all
