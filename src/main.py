@@ -28,6 +28,10 @@ if platform == 'android':
    from android.storage import primary_external_storage_path
    from android.permissions import request_permissions, Permission
 
+from settingsMenu import SettingsPopup
+from downloaderThread import DownloaderThread
+from about import AboutPopup
+
 class RV(RecycleView):
     pass
 
@@ -37,18 +41,6 @@ class ActionBarMain(ActionBar):
 
    def on_press_about_button(self):
       AboutPopup().open()
-
-class SettingsPopup(Popup):
-   file_path = StringProperty("/sdcard")
-
-   def get_path(self, path, _):
-      self.file_path = path
-      self.dismiss_popup()
-
-class AboutPopup(Popup):
-   about_text = StringProperty(f'''Youtube-Dl Kivy Version 0.0.1 - 2018 - 2020 Olivier Drevet
-Kivy Version {kivy. __version__}
-Python Version {sys.version} {sys.version_info}''')
 
 class LogPopup(Popup):
    log = StringProperty()
@@ -73,18 +65,6 @@ def ydl_progress_hook(d):
    if d['status'] == 'finished':
       print('Done downloading')
 
-class DownloadLocationDialog(FloatLayout):
-    save = ObjectProperty(None)
-    text_input = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
-    def show_download_location_dialog(self):
-       content = DownloadLocationDialog(save=self.save, cancel=self.dismiss_popup)
-       self._popup = Popup(title="Save file", content=content,
-                           size_hint=(0.9, 0.9))
-       self._popup.open()
-
-
 class DownloadStatusBar(BoxLayout):
    url = StringProperty()
    status = StringProperty()
@@ -93,38 +73,6 @@ class DownloadStatusBar(BoxLayout):
    def on_release_show_log_button(self):
       popup = LogPopup(self.log)
       popup.open()
-
-class DownloaderThread(threading.Thread):
-   def __init__(self, url, ydl_opts, rv, logger):
-       threading.Thread.__init__(self)
-       self.url = url
-       self.ydl_opts = ydl_opts
-       self.datum = rv.data[-1]
-       self.rv = rv
-       self.logger = logger
-
-   def callback_refresh_log(self, *largs):
-      self.datum['log'] = self.logger.log
-      self.rv.refresh_from_data()
-
-   def run(self):
-      self.datum['status'] = 'Processing'
-
-      Clock.schedule_interval(partial(self.callback_refresh_log), 0.25)
-
-      try:
-         with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
-            download_retcode = ydl.download([self.url])
-            self.datum['status'] = f'Done ({download_retcode})'
-            print(f'Finished with retcode {download_retcode}')
-            self.rv.refresh_from_data()
-      except SystemExit:
-         self.logger.debug('System Exit')
-         pass
-      except Exception as inst:
-         self.logger.error(inst)
-         self.logger.error(traceback.format_exc())
-         pass
 
 class DownloaderLayout(BoxLayout):
    def dismiss_popup(self):
