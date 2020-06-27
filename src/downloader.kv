@@ -43,6 +43,7 @@
     BoxLayout:
         orientation: 'vertical'
         ScrollView:
+            size_hint_y: .9
             Label:
                 id: log_label
                 text: root.log
@@ -51,6 +52,7 @@
                 size_hint: 1, None
                 height: self.texture_size[1]
         Button:
+            size_hint_y: .1
             text: 'Close'
             on_release: root.dismiss()
             size_hint_y: None
@@ -58,16 +60,22 @@
 <SettingsPopup>:
     title: 'Settings'
     BoxLayout:
-        orientation: 'horizontal'
-        size_hint_y: None
-        TextInput:
-            id: download_location
-            hint_text: 'Download location'
-            size_hint_y: None
-            multiline: False
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .9
+            TextInput:
+                id: download_location
+                hint_text: 'Download location'
+                size_hint_y: None
+                multiline: False
+            Button:
+                text: 'Download location'
+                on_release: root.show_download_location_dialog()
         Button:
-            text: 'Download location'
-            on_release: root.show_download_location_dialog()
+            size_hint_y: .1
+            text: 'Close'
+            on_release: root.dismiss()
 
 <DownloaderLayout>:
     orientation: 'vertical'

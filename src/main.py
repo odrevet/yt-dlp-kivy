@@ -69,7 +69,7 @@ class YdlLogger(object):
    def error(self, msg):
       self.log += msg + "\n"
 
-def ydl_progress_hook(d, out):
+def ydl_progress_hook(d):
    if d['status'] == 'finished':
       print('Done downloading')
 
