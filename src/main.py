@@ -56,17 +56,16 @@ class LogPopup(Popup):
       self.log = log
 
 class YdlLogger(object):
-    def debug(self, msg):
-       print('DEBUG: ' + msg);
-       pass
+   log = ''
 
-    def warning(self, msg):
-       print('WARNING: ' + msg);
-       pass
+   def debug(self, msg):
+      self.log += msg + "\n"
 
-    def error(self, msg):
-       print('ERROR: ' + msg)
+   def warning(self, msg):
+      self.log += msg + "\n"
 
+   def error(self, msg):
+      self.log += msg + "\n"
 
 def ydl_progress_hook(d):
    if d['status'] == 'finished':
@@ -100,41 +99,34 @@ class DownloadStatusBar(BoxLayout):
          self.status = 'Done'
 
 class DownloaderThread(threading.Thread):
-   def __init__(self, url, ydl_opts, rv):
+   def __init__(self, url, ydl_opts, rv, logger):
        threading.Thread.__init__(self)
        self.url = url
        self.ydl_opts = ydl_opts
        self.datum = rv.data[-1]
        self.rv = rv
+       self.logger = logger
 
-   def callback_refresh_log(self, strio_stdout, *largs):
-      self.datum['log'] = strio_stdout.getvalue()
+   def callback_refresh_log(self, *largs):
+      self.datum['log'] = self.logger.log
       self.rv.refresh_from_data()
 
    def run(self):
       self.datum['status'] = 'Processing'
 
-      # to show ytdl output in the UI, redirect stdout to a string
-      sys_stdout = sys.stdout
-      strio_stdout = StringIO()
-      sys.stdout = strio_stdout
-
-      Clock.schedule_interval(partial(self.callback_refresh_log, strio_stdout), 0.25)
+      Clock.schedule_interval(partial(self.callback_refresh_log), 0.25)
 
       try:
          with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
             download_retcode = ydl.download([self.url])
             self.datum['status'] = f'Done ({download_retcode})'
             print(f'Finished with retcode {download_retcode}')
-            sys.stdout = sys_stdout
             self.rv.refresh_from_data()
       except SystemExit:
-         print('System Exit...')
+         self.logger.log += 'System Exit...\n'
          pass
       except Exception as inst:
-         print(inst)
-         tb = traceback.format_exc()
-         print(tb)
+         self.logger.log = traceback.format_exc()
          pass
 
 class DownloaderLayout(BoxLayout):
@@ -150,9 +142,11 @@ class DownloaderLayout(BoxLayout):
       data = self.ids.rv.data
       data.append({'url': url})
 
+      logger = YdlLogger()
+
       ydl_opts = {'outtmpl':outtmpl,
                    'ignoreerrors':True,
-                   'logger': YdlLogger(),
+                   'logger': logger,
                    'progress_hooks': [ydl_progress_hook]}
 
       #Platform default arguments
@@ -163,7 +157,7 @@ class DownloaderLayout(BoxLayout):
          ydl_opts['--no-warnings'] = True
 
       # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts, self.ids.rv)
+      t = DownloaderThread(url, ydl_opts, self.ids.rv, logger)
       t.start()
 
 class RootLayout(BoxLayout):
