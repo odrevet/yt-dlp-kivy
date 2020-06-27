@@ -78,7 +78,6 @@
             hint_text: 'Enter url here'
             size_hint_y: None
             multiline: False
-            height: 40
             text: app.url
             on_text: app.url = self.text
         Button:
@@ -87,7 +86,6 @@
             on_press: root.on_press_button_download(app.url, app.outtmpl)
             size_hint_y: None
             size_hint_x: 0.1
-            height: 40
     RV:
         id: rv
 
