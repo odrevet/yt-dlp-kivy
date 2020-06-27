@@ -100,11 +100,11 @@ class DownloadStatusBar(BoxLayout):
          self.status = 'Done'
 
 class DownloaderThread(threading.Thread):
-   def __init__(self, url, ydl_opts, datum, rv):
+   def __init__(self, url, ydl_opts, rv):
        threading.Thread.__init__(self)
        self.url = url
        self.ydl_opts = ydl_opts
-       self.datum = datum
+       self.datum = rv.data[-1]
        self.rv = rv
 
    def callback_refresh_log(self, strio_stdout, *largs):
@@ -163,7 +163,7 @@ class DownloaderLayout(BoxLayout):
          ydl_opts['--no-warnings'] = True
 
       # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts, data[-1], self.ids.rv)
+      t = DownloaderThread(url, ydl_opts, self.ids.rv)
       t.start()
 
 class RootLayout(BoxLayout):
