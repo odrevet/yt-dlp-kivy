@@ -80,8 +80,6 @@ class DownloaderLayout(BoxLayout):
       if platform == 'android':
          ydl_opts['nocheckcertificate'] = True
          ydl_opts['prefer_insecure'] = True
-      elif platform == 'linux':
-         ydl_opts['--no-warnings'] = True
 
       # Run youtube-dl in a thread so the UI do not freeze
       t = DownloaderThread(url, ydl_opts, self.ids.rv, logger)
