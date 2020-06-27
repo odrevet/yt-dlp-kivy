@@ -1,14 +1,8 @@
 import kivy
 import youtube_dl
-from kivy.app import App
 from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.actionbar import ActionBar
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
-from kivy.uix.recycleview import RecycleView
-from kivy.uix.scrollview import ScrollView
 from kivy.utils import platform
 
 class DownloadLocationDialog(FloatLayout):
