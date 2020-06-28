@@ -2,98 +2,106 @@
 
 <SettingsPopup>:
     title: 'Settings'
-    ScrollView:
-        do_scroll_x: False
-        do_scroll_y: True
-        GridLayout:
-            cols: 2
-            padding : 20,20
-            row_default_height: '30dp'
-            size_hint_y: None
+    BoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint_y: .9
+            GridLayout:
+                cols: 2
+                padding : 20,20
+                row_default_height: '30dp'
+                size_hint_y: None
 
-            TextInput:
-                id: download_location
-                hint_text: 'Download location'
-                multiline: False
-                key: 'outtmpl'
-                text: app.ydl_opts[self.key]
-            Button:
-                text: 'Select directory'
-                on_release: root.show_download_location_dialog()
+                TextInput:
+                    id: download_location
+                    hint_text: 'Download location'
+                    multiline: False
+                    key: 'outtmpl'
+                    text: app.ydl_opts[self.key]
+                Button:
+                    text: 'Select directory'
+                    on_release: root.show_download_location_dialog()
 
-            CheckBox:
-                key: 'verbose'
-                on_active: app.set_param(self.key, self.active)
-                active: app.ydl_opts[self.key]
-            Label:
-                text: 'Print additional info'
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+                CheckBox:
+                    key: 'verbose'
+                    on_active: app.set_param(self.key, self.active)
+                    active: app.ydl_opts[self.key]
+                Label:
+                    text: 'Print additional info'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
 
-            CheckBox:
-                key: 'quiet'
-                on_active: app.set_param(self.key, self.active)
-                active: app.ydl_opts[self.key]
-            Label:
-                text: 'Do not print messages'            
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+                CheckBox:
+                    key: 'quiet'
+                    on_active: app.set_param(self.key, self.active)
+                    active: app.ydl_opts[self.key]
+                Label:
+                    text: 'Do not print messages'            
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
 
-            CheckBox:
-                key: 'nowarning'
-                on_active: app.set_param(self.key, self.active)
-                active: app.ydl_opts[self.key]
-            Label:
-                text: 'Do not print out anything for warnings.'
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'            
+                CheckBox:
+                    key: 'nowarning'
+                    on_active: app.set_param(self.key, self.active)
+                    active: app.ydl_opts[self.key]
+                Label:
+                    text: 'Do not print out anything for warnings.'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'            
 
-            CheckBox:
-                key: 'simulate'
-                on_active: app.set_param(self.key, self.active)
-                active: app.ydl_opts[self.key]
-            Label:
-                text: 'Do not download the video files.'
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'            
+                CheckBox:
+                    key: 'simulate'
+                    on_active: app.set_param(self.key, self.active)
+                    active: app.ydl_opts[self.key]
+                Label:
+                    text: 'Do not download the video files.'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'            
 
-            CheckBox:
-                key: 'nocheckcertificate'
-                on_active: app.set_param(self.key, self.active)
-                active: app.ydl_opts[self.key]
-            Label:
-                text: 'Do not verify SSL certificates'
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+                CheckBox:
+                    key: 'nocheckcertificate'
+                    on_active: app.set_param(self.key, self.active)
+                    active: app.ydl_opts[self.key]
+                Label:
+                    text: 'Do not verify SSL certificates'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
 
-            CheckBox:
-                key: 'prefer_insecure'
-                on_active: app.set_param(self.key, self.active)
-            Label:
-                text: 'Use HTTP instead of HTTPS to retrieve information.\nAt the moment, this is only supported by YouTube.'
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
-            
-            CheckBox:
-                key: 'ignoreerrors'
-                on_active: app.set_param(self.key, self.active)
-            Label:
-                text: 'Do not stop on download errors.'
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+                CheckBox:
+                    key: 'prefer_insecure'
+                    on_active: app.set_param(self.key, self.active)
+                Label:
+                    text: 'Use HTTP instead of HTTPS to retrieve information.\nAt the moment, this is only supported by YouTube.'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
+                
+                CheckBox:
+                    key: 'ignoreerrors'
+                    on_active: app.set_param(self.key, self.active)
+                Label:
+                    text: 'Do not stop on download errors.'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
 
-            CheckBox:
-                key: 'call_home'
-                on_active: app.set_param(self.key, self.active)
-            Label:
-                text: 'allow to contact the youtube-dl servers for debugging.' 
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+                CheckBox:
+                    key: 'call_home'
+                    on_active: app.set_param(self.key, self.active)
+                Label:
+                    text: 'allow to contact the youtube-dl servers for debugging.' 
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
+        Button:
+            height: '30dp'
+            text: 'Close'
+            on_release: root.dismiss()
+            size_hint_y: None    
