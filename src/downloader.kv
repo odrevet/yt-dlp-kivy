@@ -75,16 +75,6 @@
             text: 'Select directory'
             on_release: root.show_download_location_dialog()
 
-        TextInput: 
-            key: 'username'
-        Label: 
-            text: 'Username for authentication purposes.'
-
-        TextInput: 
-            key: 'password'
-        Label: 
-            text: 'Password for authentication purposes.'
-
         CheckBox:
             key: 'verbose'
             on_active: app.set_param(self.key, self.active)
@@ -92,8 +82,27 @@
             text: 'Print additional info'
 
         CheckBox:
+            key: 'quiet'
+            on_active: app.set_param(self.key, self.active)
+        Label:
+            text: 'Do not print messages'            
+
+        CheckBox:
+            key: 'nowarning'
+            on_active: app.set_param(self.key, self.active)
+        Label:
+            text: 'Do not print out anything for warnings.'
+
+        CheckBox:
+            key: 'simulate'
+            on_active: app.set_param(self.key, self.active)
+        Label:
+            text: 'Do not download the video files.'
+
+        CheckBox:
             key: 'nocheckcertificate'
             on_active: app.set_param(self.key, self.active)
+            active: app.ydl_opts['nocheckcertificate']
         Label:
             text: 'Do not verify SSL certificates'
 
@@ -102,7 +111,18 @@
             on_active: app.set_param(self.key, self.active)
         Label:
             text: 'Use HTTP instead of HTTPS to retrieve information.\nAt the moment, this is only supported by YouTube.'
+            
+        CheckBox:
+            key: 'ignoreerrors'
+            on_active: app.set_param(self.key, self.active)
+        Label:
+            text: 'Do not stop on download errors.'
 
+        CheckBox:
+            key: 'call_home'
+            on_active: app.set_param(self.key, self.active)
+        Label:
+            text: 'allow to contact the youtube-dl servers for debugging.'                        
 
 <DownloaderLayout>:
     orientation: 'vertical'

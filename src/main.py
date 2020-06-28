@@ -65,12 +65,12 @@ class DownloaderLayout(BoxLayout):
          #TODO permanently accept instead of asking each time the app is run
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
-      #Add UI status bar for this download
+      # Add UI status bar for this download
       data = self.ids.rv.data
       data.append({'url': url})
 
+      # Create a logger and merge it in the ydl options
       logger = YdlLogger()
-
       ydl_opts = {**ydl_opts, **{'logger': logger,
                                  'progress_hooks': [ydl_progress_hook]}}
 
@@ -81,25 +81,29 @@ class DownloaderLayout(BoxLayout):
 class RootLayout(BoxLayout):
    pass
 
+def get_output_dir():
+   if platform == 'android':
+      return os.getenv('EXTERNAL_STORAGE')
+   return expanduser("~")
+
 class DownloaderApp(App):
-   ydl_opts = ObjectProperty({})
-   url = StringProperty();
+   ydl_opts = ObjectProperty({
+      'verbose': False,
+      'quiet': False,
+      'nowarning': False,
+      'simulate' : False,
+      'ignoreerrors': False,
+      'call_home': False,
+      'nocheckcertificate': False, 
+      'prefer_insecure': False,
+      'outtmpl' : os.path.join(get_output_dir(), '%(title)s.%(ext)s')})
+   url = StringProperty()
 
    def set_param(self, id, value):
       print(f'{id}:{value}')
       self.ydl_opts[id]=value
 
-   def get_output_dir(self):
-      if platform == 'android':
-         return os.getenv('EXTERNAL_STORAGE')
-      elif platform == 'linux':
-         return expanduser("~")
-
-      return self.user_data_dir
-
    def build(self):
-      self.ydl_opts['outtmpl'] = os.path.join(self.get_output_dir(), '%(title)s.%(ext)s')
-
       return RootLayout()
 
 if __name__ == '__main__':
