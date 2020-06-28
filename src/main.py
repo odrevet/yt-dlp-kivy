@@ -100,7 +100,6 @@ class DownloaderApp(App):
    url = StringProperty()
 
    def set_param(self, id, value):
-      print(f'{id}:{value}')
       self.ydl_opts[id]=value
 
    def build(self):
