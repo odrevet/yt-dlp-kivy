@@ -66,16 +66,15 @@ class DownloaderLayout(BoxLayout):
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
       # Add UI status bar for this download
-      data = self.ids.rv.data
-      data.append({'url': url})
+      self.ids.rv.data.append({'url': url, 'log': ''})
 
       # Create a logger and merge it in the ydl options
-      logger = YdlLogger()
+      logger = YdlLogger(self.ids.rv, len(self.ids.rv.data) - 1)
       ydl_opts = {**ydl_opts, **{'logger': logger,
                                  'progress_hooks': [ydl_progress_hook]}}
 
       # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts, self.ids.rv)
+      t = DownloaderThread(url, ydl_opts)
       t.start()
 
 class RootLayout(BoxLayout):
