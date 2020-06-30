@@ -13,7 +13,7 @@ import youtube_dl
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.actionbar import ActionBar
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -45,19 +45,26 @@ class ActionBarMain(ActionBar):
 
 class LogPopup(Popup):
    log = StringProperty()
+   url = StringProperty()
 
-   def __init__(self, log, **kwargs):
+   def __init__(self, log, url, **kwargs):
       super(LogPopup, self).__init__(**kwargs)
       self.log = log
+      self.url = url
 
 class DownloadStatusBar(BoxLayout):
    url = StringProperty()
    status = StringProperty()
    log = StringProperty()
+   popup = None
 
    def on_release_show_log_button(self):
-      popup = LogPopup(self.log)
-      popup.open()
+      self.popup = LogPopup(self.log, self.url)
+      self.popup.open()
+
+   def on_log(self, instance, value):
+      if(self.popup is not None and instance.url == self.popup.url):
+         self.popup.log = value
 
 class DownloaderLayout(BoxLayout):
    def on_press_button_download(self, url, ydl_opts):
