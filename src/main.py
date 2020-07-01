@@ -26,6 +26,7 @@ if platform == 'android':
 from downloaderThread import DownloaderThread
 from about import AboutPopup
 from logger import YdlLogger, ydl_progress_hook
+from settings_json import settings_json
 
 class RV(RecycleView):
     pass
@@ -103,7 +104,7 @@ class DownloaderApp(App):
       'outtmpl' : join(get_output_dir(), '%(title)s.%(ext)s')})
 
    def build_settings(self, settings):
-      settings.add_json_panel('youtube-dl', self.config, 'src/settings.json')
+      settings.add_json_panel('youtube-dl', self.config, data=settings_json)
 
    def on_config_change(self, config, section, key, value):
       self.ydl_opts[key] = value

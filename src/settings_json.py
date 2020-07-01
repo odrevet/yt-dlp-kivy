@@ -1,4 +1,6 @@
-[
+import json
+
+settings_json = json.dumps([
     {
         "type": "bool",
         "title": "Verbose",
@@ -56,3 +58,4 @@
         "key": "outtmpl"
     }
 ]
+)
