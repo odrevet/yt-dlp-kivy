@@ -87,13 +87,16 @@
         text: root.url
         text_size: self.width, None
         height: self.texture_size[1]
+        size_hint_x: .8 
     Label:
         id: status_label
         text: root.status
+        size_hint_x: .1
     Button:
         id: show_log_button
         text: 'Log'
         on_release: root.on_release_show_log_button()
+        size_hint_x: .1
 
 <Downloadlocationdialog>:
     BoxLayout:
