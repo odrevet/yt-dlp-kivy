@@ -77,7 +77,7 @@ class DownloaderLayout(BoxLayout):
                                  'progress_hooks': [ydl_progress_hook]}}
 
       # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts)
+      t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1])
       t.start()
 
 class RootLayout(BoxLayout):
