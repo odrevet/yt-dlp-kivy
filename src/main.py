@@ -93,7 +93,6 @@ class DownloaderApp(App):
       'verbose': False,
       'quiet': False,
       'nowarning': False,
-      'simulate' : False,
       'ignoreerrors': False,
       'call_home': False,
       'nocheckcertificate': False, 

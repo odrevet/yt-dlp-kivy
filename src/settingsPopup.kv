@@ -52,17 +52,7 @@
                     text: 'Do not print out anything for warnings.'
                     text_size: self.size
                     halign: 'left'
-                    valign: 'middle'            
-
-                CheckBox:
-                    key: 'simulate'
-                    on_active: app.set_param(self.key, self.active)
-                    active: app.ydl_opts[self.key]
-                Label:
-                    text: 'Do not download the video files.'
-                    text_size: self.size
-                    halign: 'left'
-                    valign: 'middle'            
+                    valign: 'middle'                       
 
                 CheckBox:
                     key: 'nocheckcertificate'
