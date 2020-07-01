@@ -100,7 +100,7 @@ class DownloaderApp(App):
       'call_home': False,
       'nocheckcertificate': False, 
       'prefer_insecure': platform == 'android',
-      'outtmpl' : os.path.join(get_output_dir(), '%(title)s.%(ext)s')})
+      'outtmpl' : join(get_output_dir(), '%(title)s.%(ext)s')})
 
    def build_settings(self, settings):
       settings.add_json_panel('youtube-dl', self.config, 'src/settings.json')
