@@ -1,14 +1,6 @@
-from __future__ import unicode_literals
-
-import os
-import sys
 import threading
 import traceback
-from functools import partial
-from io import StringIO
-from os.path import dirname, expanduser, join
 
-import kivy
 import youtube_dl
 
 class DownloaderThread(threading.Thread):

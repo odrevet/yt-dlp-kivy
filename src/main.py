@@ -1,17 +1,12 @@
-from __future__ import unicode_literals
-
 import os
 import sys
 import threading
 import traceback
-from functools import partial
-from io import StringIO
-from os.path import dirname, expanduser, join
+from os.path import expanduser, join
 
 import kivy
 import youtube_dl
 from kivy.app import App
-from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.actionbar import ActionBar
@@ -74,7 +69,7 @@ class DownloaderLayout(BoxLayout):
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
       # Add UI status bar for this download
-      self.ids.rv.data.append({'url': url, 'index': len(self.ids.rv.data) - 1, 'log': ''})
+      self.ids.rv.data.append({'url': url, 'index': len(self.ids.rv.data) - 1, 'log': '', 'status': 'processing'})
 
       # Create a logger and merge it in the ydl options
       logger = YdlLogger(self.ids.rv, len(self.ids.rv.data) - 1)
