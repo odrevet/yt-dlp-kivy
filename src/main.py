@@ -45,25 +45,26 @@ class ActionBarMain(ActionBar):
 
 class LogPopup(Popup):
    log = StringProperty()
-   url = StringProperty()
+   index = NumericProperty()
 
-   def __init__(self, log, url, **kwargs):
+   def __init__(self, log, index, **kwargs):
       super(LogPopup, self).__init__(**kwargs)
       self.log = log
-      self.url = url
+      self.index = index
 
 class DownloadStatusBar(BoxLayout):
    url = StringProperty()
    status = StringProperty()
    log = StringProperty()
+   index = NumericProperty()
    popup = None
 
    def on_release_show_log_button(self):
-      self.popup = LogPopup(self.log, self.url)
+      self.popup = LogPopup(self.log, self.index)
       self.popup.open()
 
    def on_log(self, instance, value):
-      if(self.popup is not None and instance.url == self.popup.url):
+      if(self.popup is not None and instance.index == self.popup.index):
          self.popup.log = value
 
 class DownloaderLayout(BoxLayout):
@@ -73,7 +74,7 @@ class DownloaderLayout(BoxLayout):
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
       # Add UI status bar for this download
-      self.ids.rv.data.append({'url': url, 'log': ''})
+      self.ids.rv.data.append({'url': url, 'index': len(self.ids.rv.data) - 1, 'log': ''})
 
       # Create a logger and merge it in the ydl options
       logger = YdlLogger(self.ids.rv, len(self.ids.rv.data) - 1)

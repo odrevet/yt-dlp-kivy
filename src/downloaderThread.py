@@ -22,7 +22,7 @@ class DownloaderThread(threading.Thread):
       try:
          with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
             download_retcode = ydl.download([self.url])
-            print(f'Finished with retcode {download_retcode}')
+            self.logger.debug(f'Finished with retcode {download_retcode}')
       except SystemExit:
          self.logger.debug('System Exit')
          pass
