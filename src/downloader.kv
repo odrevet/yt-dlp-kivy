@@ -2,8 +2,6 @@
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 
-#:include settingsPopup.kv
-
 <ActionBarMain>:
     pos_hint: {'top':1}
     ActionView:
@@ -14,13 +12,13 @@
         ActionOverflow:
         ActionButton:
             text: 'Clipboard'
-            on_press: app.url = Clipboard.paste()
+            on_release: app.url = Clipboard.paste()
         ActionButton:
             text: 'Settings'
-            on_press: root.on_press_settings_button()
+            on_press: app.open_settings()
         ActionButton:
             text: 'About'
-            on_press: root.on_press_about_button()
+            on_release: root.on_press_about_button()
 
 <AboutPopup>:
     auto_dismiss: False

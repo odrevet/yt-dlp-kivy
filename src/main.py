@@ -23,7 +23,6 @@ if platform == 'android':
    from android.storage import primary_external_storage_path
    from android.permissions import request_permissions, Permission
 
-from settingsMenu import SettingsPopup
 from downloaderThread import DownloaderThread
 from about import AboutPopup
 from logger import YdlLogger, ydl_progress_hook
@@ -32,9 +31,6 @@ class RV(RecycleView):
     pass
 
 class ActionBarMain(ActionBar):
-   def on_press_settings_button(self):
-      SettingsPopup().open()
-
    def on_press_about_button(self):
       AboutPopup().open()
 
@@ -89,7 +85,14 @@ def get_output_dir():
    return expanduser("~")
 
 class DownloaderApp(App):
-   ydl_opts = ObjectProperty({
+   ydl_opts = ObjectProperty({})
+   url = StringProperty()
+
+   def set_param(self, id, value):
+      self.ydl_opts[id]=value
+
+   def build_config(self, config):
+      config.setdefaults('youtube-dl', {
       'verbose': False,
       'quiet': False,
       'nowarning': False,
@@ -98,12 +101,16 @@ class DownloaderApp(App):
       'nocheckcertificate': False, 
       'prefer_insecure': platform == 'android',
       'outtmpl' : os.path.join(get_output_dir(), '%(title)s.%(ext)s')})
-   url = StringProperty()
 
-   def set_param(self, id, value):
-      self.ydl_opts[id]=value
+   def build_settings(self, settings):
+      settings.add_json_panel('youtube-dl', self.config, 'src/settings.json')
+
+   def on_config_change(self, config, section, key, value):
+      self.ydl_opts[key] = value
 
    def build(self):
+      self.config.items('youtube-dl')
+      self.use_kivy_settings = False
       return RootLayout()
 
 if __name__ == '__main__':
