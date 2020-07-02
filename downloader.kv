@@ -12,14 +12,29 @@
             with_previous: False
         ActionOverflow:
         ActionButton:
-            text: 'Clipboard'
             on_release: app.url = Clipboard.paste()
+            Image:
+                x: self.parent.x
+                y: self.parent.y
+                size: self.parent.size
+                stretch: True
+                source: 'img/clipboard.png'
         ActionButton:
-            text: 'Settings'
             on_press: app.open_settings()
+            Image:
+                x: self.parent.x
+                y: self.parent.y
+                size: self.parent.size
+                stretch: True
+                source: 'img/work.png'
         ActionButton:
-            text: 'About'
             on_release: Factory.AboutPopup().open()
+            Image:
+                x: self.parent.x
+                y: self.parent.y
+                size: self.parent.size
+                stretch: True
+                source: 'img/info.png'
 
 <AboutPopup@Popup>:
     auto_dismiss: False
@@ -73,10 +88,15 @@
             on_text: app.url = self.text
         Button:
             id: download_button
-            text:  'GO'
             on_press: root.on_press_button_download(app.url, app.ydl_opts)
             size_hint_y: None
             size_hint_x: 0.1
+            Image:
+                x: self.parent.x
+                y: self.parent.y
+                size: self.parent.size
+                stretch: True
+                source: 'img/down-arrow.png'
     RV:
         id: rv
 

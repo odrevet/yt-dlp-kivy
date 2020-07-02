@@ -14,4 +14,6 @@ Released Under the GPL-V3 License
 
 * Kivy Framework version {kivy.__version__} MIT License
 
-* Python language version {sys.version}''')
+* Python language version {sys.version}
+
+* Icons made by Freepik www.flaticon.com''')

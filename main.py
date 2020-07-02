@@ -107,6 +107,9 @@ class DownloaderApp(App):
          self.ydl_opts[key] = value
 
    def build(self):
+      root_folder = self.user_data_dir
+      cache_folder = os.path.join(root_folder, 'cache')
+      print(cache_folder)
       if platform == 'android':
          request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
       

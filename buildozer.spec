@@ -6,13 +6,11 @@ title = youtube-dl Kivy
 package.name = youtube_dl_kivy
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = fr.odrevet
+package.domain = fr.odrevet.youtube_dl_kivy
 
-# (str) Source code where the main.py live
-source.dir = src
-
-# (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,kv,atlas
+source.dir = .
+source.include_exts = py,kv,png
+source.include_patterns = img/*.png
 
 version = 0.1
 
