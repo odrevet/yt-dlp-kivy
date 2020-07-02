@@ -12,7 +12,7 @@ package.domain = fr.odrevet
 source.dir = src
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,kv,atlas
 
 version = 0.1
 
@@ -25,8 +25,10 @@ orientation = all
 
 fullscreen = 0
 
-android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+icon.filename = img/app.png
+presplash.filename = img/splash.png
 
+android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
 
 [buildozer]
 
