@@ -32,8 +32,7 @@ class RV(RecycleView):
     pass
 
 class ActionBarMain(ActionBar):
-   def on_press_about_button(self):
-      AboutPopup().open()
+   pass
 
 class LogPopup(Popup):
    log = StringProperty()
@@ -61,10 +60,6 @@ class DownloadStatusBar(BoxLayout):
 
 class DownloaderLayout(BoxLayout):
    def on_press_button_download(self, url, ydl_opts):
-      if platform == 'android':
-         #TODO permanently accept instead of asking each time the app is run
-         request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
-
       # Add UI status bar for this download
       self.ids.rv.data.append({'url': url, 'index': len(self.ids.rv.data) - 1, 'log': '', 'status': 'processing'})
 
@@ -80,37 +75,49 @@ class DownloaderLayout(BoxLayout):
 class RootLayout(BoxLayout):
    pass
 
-def get_output_dir():
-   if platform == 'android':
-      return os.getenv('EXTERNAL_STORAGE')
-   return expanduser("~")
-
 class DownloaderApp(App):
    ydl_opts = ObjectProperty({})
    url = StringProperty()
+   filetmpl = '%(title)s.%(ext)s'
 
-   def set_param(self, id, value):
-      self.ydl_opts[id]=value
+   def get_output_dir(self):
+      if platform == 'android':
+         return os.getenv('EXTERNAL_STORAGE')
+      return expanduser("~")
 
    def build_config(self, config):
       config.setdefaults('youtube-dl', {
-      'verbose': False,
       'quiet': False,
       'nowarning': False,
       'ignoreerrors': False,
       'call_home': False,
       'nocheckcertificate': False, 
       'prefer_insecure': platform == 'android',
-      'outtmpl' : join(get_output_dir(), '%(title)s.%(ext)s')})
+      'outtmpl' : join(self.get_output_dir(), self.filetmpl),
+      'savedir': self.get_output_dir()
+      })
 
    def build_settings(self, settings):
       settings.add_json_panel('youtube-dl', self.config, data=settings_json)
 
    def on_config_change(self, config, section, key, value):
-      self.ydl_opts[key] = value
+      if(key == 'savedir'):
+         self.ydl_opts['outtmpl'] = join(value, self.filetmpl)
+      else:
+         self.ydl_opts[key] = value
 
    def build(self):
-      self.config.items('youtube-dl')
+      if platform == 'android':
+         request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
+      
+      self.ydl_opts['quiet'] = self.config.get('youtube-dl', 'quiet')
+      self.ydl_opts['nowarning'] = self.config.get('youtube-dl', 'nowarning')
+      self.ydl_opts['ignoreerrors'] = self.config.get('youtube-dl', 'ignoreerrors')
+      self.ydl_opts['call_home'] = self.config.get('youtube-dl', 'call_home')
+      self.ydl_opts['nocheckcertificate'] = self.config.get('youtube-dl', 'nocheckcertificate')
+      self.ydl_opts['prefer_insecure'] = self.config.get('youtube-dl', 'prefer_insecure')
+      self.ydl_opts['outtmpl'] = join(self.config.get('youtube-dl', 'savedir'), self.filetmpl)
+
       self.use_kivy_settings = False
       return RootLayout()
 

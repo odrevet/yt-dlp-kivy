@@ -3,13 +3,6 @@ import json
 settings_json = json.dumps([
     {
         "type": "bool",
-        "title": "Verbose",
-        "desc": "Print additional info",
-        "section": "youtube-dl",
-        "key": "verbose"
-    },
-    {
-        "type": "bool",
         "title": "Quiet",
         "desc": "Do not print messages",
         "section": "youtube-dl",
@@ -51,11 +44,12 @@ settings_json = json.dumps([
         "key": "call_home"
     },
     {
-        "type": "string",
-        "title": "Output template",
-        "desc": "Output filename",
+        "type": "path",
+        "title": "Download location",
+        "desc": "Location where to store downloaded videos",
         "section": "youtube-dl",
-        "key": "outtmpl"
+        "key": "savedir"
     }
+    
 ]
 )

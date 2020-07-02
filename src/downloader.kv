@@ -1,6 +1,7 @@
 #:kivy 1.11.1
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
+#:import Factory kivy.factory.Factory
 
 <ActionBarMain>:
     pos_hint: {'top':1}
@@ -18,9 +19,9 @@
             on_press: app.open_settings()
         ActionButton:
             text: 'About'
-            on_release: root.on_press_about_button()
+            on_release: Factory.AboutPopup().open()
 
-<AboutPopup>:
+<AboutPopup@Popup>:
     auto_dismiss: False
     title: 'About'
     BoxLayout:
@@ -85,34 +86,18 @@
         text: root.url
         text_size: self.width, None
         height: self.texture_size[1]
-        size_hint_x: .8 
+        size_hint_x: .6
     Label:
         id: status_label
         text: root.status
-        size_hint_x: .1
+        height: self.texture_size[1]
+        size_hint_x: .2
     Button:
         id: show_log_button
         text: 'Log'
         on_release: root.on_release_show_log_button()
-        size_hint_x: .1
-
-<Downloadlocationdialog>:
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-        FileChooserListView:
-            id: filechooser
-            on_selection: text_input.text = self.selection and self.selection[0] or ''
-        BoxLayout:
-            size_hint_y: None
-            height: 30
-            Button:
-                text: "Cancel"
-                on_release: root.cancel()
-            Button:
-                text: "Save"
-                on_release: root.save(filechooser.path, None)
+        height: self.texture_size[1]
+        size_hint_x: .2
 
 <RV>:
     viewclass: 'DownloadStatusBar'
@@ -126,7 +111,7 @@
         multiselect: True
         touch_multiselect: True
 
-<RootLayout>:
+<RootLayout@BoxLayout>:
     BoxLayout:
         size: root.size
         pos: root.pos

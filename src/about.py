@@ -10,8 +10,8 @@ class AboutPopup(Popup):
    about_text = StringProperty(f'''*Youtube-Dl Kivy Version 0.0.1 - 2018 - 2020 Olivier Drevet 
 Released Under the GPL-V3 License
 
-* Youtube-dl Version {pkg_resources.get_distribution('Youtube-dl').version} Unlicense License
+* Youtube-dl version {pkg_resources.get_distribution('Youtube-dl').version} Unlicense License
 
-* Kivy Version {kivy. __version__} MIT License
+* Kivy Framework version {kivy.__version__} MIT License
 
-* Python Version {sys.version} {sys.version_info}''')
+* Python language version {sys.version}''')
