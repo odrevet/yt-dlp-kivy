@@ -53,6 +53,8 @@ class DownloadStatusBar(BoxLayout):
    log = StringProperty()
    index = NumericProperty()
    status_icon = StringProperty('img/work.png')
+   #percent = NumericProperty()
+   #eta = StringProperty()
    popup = None
 
    def on_release_show_log_button(self):
@@ -71,6 +73,11 @@ class DownloadStatusBar(BoxLayout):
       if(self.popup is not None and instance.index == self.popup.index):
          self.popup.log = value
 
+def progress_hook(d):
+   if d['status'] == 'downloading':
+      print(d['_percent_str'][:-1])
+      print(d['_eta_str'])
+      
 class DownloaderLayout(BoxLayout):
    def on_press_button_download(self, url, ydl_opts):
       # Add UI status bar for this download
@@ -82,7 +89,7 @@ class DownloaderLayout(BoxLayout):
       # Create a logger and merge it in the ydl options
       logger = YdlLogger(self.ids.rv, len(self.ids.rv.data) - 1)
       ydl_opts = {**ydl_opts, **{'logger': logger,
-                                 # 'progress_hooks': [ydl_progress_hook]
+                                 #'progress_hooks': [progress_hook]
                                  }}
 
       # Run youtube-dl in a thread so the UI do not freeze

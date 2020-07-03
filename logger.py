@@ -16,10 +16,3 @@ class YdlLogger(object):
    def error(self, msg):
       self.rv.data[self.index]['log'] += f"[color=ff0000]{msg}[/color]\n"
       self.rv.refresh_from_data()
-
-#   def ydl_progress_hook(self, d):
-#      if d['status'] == 'finished':
-#         print(f"done {d['filename']}")
-#      if d['status'] == 'downloading':
-#         self.rv.data[self.index]['percent'] = float(d['_percent_str'][:-1])
-#         self.rv.data[self.index]['eta'] = d['_eta_str']
