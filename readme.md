@@ -1,13 +1,10 @@
 User interface for youtube-dl using the Kivy framework
 
-For the moment, this is just a '''Proof Of Concept''' version (see Usage)
-
 # Usage
 
 * With a web browser, copy the url of the video that you want to download.
 * Enter an url in the upper text input
 * Clik on the 'Download' button
-* Wait unit the video status is 'Done' (under android, unfocus the app will freeze downloads)
 
 # Dependancies
 
