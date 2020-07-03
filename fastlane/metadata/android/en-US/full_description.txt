@@ -1,0 +1,7 @@
+User interface for youtube-dl using the Kivy framework
+
+# Usage
+
+* With a web browser, copy the url of the video that you want to download.
+* Enter an url in the upper text input
+* Clik on the 'Download' button
