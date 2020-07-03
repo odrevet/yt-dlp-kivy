@@ -1,6 +1,6 @@
 [app]
 
-title = youtube-dl Kivy
+title = youtube-dl
 
 # (str) Package name
 package.name = youtube_dl_kivy
