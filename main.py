@@ -53,6 +53,7 @@ class DownloadStatusBar(BoxLayout):
    log = StringProperty()
    index = NumericProperty()
    status_icon = StringProperty('img/work.png')
+   title = StringProperty()
    #percent = NumericProperty()
    #eta = StringProperty()
    popup = None
