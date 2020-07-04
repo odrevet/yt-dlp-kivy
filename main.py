@@ -48,12 +48,12 @@ class LogPopup(Popup):
       self.index = index
 
 class DownloadStatusBar(BoxLayout):
-   url = StringProperty()
+   url = StringProperty('')
    status = NumericProperty(STATUS_IN_PROGRESS)
-   log = StringProperty()
+   log = StringProperty('')
    index = NumericProperty()
    status_icon = StringProperty('img/work.png')
-   title = StringProperty()
+   title = StringProperty('')
    #percent = NumericProperty()
    #eta = StringProperty()
    popup = None
@@ -81,14 +81,17 @@ def progress_hook(d):
       
 class DownloaderLayout(BoxLayout):
    def on_press_button_download(self, url, ydl_opts):
+      index = len(self.ids.rv.data)
+
       # Add UI status bar for this download
       self.ids.rv.data.append({'url': url, 
-                               'index': len(self.ids.rv.data) - 1, 
+                               'index': index, 
                                'log': '', 
+                               'title': '',
                                'status': STATUS_IN_PROGRESS})
 
       # Create a logger and merge it in the ydl options
-      logger = YdlLogger(self.ids.rv, len(self.ids.rv.data) - 1)
+      logger = YdlLogger(self.ids.rv, index)
       ydl_opts = {**ydl_opts, **{'logger': logger,
                                  #'progress_hooks': [progress_hook]
                                  }}

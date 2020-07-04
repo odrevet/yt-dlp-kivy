@@ -26,7 +26,7 @@
                 y: self.parent.y
                 size: self.parent.size
                 stretch: True
-                source: 'img/gear.png'
+                source: 'img/work.png'
         ActionButton:
             on_release: Factory.AboutPopup().open()
             Image:
@@ -110,7 +110,7 @@
             pos: self.pos
             size: self.size    
     Label:
-        text: root.title if root.title else root.url
+        text: root.url if root.title == '' else root.title
         text_size: self.width, None
         height: self.texture_size[1]
         size_hint_x: .8
