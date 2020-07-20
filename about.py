@@ -8,7 +8,8 @@ import pkg_resources
 
 class AboutPopup(Popup):
    about_text = StringProperty(f'''[b]Youtube-Dl Kivy[/b] 
-Version 0.0.2 - 2020 Olivier Drevet 
+2020 Olivier Drevet
+Version 0.2 
 Released Under the GPL-v3 License
 
 [b]Youtube-dl[/b] 
