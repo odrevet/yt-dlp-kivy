@@ -74,7 +74,24 @@
             size_hint_y: .1
             text: 'Close'
             on_release: root.dismiss()
-            height: '30dp'                     
+            height: '30dp'  
+
+<FormatSelectPopup>:
+    auto_dismiss: False
+    title: 'Format select'
+    BoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            size_hint_y: .9
+            GridLayout:
+                id: layout
+                cols: 2
+                height: self.minimum_height
+        Button:
+            size_hint_y: .1
+            text: 'Close'
+            on_release: root.dismiss()
+            height: '30dp'                 
 
 <DownloaderLayout>:
     orientation: 'vertical'

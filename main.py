@@ -3,6 +3,7 @@ import sys
 import threading
 import traceback
 from os.path import expanduser, join
+from functools import partial
 
 import kivy
 import youtube_dl
@@ -18,11 +19,13 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.uix.recycleview import RecycleView
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.dropdown import DropDown
 from kivy.utils import platform
+from kivy.uix.checkbox import CheckBox
 
 if platform == 'android':
-   from android.storage import primary_external_storage_path
-   from android.permissions import check_permission, request_permissions, Permission
+    from android.storage import primary_external_storage_path
+    from android.permissions import check_permission, request_permissions, Permission
 
 from downloaderThread import DownloaderThread
 from about import AboutPopup
@@ -35,125 +38,203 @@ from status import STATUS_IN_PROGRESS, STATUS_DONE, STATUS_ERROR
 class RV(RecycleView):
     pass
 
+
 class ActionBarMain(ActionBar):
-   pass
+    pass
+
 
 class LogPopup(Popup):
-   log = StringProperty()
-   index = NumericProperty()
+    log = StringProperty()
+    index = NumericProperty()
 
-   def __init__(self, log, index, **kwargs):
-      super(LogPopup, self).__init__(**kwargs)
-      self.log = log
-      self.index = index
+    def __init__(self, log, index, **kwargs):
+        super(LogPopup, self).__init__(**kwargs)
+        self.log = log
+        self.index = index
+
+
+class FormatSelectPopup(Popup):
+    meta = {}
+    selected_format_id = []
+
+    def __init__(self, meta, **kwargs):
+        super(FormatSelectPopup, self).__init__(**kwargs)
+
+        for format in meta['formats']:
+            grid = self.ids.layout
+            grid.add_widget(Label(text=format['format'] + ' ' + format['ext']))
+            checkbox = CheckBox(active=False)
+            callback = partial(self.on_checkbox_active, format['format_id'])
+            checkbox.bind(active=callback)
+            grid.add_widget(checkbox)
+
+    def on_checkbox_active(self, format_id, instance, value):
+        if value:
+            self.selected_format_id.append(format_id)
+        else:
+            self.selected_format_id.remove(format_id)
+
 
 class DownloadStatusBar(BoxLayout):
-   url = StringProperty('')
-   status = NumericProperty(STATUS_IN_PROGRESS)
-   log = StringProperty('')
-   index = NumericProperty()
-   status_icon = StringProperty('img/work.png')
-   title = StringProperty('')
-   #percent = NumericProperty()
-   #eta = StringProperty()
-   popup = None
+    url = StringProperty('')
+    status = NumericProperty(STATUS_IN_PROGRESS)
+    log = StringProperty('')
+    index = NumericProperty()
+    status_icon = StringProperty('img/work.png')
+    title = StringProperty('')
+    # percent = NumericProperty()
+    # eta = StringProperty()
+    popup = None
 
-   def on_release_show_log_button(self):
-      self.popup = LogPopup(self.log, self.index)
-      self.popup.open()
+    def on_release_show_log_button(self):
+        self.popup = LogPopup(self.log, self.index)
+        self.popup.open()
 
-   def on_status(self, instance, value):
-      if (value == STATUS_IN_PROGRESS):
-         self.status_icon = 'img/work.png'
-      elif (value == STATUS_DONE):
-         self.status_icon = 'img/correct.png'
-      elif (value == STATUS_ERROR):
-         self.status_icon = 'img/cancel.png'
+    def on_status(self, instance, value):
+        if (value == STATUS_IN_PROGRESS):
+            self.status_icon = 'img/work.png'
+        elif (value == STATUS_DONE):
+            self.status_icon = 'img/correct.png'
+        elif (value == STATUS_ERROR):
+            self.status_icon = 'img/cancel.png'
 
-   def on_log(self, instance, value):
-      if(self.popup is not None and instance.index == self.popup.index):
-         self.popup.log = value
+    def on_log(self, instance, value):
+        if(self.popup is not None and instance.index == self.popup.index):
+            self.popup.log = value
+
 
 def progress_hook(d):
-   if d['status'] == 'downloading':
-      print(d['_percent_str'][:-1])
-      print(d['_eta_str'])
-      
+    if d['status'] == 'downloading':
+        print(d['_percent_str'][:-1])
+        print(d['_eta_str'])
+
+
+def show_format_select_dropdown():
+    dropdown = DropDown()
+    for index in range(10):
+        btn = Button(text='Value %d' % index, size_hint_y=None, height=44)
+        dropdown.add_widget(btn)
+
+
 class DownloaderLayout(BoxLayout):
-   def on_press_button_download(self, url, ydl_opts):
-      index = len(self.ids.rv.data)
+    popup = None  # format select popup
 
-      # Add UI status bar for this download
-      self.ids.rv.data.append({'url': url, 
-                               'index': index, 
-                               'log': '', 
-                               'title': '',
-                               'status': STATUS_IN_PROGRESS})
+    def on_format_select_popup_dismiss(self, url, ydl_opts, instance):
+        self.start_download(url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}})
 
-      # Create a logger and merge it in the ydl options
-      logger = YdlLogger(self.ids.rv, index)
-      ydl_opts = {**ydl_opts, **{'logger': logger,
-                                 #'progress_hooks': [progress_hook]
-                                 }}
+    def on_press_button_download(self, url, ydl_opts):
+        # if the format method is set to 'Ask', get the metadata which contains the available formats for this url
+        format_method = App.get_running_app().config.get('format', 'method')
+        if format_method == 'Ask':
+            try:
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    meta = ydl.extract_info(url, download=False)  #TODO catch exceptions
+                    self.popup = FormatSelectPopup(meta)
+                    callback = partial(self.on_format_select_popup_dismiss, url, ydl_opts)
+                    self.popup.bind(on_dismiss=callback)
+                    self.popup.open()
+            except Exception as inst:
+                print(inst)
+        else:
+            self.start_download(url, ydl_opts)
 
-      # Run youtube-dl in a thread so the UI do not freeze
-      t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1])
-      t.start()
+    def start_download(self, url, ydl_opts):
+        index = len(self.ids.rv.data)
+
+        # Add UI status bar for this download
+        self.ids.rv.data.append({'url': url,
+                                 'index': index,
+                                 'log': '',
+                                 'title': '',
+                                 'status': STATUS_IN_PROGRESS})
+
+        # Create a logger and merge it in the ydl options
+        logger = YdlLogger(self.ids.rv, index)
+        ydl_opts = {**ydl_opts, **{'logger': logger,
+                                   # 'progress_hooks': [progress_hook]
+                                   }}
+
+        # Run youtube-dl in a thread so the UI do not freeze
+        t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1])
+        t.start()
+
 
 class RootLayout(Label):
-   pass
+    pass
+
 
 class StatusIcon(Label):
-   status = NumericProperty(1)
+    status = NumericProperty(1)
+
 
 class DownloaderApp(App):
-   ydl_opts = ObjectProperty({})
-   url = StringProperty()
-   filetmpl = '%(title)s.%(ext)s'
+    ydl_opts = ObjectProperty({})
+    url = StringProperty()
+    filetmpl = '%(title)s.%(ext)s'
 
-   def get_output_dir(self):
-      if platform == 'android':
-         return os.getenv('EXTERNAL_STORAGE')
-      return expanduser("~")
+    def get_output_dir(self):
+        if platform == 'android':
+            return os.getenv('EXTERNAL_STORAGE')
+        return expanduser("~")
 
-   def build_config(self, config):
-      config.setdefaults('youtube-dl', {
-      'quiet': False,
-      'nowarning': False,
-      'ignoreerrors': False,
-      'call_home': False,
-      'nocheckcertificate': False, 
-      'prefer_insecure': platform == 'android',
-      'outtmpl' : join(self.get_output_dir(), self.filetmpl),
-      'savedir': self.get_output_dir()
-      })
+    def build_config(self, config):
+        config.setdefaults('general', {
+            'selection': 'Preset',
+            'custom': 'best',
+            'preset': 'best',
+            'quiet': False,
+            'nowarning': False,
+            'ignoreerrors': False,
+            'call_home': False,
+            'nocheckcertificate': False,
+            'prefer_insecure': platform == 'android',
+            'outtmpl': join(self.get_output_dir(), self.filetmpl),
+            'savedir': self.get_output_dir()
+        })
 
-   def build_settings(self, settings):
-      settings.add_json_panel('youtube-dl', self.config, data=settings_json)
+    def build_settings(self, settings):
+        settings.add_json_panel('general', self.config, data=settings_json)
 
-   def on_config_change(self, config, section, key, value):
-      if(key == 'savedir'):
-         self.ydl_opts['outtmpl'] = join(value, self.filetmpl)
-      else:
-         self.ydl_opts[key] = value
+    def on_config_change(self, config, section, key, value):
+        if(key == 'savedir'):
+            self.ydl_opts['outtmpl'] = join(value, self.filetmpl)
+        elif(key == 'preset' or (key == 'method' and value == 'Preset')):
+            self.ydl_opts['format'] = self.config.get(
+                'format', 'preset')
+        elif(key == 'custom' or (key == 'method' and value == 'Custom')):
+            self.ydl_opts['format'] = self.config.get(
+                'format', 'custom')
+        elif key == 'method' and value == 'Ask':
+            self.ydl_opts.pop('format', None)
+        else:
+            self.ydl_opts[key] = value
 
-   def build(self):
-      root_folder = self.user_data_dir
-      cache_folder = os.path.join(root_folder, 'cache')
-      print(cache_folder)
-      if platform == 'android' and not check_permission('android.permission.WRITE_EXTERNAL_STORAGE'):
-         request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
-      
-      self.ydl_opts['quiet'] = self.config.get('youtube-dl', 'quiet')
-      self.ydl_opts['nowarning'] = self.config.get('youtube-dl', 'nowarning')
-      self.ydl_opts['ignoreerrors'] = self.config.get('youtube-dl', 'ignoreerrors')
-      self.ydl_opts['call_home'] = self.config.get('youtube-dl', 'call_home')
-      self.ydl_opts['nocheckcertificate'] = self.config.get('youtube-dl', 'nocheckcertificate')
-      self.ydl_opts['prefer_insecure'] = self.config.get('youtube-dl', 'prefer_insecure')
-      self.ydl_opts['outtmpl'] = join(self.config.get('youtube-dl', 'savedir'), self.filetmpl)
+    def build(self):
+        if platform == 'android' and not check_permission('android.permission.WRITE_EXTERNAL_STORAGE'):
+            request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
-      self.use_kivy_settings = False
-      return RootLayout()
+        self.ydl_opts['quiet'] = self.config.get('general', 'quiet')
+        self.ydl_opts['nowarning'] = self.config.get('general', 'nowarning')
+        self.ydl_opts['ignoreerrors'] = self.config.get(
+            'general', 'ignoreerrors')
+        self.ydl_opts['call_home'] = self.config.get('general', 'call_home')
+        self.ydl_opts['nocheckcertificate'] = self.config.get(
+            'general', 'nocheckcertificate')
+        self.ydl_opts['prefer_insecure'] = self.config.get(
+            'general', 'prefer_insecure')
+        self.ydl_opts['outtmpl'] = join(
+            self.config.get('general', 'savedir'), self.filetmpl)
+
+        if self.config.get('format', 'method') == 'Preset':
+            self.ydl_opts['format'] = self.config.get(
+                'format', 'preset')
+        elif self.config.get('format', 'method') == 'Custom':
+            self.ydl_opts['format'] = self.config.get(
+                'format', 'custom')
+
+        self.use_kivy_settings = False
+        return RootLayout()
+
 
 if __name__ == '__main__':
-   DownloaderApp().run()
+    DownloaderApp().run()
