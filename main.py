@@ -179,7 +179,7 @@ class DownloaderApp(App):
 
     def build_config(self, config):
         config.setdefaults('general', {
-            'selection': 'Preset',
+            'method': 'Preset',
             'custom': 'best',
             'preset': 'best',
             'quiet': False,
@@ -200,10 +200,10 @@ class DownloaderApp(App):
             self.ydl_opts['outtmpl'] = join(value, self.filetmpl)
         elif(key == 'preset' or (key == 'method' and value == 'Preset')):
             self.ydl_opts['format'] = self.config.get(
-                'format', 'preset')
+                'general', 'preset')
         elif(key == 'custom' or (key == 'method' and value == 'Custom')):
             self.ydl_opts['format'] = self.config.get(
-                'format', 'custom')
+                'general', 'custom')
         elif key == 'method' and value == 'Ask':
             self.ydl_opts.pop('format', None)
         else:
@@ -225,12 +225,12 @@ class DownloaderApp(App):
         self.ydl_opts['outtmpl'] = join(
             self.config.get('general', 'savedir'), self.filetmpl)
 
-        if self.config.get('format', 'method') == 'Preset':
+        if self.config.get('general', 'method') == 'Preset':
             self.ydl_opts['format'] = self.config.get(
-                'format', 'preset')
-        elif self.config.get('format', 'method') == 'Custom':
+                'general', 'preset')
+        elif self.config.get('general', 'method') == 'Custom':
             self.ydl_opts['format'] = self.config.get(
-                'format', 'custom')
+                'general', 'custom')
 
         self.use_kivy_settings = False
         return RootLayout()

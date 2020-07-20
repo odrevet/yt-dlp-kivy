@@ -6,14 +6,14 @@ settings_json = json.dumps([
         "title": "Format method",
         "desc": "Set which method to use to select the format",
         "options": ["Preset", "Custom", "Ask"],
-        "section": "format",
+        "section": "general",
         "key": "method"
     },
     {
         "type": "string",
         "title": "Custom format",
         "desc": "Format",
-        "section": "format",
+        "section": "general",
         "key": "custom"
     },
     {
@@ -21,7 +21,7 @@ settings_json = json.dumps([
         "title": "Preset",
         "desc": "Format preset",
         "options": ["best", "worst", "bestvideo", "worstvideo", "bestaudio", "worstaudio"],
-        "section": "format",
+        "section": "general",
         "key": "preset"
     },
     {
