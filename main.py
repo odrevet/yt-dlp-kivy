@@ -59,11 +59,11 @@ class FormatSelectPopup(Popup):
 
     def __init__(self, meta, **kwargs):
         super(FormatSelectPopup, self).__init__(**kwargs)
-
-        for format in meta['formats']:
+        formats_sorted = sorted(meta['formats'], key=lambda k: int(k['format_id'])) 
+        for format in formats_sorted:
             grid = self.ids.layout
             grid.add_widget(Label(text=format['format'] + ' ' + format['ext']))
-            checkbox = CheckBox(active=False)
+            checkbox = CheckBox(active=False, size_hint_x=None, width=100)
             callback = partial(self.on_checkbox_active, format['format_id'])
             checkbox.bind(active=callback)
             grid.add_widget(checkbox)
@@ -120,7 +120,8 @@ class DownloaderLayout(BoxLayout):
     popup = None  # format select popup
 
     def on_format_select_popup_dismiss(self, url, ydl_opts, instance):
-        self.start_download(url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}})
+        if instance.selected_format_id:
+            self.start_download(url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}})
 
     def on_press_button_download(self, url, ydl_opts):
         # if the format method is set to 'Ask', get the metadata which contains the available formats for this url
