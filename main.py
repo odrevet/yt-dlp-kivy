@@ -124,7 +124,7 @@ class DownloaderLayout(BoxLayout):
 
     def on_press_button_download(self, url, ydl_opts):
         # if the format method is set to 'Ask', get the metadata which contains the available formats for this url
-        format_method = App.get_running_app().config.get('format', 'method')
+        format_method = App.get_running_app().config.get('general', 'method')
         if format_method == 'Ask':
             try:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
