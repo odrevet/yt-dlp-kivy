@@ -1,4 +1,4 @@
 bin/
 __pycache__
 .buildozer
-.downloader.ini
+downloader.ini
