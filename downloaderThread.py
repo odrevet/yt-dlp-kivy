@@ -15,11 +15,7 @@ class DownloaderThread(threading.Thread):
 
    def run(self):
       try:
-         with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
-            meta = ydl.extract_info(self.url, download = False)
-            if(meta is not None):
-               self.datum['title'] = meta['title']
-            
+         with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:            
             retcode = ydl.download([self.url])
             self.logger.debug(f'Finished with retcode {retcode}')
             self.datum['status'] = STATUS_DONE if retcode == 0 else STATUS_ERROR

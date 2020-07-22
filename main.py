@@ -9,7 +9,7 @@ import kivy
 import youtube_dl
 from kivy.app import App
 from kivy.factory import Factory
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
+from kivy.properties import DictProperty, StringProperty, NumericProperty
 from kivy.uix.actionbar import ActionBar
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -19,7 +19,6 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.uix.recycleview import RecycleView
 from kivy.uix.scrollview import ScrollView
-from kivy.uix.dropdown import DropDown
 from kivy.utils import platform
 from kivy.uix.checkbox import CheckBox
 
@@ -38,10 +37,8 @@ from status import STATUS_IN_PROGRESS, STATUS_DONE, STATUS_ERROR
 class RV(RecycleView):
     pass
 
-
 class ActionBarMain(ActionBar):
     pass
-
 
 class LogPopup(Popup):
     log = StringProperty()
@@ -51,7 +48,6 @@ class LogPopup(Popup):
         super(LogPopup, self).__init__(**kwargs)
         self.log = log
         self.index = index
-
 
 class FormatSelectPopup(Popup):
     meta = {}
@@ -74,6 +70,13 @@ class FormatSelectPopup(Popup):
         else:
             self.selected_format_id.remove(format_id)
 
+class InfoDisplayPopup(Popup):
+    meta = {}
+
+    def __init__(self, meta, **kwargs):
+        super(InfoDisplayPopup, self).__init__(**kwargs)
+        self.meta = meta
+        self.ids.info_label.text = str(meta.keys())
 
 class DownloadStatusBar(BoxLayout):
     url = StringProperty('')
@@ -82,8 +85,7 @@ class DownloadStatusBar(BoxLayout):
     index = NumericProperty()
     status_icon = StringProperty('img/work.png')
     title = StringProperty('')
-    # percent = NumericProperty()
-    # eta = StringProperty()
+    percent = NumericProperty()
     popup = None
 
     def on_release_show_log_button(self):
@@ -102,58 +104,57 @@ class DownloadStatusBar(BoxLayout):
         if(self.popup is not None and instance.index == self.popup.index):
             self.popup.log = value
 
-
-def progress_hook(d):
-    if d['status'] == 'downloading':
-        print(d['_percent_str'][:-1])
-        print(d['_eta_str'])
-
-
-def show_format_select_dropdown():
-    dropdown = DropDown()
-    for index in range(10):
-        btn = Button(text='Value %d' % index, size_hint_y=None, height=44)
-        dropdown.add_widget(btn)
-
-
 class DownloaderLayout(BoxLayout):
-    popup = None  # format select popup
+    popup = None  # info display popup
 
-    def on_format_select_popup_dismiss(self, url, ydl_opts, instance):
+    def on_press_button_info(self):
+        app = App.get_running_app()
+        try:
+            if not bool(app.meta):
+                with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
+                    app.meta = ydl.extract_info(app.url, download = False)
+            
+            self.popup = InfoDisplayPopup(app.meta)
+            self.popup.open()
+        except Exception as inst:
+            print('Exception: ' + str(inst))
+
+    def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
         if instance.selected_format_id:
-            self.start_download(url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}})
+            self.start_download(url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}}, meta)
 
-    def on_press_button_download(self, url, ydl_opts):
+    def on_press_button_download(self):
+        app = App.get_running_app()
+
         # if the format method is set to 'Ask', get the metadata which contains the available formats for this url
-        format_method = App.get_running_app().config.get('general', 'method')
+        format_method = app.config.get('general', 'method')
         if format_method == 'Ask':
             try:
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                    meta = ydl.extract_info(url, download=False)  #TODO catch exceptions
-                    self.popup = FormatSelectPopup(meta)
-                    callback = partial(self.on_format_select_popup_dismiss, url, ydl_opts)
-                    self.popup.bind(on_dismiss=callback)
-                    self.popup.open()
+                if not bool(app.meta):
+                    with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
+                        app.meta = ydl.extract_info(app.url, download = False)
+                
+                self.popup = FormatSelectPopup(app.meta)
+                callback = partial(self.on_format_select_popup_dismiss, app.url, app.ydl_opts, app.meta)
+                self.popup.bind(on_dismiss=callback)
+                self.popup.open()
             except Exception as inst:
-                print(inst)
+                print('Exception: ' + str(inst))
         else:
-            self.start_download(url, ydl_opts)
+            self.start_download(app.url, app.ydl_opts, app.meta)
 
-    def start_download(self, url, ydl_opts):
+    def start_download(self, url, ydl_opts, meta):
         index = len(self.ids.rv.data)
 
         # Add UI status bar for this download
         self.ids.rv.data.append({'url': url,
                                  'index': index,
                                  'log': '',
-                                 'title': '',
+                                 'title': meta['title'],
                                  'status': STATUS_IN_PROGRESS})
 
-        # Create a logger and merge it in the ydl options
-        logger = YdlLogger(self.ids.rv, index)
-        ydl_opts = {**ydl_opts, **{'logger': logger,
-                                   # 'progress_hooks': [progress_hook]
-                                   }}
+        # Create a logger
+        ydl_opts['logger'] = YdlLogger(self.ids.rv, index)
 
         # Run youtube-dl in a thread so the UI do not freeze
         t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1])
@@ -163,13 +164,12 @@ class DownloaderLayout(BoxLayout):
 class RootLayout(Label):
     pass
 
-
 class StatusIcon(Label):
     status = NumericProperty(1)
 
-
 class DownloaderApp(App):
-    ydl_opts = ObjectProperty({})
+    meta = DictProperty()
+    ydl_opts = DictProperty()
     url = StringProperty()
     filetmpl = '%(title)s.%(ext)s'
 
