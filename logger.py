@@ -2,7 +2,6 @@ import re
 
 class YdlLogger(object):
    rv = None
-   regex = None 
 
    def __init__(self, rv, index):
       self.rv = rv
