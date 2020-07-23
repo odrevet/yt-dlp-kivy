@@ -55,7 +55,7 @@ class FormatSelectPopup(Popup):
 
     def __init__(self, meta, **kwargs):
         super(FormatSelectPopup, self).__init__(**kwargs)
-        formats_sorted = sorted(meta['formats'], key=lambda k: int(k['format_id'])) 
+        formats_sorted = sorted(meta['formats'], key=lambda k:k['format']) 
         for format in formats_sorted:
             grid = self.ids.layout
             grid.add_widget(Label(text=format['format'] + ' ' + format['ext']))
@@ -85,7 +85,10 @@ class DownloadStatusBar(BoxLayout):
     index = NumericProperty()
     status_icon = StringProperty('img/work.png')
     title = StringProperty('')
-    percent = NumericProperty()
+    percent = NumericProperty(0)
+    ETA = StringProperty('')
+    speed = StringProperty('')
+    file_size = StringProperty('')
     popup = None
 
     def on_release_show_log_button(self):
@@ -125,6 +128,9 @@ class DownloaderLayout(BoxLayout):
 
     def on_press_button_download(self):
         app = App.get_running_app()
+        if not bool(app.meta):
+            with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
+                app.meta = ydl.extract_info(app.url, download = False)
 
         # if the format method is set to 'Ask', get the metadata which contains the available formats for this url
         format_method = app.config.get('general', 'method')

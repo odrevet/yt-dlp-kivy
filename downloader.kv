@@ -148,6 +148,7 @@
         id: rv
 
 <DownloadStatusBar>:
+    orientation: 'horizontal'
     padding: 5
     bcolor: .6, .6, .6, 1
     canvas.before:
@@ -155,7 +156,7 @@
             rgba: self.bcolor
         Rectangle:
             pos: self.pos
-            size: self.size    
+            size: self.size
     Label:
         text: root.url if root.title == '' else root.title
         text_size: self.width, None
@@ -183,13 +184,11 @@
     viewclass: 'DownloadStatusBar'
     RecycleBoxLayout:
         id: rbl
-        default_size: None, dp(26)
+        default_size: None, dp(60)
         default_size_hint: 1, None
         size_hint_y: None
         height: self.minimum_height
         orientation: 'vertical'
-        multiselect: True
-        touch_multiselect: True
 
 <RootLayout>:
     BoxLayout:
