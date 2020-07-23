@@ -157,11 +157,15 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    Label:
-        text: root.url if root.title == '' else root.title
-        text_size: self.width, None
-        height: self.texture_size[1]
-        size_hint_x: .8
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.url if root.title == '' else root.title
+            text_size: self.width, None
+            height: self.texture_size[1]
+            size_hint_x: .8
+        ProgressBar:
+            value: root.percent
     Image:
         x: self.parent.x
         y: self.parent.y
@@ -179,6 +183,7 @@
             size: self.parent.size
             stretch: True
             source: 'img/report.png'
+
 
 <RV>:
     viewclass: 'DownloadStatusBar'
