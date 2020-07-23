@@ -83,7 +83,7 @@ class DownloadStatusBar(BoxLayout):
     status = NumericProperty(STATUS_IN_PROGRESS)
     log = StringProperty('')
     index = NumericProperty()
-    status_icon = StringProperty('img/work.png')
+    status_icon = StringProperty('img/loader.png')
     title = StringProperty('')
     percent = NumericProperty(0)
     ETA = StringProperty('')
@@ -97,7 +97,7 @@ class DownloadStatusBar(BoxLayout):
 
     def on_status(self, instance, value):
         if (value == STATUS_IN_PROGRESS):
-            self.status_icon = 'img/work.png'
+            self.status_icon = 'img/loader.png'
         elif (value == STATUS_DONE):
             self.status_icon = 'img/correct.png'
         elif (value == STATUS_ERROR):
