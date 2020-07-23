@@ -76,7 +76,7 @@ class InfoDisplayPopup(Popup):
     def __init__(self, meta, **kwargs):
         super(InfoDisplayPopup, self).__init__(**kwargs)
         self.meta = meta
-        self.ids.info_label.text = str(meta.keys())
+        self.ids.info_label.text = meta['description']
 
 class DownloadStatusBar(BoxLayout):
     url = StringProperty('')
