@@ -49,6 +49,7 @@
                 text_size: self.width, None
                 size_hint: 1, None
                 height: self.texture_size[1]
+                on_ref_press: root.on_ref_press(args[1])
                 markup: True
         Button:
             text: 'Close'
@@ -82,12 +83,9 @@
     BoxLayout:
         orientation: 'vertical'
         ScrollView:
-            Label: 
-                id: info_label
-                size: self.texture_size
-                text_size: self.width, None
-                size_hint: 1, None
-                height: self.texture_size[1]
+            BoxLayout:
+                id: view
+                orientation: 'vertical'
         Button:
             size_hint_y: .1
             text: 'Close'
@@ -164,7 +162,7 @@
             text_size: self.width, None
             height: self.texture_size[1]
         Label:
-            text: str(root.percent) + '%' + ' ' + root.speed + ' ' + root.file_size + ' ' + root.ETA
+            text: '{:5.2f}% {} {} {}'.format(root.percent, root.file_size, root.speed, root.ETA)
             text_size: self.width, None
             height: self.texture_size[1]
         ProgressBar:

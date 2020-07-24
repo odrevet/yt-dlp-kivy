@@ -21,6 +21,7 @@ from kivy.uix.recycleview import RecycleView
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import platform
 from kivy.uix.checkbox import CheckBox
+from kivy.uix.image import AsyncImage
 
 if platform == 'android':
     from android.storage import primary_external_storage_path
@@ -37,8 +38,10 @@ from status import STATUS_IN_PROGRESS, STATUS_DONE, STATUS_ERROR
 class RV(RecycleView):
     pass
 
+
 class ActionBarMain(ActionBar):
     pass
+
 
 class LogPopup(Popup):
     log = StringProperty()
@@ -49,13 +52,14 @@ class LogPopup(Popup):
         self.log = log
         self.index = index
 
+
 class FormatSelectPopup(Popup):
     meta = {}
     selected_format_id = []
 
     def __init__(self, meta, **kwargs):
         super(FormatSelectPopup, self).__init__(**kwargs)
-        formats_sorted = sorted(meta['formats'], key=lambda k:k['format']) 
+        formats_sorted = sorted(meta['formats'], key=lambda k: k['format'])
         for format in formats_sorted:
             grid = self.ids.layout
             grid.add_widget(Label(text=format['format'] + ' ' + format['ext']))
@@ -70,13 +74,27 @@ class FormatSelectPopup(Popup):
         else:
             self.selected_format_id.remove(format_id)
 
+
 class InfoDisplayPopup(Popup):
     meta = {}
 
     def __init__(self, meta, **kwargs):
         super(InfoDisplayPopup, self).__init__(**kwargs)
         self.meta = meta
-        self.ids.info_label.text = meta['description']
+
+        self.add_to_view(Label(text='[b]'+meta['title']+'[/b]', markup=True))
+
+        if meta['description']:
+            self.add_to_view(Label(text=meta['description']))
+
+        if meta['thumbnails']:
+            url = meta['thumbnails'][0]['url']
+            thumbnail = AsyncImage(source=url)
+            self.add_to_view(thumbnail)
+
+    def add_to_view(self, widget):
+        self.ids.view.add_widget(widget)
+
 
 class DownloadStatusBar(BoxLayout):
     url = StringProperty('')
@@ -107,6 +125,7 @@ class DownloadStatusBar(BoxLayout):
         if(self.popup is not None and instance.index == self.popup.index):
             self.popup.log = value
 
+
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
 
@@ -115,8 +134,8 @@ class DownloaderLayout(BoxLayout):
         try:
             if not bool(app.meta):
                 with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
-                    app.meta = ydl.extract_info(app.url, download = False)
-            
+                    app.meta = ydl.extract_info(app.url, download=False)
+
             self.popup = InfoDisplayPopup(app.meta)
             self.popup.open()
         except Exception as inst:
@@ -124,28 +143,27 @@ class DownloaderLayout(BoxLayout):
 
     def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
         if instance.selected_format_id:
-            self.start_download(url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}}, meta)
+            self.start_download(
+                url, {**ydl_opts, **{'format': ','.join(instance.selected_format_id)}}, meta)
 
     def on_press_button_download(self):
         app = App.get_running_app()
-        if not bool(app.meta):
-            with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
-                app.meta = ydl.extract_info(app.url, download = False)
+        try:
+            if not bool(app.meta):
+                with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
+                    app.meta = ydl.extract_info(app.url, download=False)
+        except Exception as e:
+            print('Error while trying to extract info: ' + str(e))
+            return
 
-        # if the format method is set to 'Ask', get the metadata which contains the available formats for this url
         format_method = app.config.get('general', 'method')
         if format_method == 'Ask':
-            try:
-                if not bool(app.meta):
-                    with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
-                        app.meta = ydl.extract_info(app.url, download = False)
-                
-                self.popup = FormatSelectPopup(app.meta)
-                callback = partial(self.on_format_select_popup_dismiss, app.url, app.ydl_opts, app.meta)
-                self.popup.bind(on_dismiss=callback)
-                self.popup.open()
-            except Exception as inst:
-                print('Exception: ' + str(inst))
+            self.popup = FormatSelectPopup(app.meta)
+            callback = partial(self.on_format_select_popup_dismiss,
+                               app.url, app.ydl_opts, app.meta)
+            self.popup.bind(on_dismiss=callback)
+            self.popup.open()
+
         else:
             self.start_download(app.url, app.ydl_opts, app.meta)
 
@@ -170,14 +188,16 @@ class DownloaderLayout(BoxLayout):
 class RootLayout(Label):
     pass
 
+
 class StatusIcon(Label):
     status = NumericProperty(1)
+
 
 class DownloaderApp(App):
     meta = DictProperty()
     ydl_opts = DictProperty()
     url = StringProperty()
-    filetmpl = '%(title)s.%(ext)s'
+    filetmpl = '%(title)s_%(format)s.%(ext)s'
 
     def get_output_dir(self):
         if platform == 'android':
