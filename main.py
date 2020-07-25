@@ -1,7 +1,6 @@
 import os
 import sys
 import threading
-import traceback
 from os.path import expanduser, join
 from functools import partial
 
