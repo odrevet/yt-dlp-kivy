@@ -21,7 +21,7 @@ class YdlLogger(object):
             self.rv.data[self.index]['log'] += f"{msg}\n"
             if msg.endswith('has already been downloaded'):
                 self.rv.data[self.index]['percent'] = 100
-                self.rv.data[self.index]['ETA'] = 'This video has alderly been downloaded'
+                self.rv.data[self.index]['ETA'] = 'Video has alderly been downloaded'
 
         self.rv.refresh_from_data()
 
