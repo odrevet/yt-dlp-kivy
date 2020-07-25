@@ -59,6 +59,7 @@ class FormatSelectPopup(Popup):
 
     def __init__(self, meta, **kwargs):
         super(FormatSelectPopup, self).__init__(**kwargs)
+        self.selected_format_id.clear()
         formats_sorted = sorted(meta['formats'], key=lambda k: k['format'])
         for format in formats_sorted:
             grid = self.ids.layout
