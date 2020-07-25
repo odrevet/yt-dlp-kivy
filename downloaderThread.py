@@ -3,7 +3,7 @@ import traceback
 
 import youtube_dl
 
-from status import STATUS_IN_PROGRESS, STATUS_DONE, STATUS_ERROR
+from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
 
 class DownloaderThread(threading.Thread):

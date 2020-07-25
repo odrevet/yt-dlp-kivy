@@ -1,37 +1,36 @@
 import os
 import sys
 import threading
-from os.path import expanduser, join
 from functools import partial
+from os.path import expanduser, join
 
 import kivy
 import youtube_dl
 from kivy.app import App
 from kivy.factory import Factory
-from kivy.properties import DictProperty, StringProperty, NumericProperty
+from kivy.properties import DictProperty, NumericProperty, StringProperty
 from kivy.uix.actionbar import ActionBar
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.label import Label
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import AsyncImage
+from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.recycleview import RecycleView
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import platform
-from kivy.uix.checkbox import CheckBox
-from kivy.uix.image import AsyncImage
+
+from about import AboutPopup
+from downloaderThread import DownloaderThread
+from logger import YdlLogger
+from settings_json import settings_json
+from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
 if platform == 'android':
     from android.storage import primary_external_storage_path
     from android.permissions import check_permission, request_permissions, Permission
-
-from downloaderThread import DownloaderThread
-from about import AboutPopup
-from logger import YdlLogger
-from settings_json import settings_json
-
-from status import STATUS_IN_PROGRESS, STATUS_DONE, STATUS_ERROR
 
 
 class RV(RecycleView):
