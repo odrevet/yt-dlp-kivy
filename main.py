@@ -193,8 +193,8 @@ class StatusIcon(Label):
 
 
 class DownloaderApp(App):
-    meta = DictProperty()
-    ydl_opts = DictProperty()
+    meta = {}
+    ydl_opts = {}
     url = StringProperty()
     filetmpl = '%(title)s_%(format)s.%(ext)s'
 
