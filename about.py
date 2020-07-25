@@ -11,7 +11,7 @@ import webbrowser
 class AboutPopup(Popup):
     about_text = StringProperty(f'''[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref] 
 2020 Olivier Drevet
-Version 0.2 
+Version 0.2.1
 Released Under the GPL-v3 License
 
 [ref=https://youtube-dl.org/][b]Youtube-dl[/b][/ref] 

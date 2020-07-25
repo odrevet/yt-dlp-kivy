@@ -12,7 +12,7 @@ source.dir = .
 source.include_exts = py,kv,png
 source.include_patterns = img/*.png
 
-version = 0.2
+version = 0.2.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
