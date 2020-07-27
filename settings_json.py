@@ -72,6 +72,13 @@ settings_json = json.dumps([
         "desc": "Location where to store downloaded videos",
         "section": "general",
         "key": "savedir"
+    },
+    {
+        "type": "string",
+        "title": "Output template",
+        "desc": "Template for output names",
+        "section": "general",
+        "key": "filetmpl"
     }
 
 ]

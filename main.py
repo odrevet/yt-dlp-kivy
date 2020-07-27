@@ -196,7 +196,6 @@ class DownloaderApp(App):
     meta = {}
     ydl_opts = {}
     url = StringProperty()
-    filetmpl = '%(title)s_%(format)s.%(ext)s'
 
     def get_output_dir(self):
         if platform == 'android':
@@ -214,7 +213,7 @@ class DownloaderApp(App):
             'call_home': False,
             'nocheckcertificate': False,
             'prefer_insecure': platform == 'android',
-            'outtmpl': join(self.get_output_dir(), self.filetmpl),
+            'filetmpl': '%(title)s_%(format)s.%(ext)s',
             'savedir': self.get_output_dir()
         })
 
@@ -223,7 +222,9 @@ class DownloaderApp(App):
 
     def on_config_change(self, config, section, key, value):
         if(key == 'savedir'):
-            self.ydl_opts['outtmpl'] = join(value, self.filetmpl)
+            self.ydl_opts['outtmpl'] = join(value, self.config.get('general', 'filetmpl'))
+        elif(key == 'filetmpl'):
+            self.ydl_opts['outtmpl'] = join(self.config.get('general', 'savedir', value))
         elif(key == 'preset' or (key == 'method' and value == 'Preset')):
             self.ydl_opts['format'] = self.config.get(
                 'general', 'preset')
@@ -249,7 +250,7 @@ class DownloaderApp(App):
         self.ydl_opts['prefer_insecure'] = self.config.get(
             'general', 'prefer_insecure')
         self.ydl_opts['outtmpl'] = join(
-            self.config.get('general', 'savedir'), self.filetmpl)
+            self.config.get('general', 'savedir'), self.config.get('general', 'filetmpl'))
 
         if self.config.get('general', 'method') == 'Preset':
             self.ydl_opts['format'] = self.config.get(
