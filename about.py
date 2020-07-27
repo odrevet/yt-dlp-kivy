@@ -1,5 +1,4 @@
 import sys
-import subprocess
 import pkg_resources
 import webbrowser
 import youtube_dl
@@ -9,18 +8,8 @@ from kivy.uix.popup import Popup
 
 
 class AboutPopup(Popup):
-    ffmpeg_output = ''
-
     def __init__(self, **kwargs):
         super(AboutPopup, self).__init__(**kwargs)
-
-        try:
-            self.ffmpeg_output = subprocess.check_output(['ffmpeg', "-version"])
-        except OSError as e:
-            if e.errno == errno.ENOENT:
-                self.ffmpeg_output = 'ffmpeg was not found : ' + str(e)
-            else:
-                self.ffmpeg_output = 'Error while trying to get ffmpeg version: ' + str(e)
 
         self.ids.about_label.text = f'''[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
 2020 Olivier Drevet
@@ -39,10 +28,7 @@ MIT License
 Version {sys.version}
 
 [ref=https://www.flaticon.com][b]Icons[/b][/ref]
-by Freepik from www.flaticon.com
-
-[ref=https://ffmpeg.org/][b]ffmpeg[/b][/ref]
-{self.ffmpeg_output}'''
+by Freepik from www.flaticon.com'''
 
     def on_ref_press(self, url):
         webbrowser.open(url)
