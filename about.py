@@ -11,16 +11,18 @@ from kivy.uix.popup import Popup
 class AboutPopup(Popup):
     ffmpeg_output = ''
 
-    try:
-        ffmpeg_output = subprocess.check_output(['ffmpeg', "-version"])
-    except OSError as e:
-        if e.errno == errno.ENOENT:
-            ffmpeg_output = 'ffmpeg was not found : ' + str(e)
-        else:
-            ffmpeg_output = 'Error while trying to get ffmpeg version: ' + \
-                str(e)
+    def __init__(self, **kwargs):
+        super(AboutPopup, self).__init__(**kwargs)
 
-    about_text = StringProperty(f'''[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
+        try:
+            self.ffmpeg_output = subprocess.check_output(['ffmpeg', "-version"])
+        except OSError as e:
+            if e.errno == errno.ENOENT:
+                self.ffmpeg_output = 'ffmpeg was not found : ' + str(e)
+            else:
+                self.ffmpeg_output = 'Error while trying to get ffmpeg version: ' + str(e)
+
+        self.ids.about_label.text = f'''[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
 2020 Olivier Drevet
 Version 0.2.1
 Released Under the GPL-v3 License
@@ -40,7 +42,7 @@ Version {sys.version}
 by Freepik from www.flaticon.com
 
 [ref=https://ffmpeg.org/][b]ffmpeg[/b][/ref]
-{ffmpeg_output}''')
+{self.ffmpeg_output}'''
 
-def on_ref_press(self, url):
-    webbrowser.open(url)
+    def on_ref_press(self, url):
+        webbrowser.open(url)
