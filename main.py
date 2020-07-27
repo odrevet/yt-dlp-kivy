@@ -222,15 +222,15 @@ class DownloaderApp(App):
 
     def on_config_change(self, config, section, key, value):
         if(key == 'savedir'):
-            self.ydl_opts['outtmpl'] = join(value, self.config.get('general', 'filetmpl'))
+            self.ydl_opts['outtmpl'] = join(value,
+                                            self.config.get('general', 'filetmpl'))
         elif(key == 'filetmpl'):
-            self.ydl_opts['outtmpl'] = join(self.config.get('general', 'savedir', value))
+            self.ydl_opts['outtmpl'] = join(self.config.get('general', 'savedir'),
+                                            value)
         elif(key == 'preset' or (key == 'method' and value == 'Preset')):
-            self.ydl_opts['format'] = self.config.get(
-                'general', 'preset')
+            self.ydl_opts['format'] = self.config.get('general', 'preset')
         elif(key == 'custom' or (key == 'method' and value == 'Custom')):
-            self.ydl_opts['format'] = self.config.get(
-                'general', 'custom')
+            self.ydl_opts['format'] = self.config.get('general', 'custom')
         elif key == 'method' and value == 'Ask':
             self.ydl_opts.pop('format', None)
         else:
@@ -242,22 +242,17 @@ class DownloaderApp(App):
 
         self.ydl_opts['quiet'] = self.config.get('general', 'quiet')
         self.ydl_opts['nowarning'] = self.config.get('general', 'nowarning')
-        self.ydl_opts['ignoreerrors'] = self.config.get(
-            'general', 'ignoreerrors')
+        self.ydl_opts['ignoreerrors'] = self.config.get('general', 'ignoreerrors')
         self.ydl_opts['call_home'] = self.config.get('general', 'call_home')
-        self.ydl_opts['nocheckcertificate'] = self.config.get(
-            'general', 'nocheckcertificate')
-        self.ydl_opts['prefer_insecure'] = self.config.get(
-            'general', 'prefer_insecure')
-        self.ydl_opts['outtmpl'] = join(
-            self.config.get('general', 'savedir'), self.config.get('general', 'filetmpl'))
+        self.ydl_opts['nocheckcertificate'] = self.config.get('general', 'nocheckcertificate')
+        self.ydl_opts['prefer_insecure'] = self.config.get('general', 'prefer_insecure')
+        self.ydl_opts['outtmpl'] = join(self.config.get('general', 'savedir'),
+                                        self.config.get('general', 'filetmpl'))
 
         if self.config.get('general', 'method') == 'Preset':
-            self.ydl_opts['format'] = self.config.get(
-                'general', 'preset')
+            self.ydl_opts['format'] = self.config.get('general', 'preset')
         elif self.config.get('general', 'method') == 'Custom':
-            self.ydl_opts['format'] = self.config.get(
-                'general', 'custom')
+            self.ydl_opts['format'] = self.config.get('general', 'custom')
 
         self.use_kivy_settings = False
         return RootLayout()
