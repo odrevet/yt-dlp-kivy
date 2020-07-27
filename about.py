@@ -1,32 +1,46 @@
 import sys
-
-import kivy
-import youtube_dl
-from kivy.properties import StringProperty
-from kivy.uix.popup import Popup
+import subprocess
 import pkg_resources
 import webbrowser
+import youtube_dl
+import kivy
+from kivy.properties import StringProperty
+from kivy.uix.popup import Popup
 
 
 class AboutPopup(Popup):
-    about_text = StringProperty(f'''[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref] 
+    ffmpeg_output = ''
+
+    try:
+        ffmpeg_output = subprocess.check_output(['ffmpeg', "-version"])
+    except OSError as e:
+        if e.errno == errno.ENOENT:
+            ffmpeg_output = 'ffmpeg was not found : ' + str(e)
+        else:
+            ffmpeg_output = 'Error while trying to get ffmpeg version: ' + \
+                str(e)
+
+    about_text = StringProperty(f'''[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
 2020 Olivier Drevet
 Version 0.2.1
 Released Under the GPL-v3 License
 
-[ref=https://youtube-dl.org/][b]Youtube-dl[/b][/ref] 
-Version {pkg_resources.get_distribution('Youtube-dl').version} 
+[ref=https://youtube-dl.org/][b]Youtube-dl[/b][/ref]
+Version {pkg_resources.get_distribution('Youtube-dl').version}
 Unlicense License
 
 [ref=https://kivy.org][b]Kivy[/b][/ref]
 Version {kivy.__version__}
 MIT License
 
-[ref=https://www.python.org][b]Python[/b][/ref] 
+[ref=https://www.python.org][b]Python[/b][/ref]
 Version {sys.version}
 
 [ref=https://www.flaticon.com][b]Icons[/b][/ref]
-by Freepik from www.flaticon.com''')
+by Freepik from www.flaticon.com
 
-    def on_ref_press(self, url):
-        webbrowser.open(url)
+[ref=https://ffmpeg.org/][b]ffmpeg[/b][/ref]
+{ffmpeg_output}''')
+
+def on_ref_press(self, url):
+    webbrowser.open(url)
