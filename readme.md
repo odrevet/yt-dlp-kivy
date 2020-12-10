@@ -1,5 +1,7 @@
 User interface for youtube-dl using the Kivy framework
 
+Documentation assume you are using Python 3 with pip 3.
+
 # Usage
 
 * With a web browser, copy the url of the video that you want to download.
@@ -8,34 +10,21 @@ User interface for youtube-dl using the Kivy framework
 
 # Dependancies
 
-* youtube-dl
+	pip install kivy[full] youtube_dl
 
-    python -m pip install youtube_dl
-
-* Kivy
-
-    python -m pip install --upgrade --user pip setuptools virtualenv
-    python -m pip install kivy
-
-# run (Under Linux)
+# run (Desktop)
 
     python main.py
 
 
 # Android build (from Ubuntu)
 
-see
-
-* install buildozer
-
-    pip3 install --user --upgrade buildozer
-
-* Install dependencies
+See https://buildozer.readthedocs.io/en/latest/installation.html
 
 
 ```
 sudo apt install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-pip3 install --user --upgrade Cython==0.29.19 virtualenv  # the --user should be removed if you do this in a venv
+pip install --user --upgrade Cython==0.29.19 virtualenv buildozer
 
 # add the following line at the end of your ~/.bashrc file
 export PATH=$PATH:~/.local/bin/
