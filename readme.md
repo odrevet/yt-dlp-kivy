@@ -42,7 +42,9 @@ At the first run, buildozer will install android depandancies such as ANT, SDK a
 
 ## Utils
 
-Must be run with bash from the project root directory (where this file, readme.md is)
+**Must be run using bash** from the project root directory (where this file, readme.md is)
+
+In case of errors, check utils/config.sh and adjust the exported shell variables
 
 A typical session is :
 
@@ -64,7 +66,7 @@ Signe the apk
 
 uninstall the app on on a connected phone then install the app on the phone
 
-The keystore included is needed to signe the app, the password is 123456
+The keystore included is needed to signe the app, **the password is 123456**
 
 * config.sh
 
