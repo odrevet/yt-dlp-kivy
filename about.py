@@ -37,8 +37,9 @@ MIT License
 [ref=https://www.python.org][b]Python[/b][/ref]
 Version {sys.version}
 
-[ref=https://www.flaticon.com][b]Icons[/b][/ref]
-by Freepik from www.flaticon.com
+[ref=https://heroicons.dev][b]Icons[/b][/ref]
+by heroicons
+MIT License
 
 [ref=https://ffmpeg.org/][b]ffmpeg[/b][/ref]
 {self.ffmpeg_output}'''

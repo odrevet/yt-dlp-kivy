@@ -4,6 +4,7 @@
 #:import Factory kivy.factory.Factory
 
 <ActionBarMain>:
+    background_color: 128, 128, 128, 0.75
     pos_hint: {'top':1}
     ActionView:
         use_separator: True
@@ -204,7 +205,7 @@
             id: action_bar_main
         DownloaderLayout:
             id: main_layout
-            bcolor: .2, .25, .3, 1
+            bcolor: .75, .75, .75, .75
             canvas.before:
                 Color:
                     rgba: self.bcolor
