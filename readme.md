@@ -10,7 +10,17 @@ Documentation assume you are using Python 3 with pip 3.
 
 # Dependancies
 
-	pip install kivy[full] youtube_dl
+* Python 
+
+	pip install "kivy[full]" youtube_dl
+
+
+* System 
+
+xsel is required to use the clipboard button (copy url from clipboard into input)
+
+    sudo apt install xsel
+
 
 # run (Desktop)
 
