@@ -2,7 +2,7 @@
 
 source utils/config.sh
 ANDROID_SDK_DIR=~/.buildozer/android/platform/android-sdk
-BUILD_TOOLS_VERSION='30.0.0'
+BUILD_TOOLS_VERSION='33.0.0'
 BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 APP_VERSION=0.2.1
 TARGET_ARCH=armeabi-v7a
