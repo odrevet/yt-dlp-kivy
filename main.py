@@ -5,7 +5,7 @@ from functools import partial
 from os.path import expanduser, join
 
 import kivy
-import youtube_dl
+import yt_dlp
 from kivy.app import App
 from kivy.factory import Factory
 from kivy.properties import DictProperty, NumericProperty, StringProperty
@@ -132,8 +132,8 @@ class DownloaderLayout(BoxLayout):
         app = App.get_running_app()
         try:
             if not bool(app.meta):
-                with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
-                    app.meta = ydl.extract_info(app.url, download=False)
+                with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
+                    app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
 
             self.popup = InfoDisplayPopup(app.meta)
             self.popup.open()
@@ -152,8 +152,8 @@ class DownloaderLayout(BoxLayout):
         app = App.get_running_app()
         try:
             if not bool(app.meta):
-                with youtube_dl.YoutubeDL(app.ydl_opts) as ydl:
-                    app.meta = ydl.extract_info(app.url, download=False)
+                with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
+                    app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
         except Exception as e:
             print("Error while trying to extract info: " + str(e))
             return
@@ -187,7 +187,7 @@ class DownloaderLayout(BoxLayout):
         # Create a logger
         ydl_opts["logger"] = YdlLogger(self.ids.rv, index)
 
-        # Run youtube-dl in a thread so the UI do not freeze
+        # Run in a thread so the UI do not freeze when download
         t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1])
         t.start()
 

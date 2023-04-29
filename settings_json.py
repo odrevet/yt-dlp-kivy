@@ -68,13 +68,6 @@ settings_json = json.dumps(
             "key": "ignoreerrors",
         },
         {
-            "type": "bool",
-            "title": "Call home",
-            "desc": "Allow to contact the general servers for debugging",
-            "section": "general",
-            "key": "call_home",
-        },
-        {
             "type": "path",
             "title": "Download location",
             "desc": "Location where to store downloaded videos",

@@ -12,11 +12,11 @@ source.dir = .
 source.include_exts = py,kv,png
 source.include_patterns = img/*.png
 
-version = 0.2.1
+version = 0.3.0
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = openssl,requests,youtube-dl,kivy
+requirements = openssl,requests,yt-dlp,kivy
 
 # (str) Supported orientation (one of landscape, portrait or all)
 orientation = portrait

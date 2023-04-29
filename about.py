@@ -20,12 +20,12 @@ class AboutPopup(Popup):
             self.ffmpeg_output = str(e)
 
         self.ids.about_label.text = f"""[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
-2020 Olivier Drevet
-Version 0.2.1
+2023 Olivier Drevet
+Version 0.3.0
 Released Under the GPL-v3 License
 
-[ref=https://youtube-dl.org/][b]Youtube-dl[/b][/ref]
-Version {pkg_resources.get_distribution('Youtube-dl').version}
+[ref=https://github.com/yt-dlp/yt-dlp][b]yt-dlp[/b][/ref]
+Version {pkg_resources.get_distribution('yt-dlp').version}
 Unlicense License
 
 [ref=https://kivy.org][b]Kivy[/b][/ref]

@@ -1,4 +1,4 @@
-#:kivy 1.11.1
+#:kivy 2.1.0
 #:import Window kivy.core.window.Window
 #:import Clipboard kivy.core.clipboard.Clipboard
 #:import Factory kivy.factory.Factory
@@ -75,7 +75,7 @@
             size_hint_y: .1
             text: 'Close'
             on_release: root.dismiss()
-            height: '30dp'  
+            height: '30dp'
 
 <InfoDisplayPopup>:
     auto_dismiss: False
@@ -106,7 +106,7 @@
             size_hint_y: .1
             text: 'Close'
             on_release: root.dismiss()
-            height: '30dp'                 
+            height: '30dp'
 
 <DownloaderLayout>:
     orientation: 'vertical'
@@ -130,7 +130,7 @@
                 y: self.parent.y
                 size: self.parent.size
                 stretch: True
-                source: 'img/info.png'            
+                source: 'img/info.png'
         Button:
             id: download_button
             on_press: root.on_press_button_download()
@@ -211,4 +211,4 @@
                     rgba: self.bcolor
                 Rectangle:
                     pos: self.pos
-                    size: self.size            
+                    size: self.size

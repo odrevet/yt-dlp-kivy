@@ -1,4 +1,4 @@
-User interface for youtube-dl using the Kivy framework
+User interface for yt-dlp using the Kivy framework
 
 Documentation assume you are using Python 3 with pip 3.
 
@@ -59,5 +59,4 @@ Define  variables shared by the utils scripts
 
 * https://kivy.org/doc/stable/installation/installation-linux.html
 * https://buildozer.readthedocs.io/en/latest/installation.html
-* https://github.com/ytdl-org/youtube-dl#embedding-youtube-dl
-* https://github.com/ytdl-org/youtube-dl/blob/3e4cedf9e8cd3157df2457df7274d0c842421945/youtube_dl/YoutubeDL.py#L137-L312
+* https://github.com/yt-dlp/yt-dlp#embedding-yt-dlp
