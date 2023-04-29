@@ -9,11 +9,12 @@ Documentation assume you are using Python 3 with pip 3.
 
 # Prerequists
 
-Kivy must be installed to run
+* Kivy (run)
+* Buildozer (build for android)
 
 ## Docker
 
-I maintain a Dockerfile here https://gist.github.com/odrevet/a9630ed9d9974d88f694a4d4c2a3750c
+I maintain a Dockerfile here https://gist.github.com/odrevet/a9630ed9d9974d88f694a4d4c2a3750c with Kivy and buildozer
 
 ```
 docker build -t kivy .
