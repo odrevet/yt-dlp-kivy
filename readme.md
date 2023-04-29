@@ -4,55 +4,26 @@ Documentation assume you are using Python 3 with pip 3.
 
 # Usage
 
-* With a web browser, copy the url of the video that you want to download.
-* Enter an url in the upper text input
-* Clik on the 'Download' button
+* Past or enter video URL to download in the text field.
+* Click on the 'Download' button
 
-# Dependancies
+# Prerequists
 
-* Python 
+Kivy must be installed to run
 
-	pip install "kivy[full]" youtube_dl
+## Docker
 
-
-* System 
-
-xsel is required to use the clipboard button (copy url from clipboard into input)
-
-    sudo apt install xsel
-
-
-# run (Desktop)
-
-    python main.py
-
-
-# Android build (from Ubuntu)
-
-See https://buildozer.readthedocs.io/en/latest/installation.html
-
+I maintain a Dockerfile here https://gist.github.com/odrevet/a9630ed9d9974d88f694a4d4c2a3750c
 
 ```
-sudo apt install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-pip install --user --upgrade Cython==0.29.19 virtualenv buildozer
-
-# add the following line at the end of your ~/.bashrc file
-export PATH=$PATH:~/.local/bin/
+docker build -t kivy .
+docker run -it -v $(pwd):/app kivy bash
+pip3 install youtube_dl
 ```
-
-* Build command:
-
-    buildozer android release
-
-At the first run, buildozer will install android depandancies such as ANT, SDK and NDK.
-
-* Build and install debug version
-
-    buildozer android debug deploy run
 
 ## Utils
 
-**Must be run using bash** from the project root directory (where this file, readme.md is)
+**Must be run using bash**
 
 In case of errors, check utils/config.sh and adjust the exported shell variables
 

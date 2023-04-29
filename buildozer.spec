@@ -19,7 +19,7 @@ version = 0.2.1
 requirements = openssl,requests,youtube-dl,kivy
 
 # (str) Supported orientation (one of landscape, portrait or all)
-orientation = all
+orientation = portrait
 
 fullscreen = 0
 
