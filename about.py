@@ -2,7 +2,7 @@ import sys
 from subprocess import check_output
 import pkg_resources
 import webbrowser
-import youtube_dl
+import yt_dlp
 import kivy
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup

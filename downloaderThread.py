@@ -1,7 +1,7 @@
 import threading
 import traceback
 
-import youtube_dl
+import yt_dlp
 
 from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
