@@ -14,12 +14,12 @@ Documentation assume you are using Python 3 with pip 3.
 
 ## Docker
 
-I maintain a Dockerfile here https://gist.github.com/odrevet/a9630ed9d9974d88f694a4d4c2a3750c with Kivy and buildozer
+Use the Dockerfile, modified from https://gist.github.com/odrevet/a9630ed9d9974d88f694a4d4c2a3750c
+contains Kivy and buildozer
 
 ```
 docker build -t kivy .
 docker run -it -v $(pwd):/app kivy bash
-pip3 install youtube_dl
 ```
 
 ## Utils
