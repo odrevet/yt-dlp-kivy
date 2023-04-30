@@ -1,18 +1,18 @@
 [app]
 
-title = youtube-dl
+title = yt-dlp-kivy
 
 # (str) Package name
-package.name = youtube_dl_kivy
+package.name = yt_dlp_kivy
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = fr.odrevet.youtube_dl_kivy
+package.domain = fr.odrevet.yt_dlp_kivy
 
 source.dir = .
 source.include_exts = py,kv,png
 source.include_patterns = img/*.png
 
-version = 0.3.0
+version = 0.1.0
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
