@@ -21,7 +21,7 @@ class AboutPopup(Popup):
 
         self.ids.about_label.text = f"""[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
 2023 Olivier Drevet
-Version 0.3.0
+Version 0.1.0
 Released Under the GPL-v3 License
 
 [ref=https://github.com/yt-dlp/yt-dlp][b]yt-dlp[/b][/ref]
