@@ -8,7 +8,7 @@ package.name = yt_dlp_kivy
 # (str) Package domain (needed for android/ios packaging)
 package.domain = fr.odrevet.yt_dlp_kivy
 
-source.dir = .
+source.dir = src
 source.include_exts = py,kv,png
 source.include_patterns = img/*.png
 
