@@ -19,7 +19,7 @@ contains Kivy and buildozer
 
 ```
 docker build -t kivy .
-docker run -it -v $(pwd):/app kivy bash
+docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb -v $(pwd):/app kivy bash
 ```
 
 ## Utils
