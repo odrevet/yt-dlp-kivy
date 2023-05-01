@@ -220,7 +220,6 @@ class DownloaderApp(App):
                 "quiet": False,
                 "nowarning": False,
                 "ignoreerrors": False,
-                "call_home": False,
                 "nocheckcertificate": False,
                 "prefer_insecure": platform == "android",
                 "filetmpl": "%(title)s_%(format)s.%(ext)s",
@@ -258,7 +257,6 @@ class DownloaderApp(App):
         self.ydl_opts["quiet"] = self.config.get("general", "quiet")
         self.ydl_opts["nowarning"] = self.config.get("general", "nowarning")
         self.ydl_opts["ignoreerrors"] = self.config.get("general", "ignoreerrors")
-        self.ydl_opts["call_home"] = self.config.get("general", "call_home")
         self.ydl_opts["nocheckcertificate"] = self.config.get(
             "general", "nocheckcertificate"
         )
