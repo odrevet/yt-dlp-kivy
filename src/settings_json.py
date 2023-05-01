@@ -5,17 +5,10 @@ settings_json = json.dumps(
         {
             "type": "options",
             "title": "Format method",
-            "desc": "Set which method to use to select the format",
-            "options": ["Preset", "Custom", "Ask"],
+            "desc": "Use preset format or detect available formats and ask before download",
+            "options": ["Preset", "Ask"],
             "section": "general",
             "key": "method",
-        },
-        {
-            "type": "string",
-            "title": "Custom format",
-            "desc": "Format",
-            "section": "general",
-            "key": "custom",
         },
         {
             "type": "options",

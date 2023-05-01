@@ -76,27 +76,6 @@ class FormatSelectPopup(Popup):
             self.selected_format_id.remove(format_id)
 
 
-class InfoDisplayPopup(Popup):
-    meta = {}
-
-    def __init__(self, meta, **kwargs):
-        super(InfoDisplayPopup, self).__init__(**kwargs)
-        self.meta = meta
-
-        self.add_to_view(Label(text="[b]" + meta["title"] + "[/b]", markup=True))
-
-        if meta["description"]:
-            self.add_to_view(Label(text=meta["description"]))
-
-        if meta["thumbnails"]:
-            url = meta["thumbnails"][0]["url"]
-            thumbnail = AsyncImage(source=url)
-            self.add_to_view(thumbnail)
-
-    def add_to_view(self, widget):
-        self.ids.view.add_widget(widget)
-
-
 class DownloadStatusBar(BoxLayout):
     url = StringProperty("")
     status = NumericProperty(STATUS_IN_PROGRESS)
@@ -217,7 +196,6 @@ class DownloaderApp(App):
             "general",
             {
                 "method": "Preset",
-                "custom": "best",
                 "preset": "best",
                 "quiet": False,
                 "nowarning": False,
@@ -243,8 +221,6 @@ class DownloaderApp(App):
             )
         elif key == "preset" or (key == "method" and value == "Preset"):
             self.ydl_opts["format"] = self.config.get("general", "preset")
-        elif key == "custom" or (key == "method" and value == "Custom"):
-            self.ydl_opts["format"] = self.config.get("general", "custom")
         elif key == "method" and value == "Ask":
             self.ydl_opts.pop("format", None)
         else:
@@ -270,8 +246,6 @@ class DownloaderApp(App):
 
         if self.config.get("general", "method") == "Preset":
             self.ydl_opts["format"] = self.config.get("general", "preset")
-        elif self.config.get("general", "method") == "Custom":
-            self.ydl_opts["format"] = self.config.get("general", "custom")
 
         self.use_kivy_settings = False
         return RootLayout()
