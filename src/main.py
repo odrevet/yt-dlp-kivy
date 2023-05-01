@@ -246,11 +246,9 @@ class DownloaderApp(App):
         ):
             request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
+        # general
         self.ydl_opts["ignoreerrors"] = self.config.get("general", "ignoreerrors")
-        self.ydl_opts["nocheckcertificate"] = self.config.get(
-            "general", "nocheckcertificate"
-        )
-        self.ydl_opts["prefer_insecure"] = self.config.get("general", "prefer_insecure")
+
         self.ydl_opts["outtmpl"] = join(
             self.config.get("general", "savedir"),
             self.config.get("general", "filetmpl"),
@@ -259,6 +257,11 @@ class DownloaderApp(App):
         if self.config.get("general", "method") == "Preset":
             self.ydl_opts["format"] = self.config.get("general", "preset")
 
+        # workarounds
+        self.ydl_opts["nocheckcertificate"] = self.config.get("workarounds", "nocheckcertificate")
+        self.ydl_opts["prefer_insecure"] = self.config.get("workarounds", "prefer_insecure")
+
+        # verbosity
         self.ydl_opts["quiet"] = self.config.get("verbosity", "quiet")
         self.ydl_opts["nowarning"] = self.config.get("verbosity", "nowarning")
         self.ydl_opts["verbose"] = self.config.get("verbosity", "verbose")
