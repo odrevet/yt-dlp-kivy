@@ -209,7 +209,6 @@ class DownloaderApp(App):
             {
                 "quiet": False,
                 "nowarning": False,
-                "verbose": False,
             })
 
         config.setdefaults(
