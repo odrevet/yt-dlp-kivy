@@ -1,6 +1,6 @@
 import json
 
-settings_json = json.dumps(
+general = json.dumps(
     [
         {
             "type": "options",
@@ -24,34 +24,6 @@ settings_json = json.dumps(
             ],
             "section": "general",
             "key": "preset",
-        },
-        {
-            "type": "bool",
-            "title": "Quiet",
-            "desc": "Do not print messages",
-            "section": "general",
-            "key": "quiet",
-        },
-        {
-            "type": "bool",
-            "title": "No warning",
-            "desc": "Do not print messages",
-            "section": "general",
-            "key": "nowarning",
-        },
-        {
-            "type": "bool",
-            "title": "No Check Certificate",
-            "desc": "Do not verify SSL certificates",
-            "section": "general",
-            "key": "nocheckcertificate",
-        },
-        {
-            "type": "bool",
-            "title": "Prefer insecure",
-            "desc": "Use HTTP to retrieve information on YouTube",
-            "section": "general",
-            "key": "prefer_insecure",
         },
         {
             "type": "bool",

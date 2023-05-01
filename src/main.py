@@ -25,7 +25,9 @@ from kivy.utils import platform
 from about import AboutPopup
 from downloaderThread import DownloaderThread
 from logger import YdlLogger
-from settings_json import settings_json
+from settings.general import *
+from settings.verbosity import *
+from settings.workarounds import *
 from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
 if platform == "android":
@@ -197,18 +199,30 @@ class DownloaderApp(App):
             {
                 "method": "Preset",
                 "preset": "best",
-                "quiet": False,
-                "nowarning": False,
                 "ignoreerrors": False,
-                "nocheckcertificate": False,
-                "prefer_insecure": platform == "android",
                 "filetmpl": "%(title)s_%(format)s.%(ext)s",
                 "savedir": self.get_output_dir(),
-            },
-        )
+            })
+
+        config.setdefaults(
+            "verbosity",
+            {
+                "quiet": False,
+                "nowarning": False,
+                "verbose": False,
+            })
+
+        config.setdefaults(
+            "workarounds",
+            {
+                "nocheckcertificate": False,
+                "prefer_insecure": platform == "android",
+            })
 
     def build_settings(self, settings):
-        settings.add_json_panel("general", self.config, data=settings_json)
+        settings.add_json_panel("general", self.config, data=general)
+        settings.add_json_panel("verbosity", self.config, data=verbosity)
+        settings.add_json_panel("workarounds", self.config, data=workarounds)
 
     def on_config_change(self, config, section, key, value):
         if key == "savedir":
@@ -228,12 +242,10 @@ class DownloaderApp(App):
 
     def build(self):
         if platform == "android" and not check_permission(
-            "android.permission.WRITE_EXTERNAL_STORAGE"
+                "android.permission.WRITE_EXTERNAL_STORAGE"
         ):
             request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
 
-        self.ydl_opts["quiet"] = self.config.get("general", "quiet")
-        self.ydl_opts["nowarning"] = self.config.get("general", "nowarning")
         self.ydl_opts["ignoreerrors"] = self.config.get("general", "ignoreerrors")
         self.ydl_opts["nocheckcertificate"] = self.config.get(
             "general", "nocheckcertificate"
@@ -246,6 +258,10 @@ class DownloaderApp(App):
 
         if self.config.get("general", "method") == "Preset":
             self.ydl_opts["format"] = self.config.get("general", "preset")
+
+        self.ydl_opts["quiet"] = self.config.get("verbosity", "quiet")
+        self.ydl_opts["nowarning"] = self.config.get("verbosity", "nowarning")
+        self.ydl_opts["verbose"] = self.config.get("verbosity", "verbose")
 
         self.use_kivy_settings = False
         return RootLayout()
