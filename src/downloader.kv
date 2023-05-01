@@ -112,29 +112,21 @@
     orientation: 'vertical'
     BoxLayout:
         size_hint_y: None
+        height: url_textinput.minimum_height
         TextInput:
             id: url_textinput
             hint_text: 'Video URL'
             size_hint_y: None
+            height: self.minimum_height
             multiline: False
             text: app.url
             on_text: app.url = self.text
             on_text: app.meta = {}
         Button:
-            id: info_display_button
-            on_press: root.on_press_button_info()
-            size_hint_y: None
-            size_hint_x: 0.1
-            Image:
-                x: self.parent.x
-                y: self.parent.y
-                size: self.parent.size
-                stretch: True
-                source: 'img/info.png'
-        Button:
             id: download_button
             on_press: root.on_press_button_download()
             size_hint_y: None
+            height: url_textinput.minimum_height
             size_hint_x: 0.1
             Image:
                 x: self.parent.x
@@ -157,10 +149,19 @@
             size: self.size
     BoxLayout:
         orientation: 'vertical'
+        spacing: '10dp'
         Label:
-            text: root.url if root.title == '' else root.title
+            text: root.url
             text_size: self.width, None
             height: self.texture_size[1]
+            halign: 'left'
+            shorten: True
+        Label:
+            text: root.title
+            text_size: self.width, None
+            height: self.texture_size[1]
+            halign: 'left'
+            shorten: True
         Label:
             text: '{:5.2f}% {} {} {}'.format(root.percent, root.file_size, root.speed, root.ETA)
             text_size: self.width, None

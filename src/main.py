@@ -32,6 +32,8 @@ if platform == "android":
     from android.storage import primary_external_storage_path
     from android.permissions import check_permission, request_permissions, Permission
 
+from kivy.config import Config
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 class RV(RecycleView):
     pass
