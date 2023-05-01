@@ -16,12 +16,5 @@ verbosity = json.dumps(
             "section": "verbosity",
             "key": "nowarning",
         },
-        {
-            "type": "bool",
-            "title": "Verbose",
-            "desc": "Print various debugging information",
-            "section": "verbosity",
-            "key": "verbose",
-        }
     ]
 )

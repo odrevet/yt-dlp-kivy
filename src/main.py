@@ -261,10 +261,9 @@ class DownloaderApp(App):
         self.ydl_opts["nocheckcertificate"] = self.config.get("workarounds", "nocheckcertificate")
         self.ydl_opts["prefer_insecure"] = self.config.get("workarounds", "prefer_insecure")
 
-        # verbosity
+        # # verbosity
         self.ydl_opts["quiet"] = self.config.get("verbosity", "quiet")
         self.ydl_opts["nowarning"] = self.config.get("verbosity", "nowarning")
-        self.ydl_opts["verbose"] = self.config.get("verbosity", "verbose")
 
         self.use_kivy_settings = False
         return RootLayout()
