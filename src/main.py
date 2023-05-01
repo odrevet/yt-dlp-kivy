@@ -111,18 +111,6 @@ class DownloadStatusBar(BoxLayout):
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
 
-    def on_press_button_info(self):
-        app = App.get_running_app()
-        try:
-            if not bool(app.meta):
-                with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
-                    app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
-
-            self.popup = InfoDisplayPopup(app.meta)
-            self.popup.open()
-        except Exception as inst:
-            print("Exception: " + str(inst))
-
     def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
         if instance.selected_format_id:
             self.start_download(
