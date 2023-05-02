@@ -31,6 +31,11 @@ from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 if platform == "android":
     from android.storage import primary_external_storage_path
     from android.permissions import check_permission, request_permissions, Permission
+    from android.storage import app_storage_path
+
+    cache_dir = os.path.join(app_storage_path(), 'cache')
+    os.makedirs(cache_dir, exist_ok=True)
+    os.environ['KIVY_CACHE_DIR'] = cache_dir
 
 class RV(RecycleView):
     pass
