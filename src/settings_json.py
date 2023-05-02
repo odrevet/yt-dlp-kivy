@@ -1,7 +1,11 @@
 import json
 
-general = json.dumps(
+settings_json = json.dumps(
     [
+        {
+            "type": "title",
+            "title": "General"
+        },
         {
             "type": "options",
             "title": "Format method",
@@ -45,6 +49,42 @@ general = json.dumps(
             "desc": "Template for output names",
             "section": "general",
             "key": "filetmpl",
+        },
+        {
+            "type": "title",
+            "title": "Workarounds"
+        },
+        {
+            "type": "bool",
+            "title": "No Check Certificate",
+            "desc": "Suppress HTTPS certificate validation",
+            "section": "workarounds",
+            "key": "nocheckcertificate",
+        },
+        {
+            "type": "bool",
+            "title": "Prefer insecure",
+            "desc": "Use an unencrypted connection to retrieve information about the video (Currently supported only for YouTube)",
+            "section": "workarounds",
+            "key": "prefer_insecure",
+        },
+        {
+            "type": "title",
+            "title": "Verbosity"
+        },
+        {
+            "type": "bool",
+            "title": "Quiet",
+            "desc": "Activate quiet mode. If used with --verbose, print the log to stderr",
+            "section": "verbosity",
+            "key": "quiet",
+        },
+        {
+            "type": "bool",
+            "title": "No warning",
+            "desc": "Ignore warnings",
+            "section": "verbosity",
+            "key": "nowarning",
         },
     ]
 )

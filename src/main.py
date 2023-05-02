@@ -25,9 +25,7 @@ from kivy.utils import platform
 from about import AboutPopup
 from downloaderThread import DownloaderThread
 from logger import YdlLogger
-from settings.general import *
-from settings.verbosity import *
-from settings.workarounds import *
+from settings_json import settings_json
 from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
 if platform == "android":
@@ -207,9 +205,7 @@ class DownloaderApp(App):
             })
 
     def build_settings(self, settings):
-        settings.add_json_panel("general", self.config, data=general)
-        settings.add_json_panel("verbosity", self.config, data=verbosity)
-        settings.add_json_panel("workarounds", self.config, data=workarounds)
+        settings.add_json_panel("Settings", self.config, data=settings_json)
 
     def on_config_change(self, config, section, key, value):
         if key == "savedir":
