@@ -107,18 +107,17 @@
             text: app.url
             on_text: app.url = self.text
             on_text: app.meta = {}
-        Button:
-            id: download_button
-            on_press: root.on_press_button_download()
-            size_hint_y: None
-            height: url_textinput.minimum_height
-            size_hint_x: 0.1
-            Image:
-                x: self.parent.x
-                y: self.parent.y
-                size: self.parent.size
-                stretch: True
-                source: 'img/down-arrow.png'
+    Button:
+        id: download_button
+        on_press: root.on_press_button_download()
+        size_hint_y: None
+        height: url_textinput.minimum_height
+        Image:
+            x: self.parent.x
+            y: self.parent.y
+            size: self.parent.size
+            stretch: True
+            source: 'img/down-arrow.png'
     RV:
         id: rv
 
