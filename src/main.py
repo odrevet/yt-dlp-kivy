@@ -5,9 +5,11 @@ from threading import Lock
 from functools import partial
 from os.path import expanduser, join
 
-import kivy
 import yt_dlp
+
+import kivy
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.properties import DictProperty, NumericProperty, StringProperty
 from kivy.uix.actionbar import ActionBar
@@ -113,6 +115,13 @@ class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
     lock = Lock()  # thread lock
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.refresh_rv, 1)
+
+    def refresh_rv(self, dt):
+        self.ids.rv.refresh_from_data()
+
     def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
         if instance.selected_format_id:
             self.start_download(
@@ -157,7 +166,7 @@ class DownloaderLayout(BoxLayout):
         )
 
         # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.ids.rv, index, self.lock)
+        ydl_opts["logger"] = YdlLogger(self.ids.rv.data[-1], self.lock)
 
         # Run in a thread so the UI do not freeze when download
         t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1], self.lock)

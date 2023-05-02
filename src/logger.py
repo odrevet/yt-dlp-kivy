@@ -2,11 +2,8 @@ import re
 
 
 class YdlLogger(object):
-    rv = None
-
-    def __init__(self, rv, index, lock):
-        self.rv = rv
-        self.index = index
+    def __init__(self, data, lock):
+        self.data = data
         self.lock = lock
 
     def debug(self, msg):
@@ -17,25 +14,21 @@ class YdlLogger(object):
 
         if m is not None:
             with self.lock:
-                self.rv.data[self.index]["percent"] = float(m.group(1))
-                self.rv.data[self.index]["file_size"] = m.group(2)
-                self.rv.data[self.index]["speed"] = m.group(3)
-                self.rv.data[self.index]["ETA"] = m.group(4)
+                self.data["percent"] = float(m.group(1))
+                self.data["file_size"] = m.group(2)
+                self.data["speed"] = m.group(3)
+                self.data["ETA"] = m.group(4)
         else:
             with self.lock:
-                self.rv.data[self.index]["log"] += f"{msg}\n"
+                self.data["log"] += f"{msg}\n"
                 if msg.endswith("has already been downloaded"):
-                    self.rv.data[self.index]["percent"] = 100
-                    self.rv.data[self.index]["ETA"] = "Video has alderly been downloaded"
-
-        self.rv.refresh_from_data()
+                    self.data["percent"] = 100
+                    self.data["ETA"] = "Video has alderly been downloaded"
 
     def warning(self, msg):
         with self.lock:
-            self.rv.data[self.index]["log"] += f"[color=ffff00]{msg}[/color]\n"
-            self.rv.refresh_from_data()
+            self.data["log"] += f"[color=ffff00]{msg}[/color]\n"
 
     def error(self, msg):
         with self.lock:
-            self.rv.data[self.index]["log"] += f"[color=ff0000]{msg}[/color]\n"
-            self.rv.refresh_from_data()
+            self.data["log"] += f"[color=ff0000]{msg}[/color]\n"
