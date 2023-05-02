@@ -4,6 +4,8 @@ import threading
 from threading import Lock
 from functools import partial
 from os.path import expanduser, join
+import uuid
+from datetime import datetime
 
 import yt_dlp
 
@@ -11,7 +13,7 @@ import kivy
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
-from kivy.properties import DictProperty, NumericProperty, StringProperty
+from kivy.properties import DictProperty, NumericProperty, StringProperty, ObjectProperty
 from kivy.uix.actionbar import ActionBar
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -50,12 +52,12 @@ class ActionBarMain(ActionBar):
 
 class LogPopup(Popup):
     log = StringProperty()
-    index = NumericProperty()
+    id = ObjectProperty()
 
     def __init__(self, log, index, **kwargs):
         super(LogPopup, self).__init__(**kwargs)
         self.log = log
-        self.index = index
+        self.id = id
 
 
 class FormatSelectPopup(Popup):
@@ -85,7 +87,7 @@ class DownloadStatusBar(BoxLayout):
     url = StringProperty("")
     status = NumericProperty(STATUS_IN_PROGRESS)
     log = StringProperty("")
-    index = NumericProperty()
+    id = ObjectProperty()
     status_icon = StringProperty("img/loader.png")
     title = StringProperty("")
     percent = NumericProperty(0)
@@ -95,7 +97,7 @@ class DownloadStatusBar(BoxLayout):
     popup = None
 
     def on_release_show_log_button(self):
-        self.popup = LogPopup(self.log, self.index)
+        self.popup = LogPopup(self.log, self.id)
         self.popup.open()
 
     def on_status(self, instance, value):
@@ -107,19 +109,22 @@ class DownloadStatusBar(BoxLayout):
             self.status_icon = "img/cancel.png"
 
     def on_log(self, instance, value):
-        if self.popup is not None and instance.index == self.popup.index:
+        if self.popup is not None and instance.id == self.popup.id:
             self.popup.log = value
 
 
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
     lock = Lock()  # thread lock
+    downloads = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Clock.schedule_interval(self.refresh_rv, 1)
 
     def refresh_rv(self, dt):
+        downloads_array = list(self.downloads.values())
+        self.ids.rv.data = sorted(downloads_array, key=lambda x: x['dt'], reverse=True)
         self.ids.rv.refresh_from_data()
 
     def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
@@ -152,24 +157,24 @@ class DownloaderLayout(BoxLayout):
             self.start_download(app.url, app.ydl_opts, app.meta)
 
     def start_download(self, url, ydl_opts, meta):
-        index = len(self.ids.rv.data)
+        id = uuid.uuid4()
 
         # Add UI status bar for this download
-        self.ids.rv.data.append(
-            {
-                "url": url,
-                "index": index,
-                "log": "",
-                "title": meta["title"],
-                "status": STATUS_IN_PROGRESS,
-            }
-        )
+        self.downloads[id] = {
+            "id": id,
+            "dt": datetime.now(),
+            "url": url,
+            "log": "",
+            "title": meta["title"],
+            "status": STATUS_IN_PROGRESS,
+        }
+
 
         # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.ids.rv.data[-1], self.lock)
+        ydl_opts["logger"] = YdlLogger(self.downloads[id], self.lock)
 
         # Run in a thread so the UI do not freeze when download
-        t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1], self.lock)
+        t = DownloaderThread(url, ydl_opts, self.downloads[id], self.lock)
         t.start()
 
 
