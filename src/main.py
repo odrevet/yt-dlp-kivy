@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+from threading import Lock
 from functools import partial
 from os.path import expanduser, join
 
@@ -110,6 +111,7 @@ class DownloadStatusBar(BoxLayout):
 
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
+    lock = Lock()  # thread lock
 
     def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
         if instance.selected_format_id:
@@ -155,10 +157,10 @@ class DownloaderLayout(BoxLayout):
         )
 
         # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.ids.rv, index)
+        ydl_opts["logger"] = YdlLogger(self.ids.rv, index, self.lock)
 
         # Run in a thread so the UI do not freeze when download
-        t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1])
+        t = DownloaderThread(url, ydl_opts, self.ids.rv.data[-1], self.lock)
         t.start()
 
 
