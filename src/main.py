@@ -121,8 +121,7 @@ class DownloaderLayout(BoxLayout):
                 with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
                     app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
         except Exception as e:
-            print("Error while trying to extract info: " + str(e))
-            return
+            app.meta["title"] = "Cannot retreive metadata, check logs"
 
         format_method = app.config.get("general", "method")
         if format_method == "Ask":

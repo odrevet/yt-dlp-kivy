@@ -21,7 +21,7 @@
                 stretch: True
                 source: 'img/clipboard.png'
         ActionButton:
-            on_press: app.open_settings()
+            on_release: app.open_settings()
             Image:
                 x: self.parent.x
                 y: self.parent.y
@@ -109,7 +109,7 @@
             on_text: app.meta = {}
     Button:
         id: download_button
-        on_press: root.on_press_button_download()
+        on_release: root.on_press_button_download()
         size_hint_y: None
         height: url_textinput.minimum_height
         Image:
