@@ -1,1 +1,1 @@
-User interface for youtube-dl using the Kivy framework
+User interface for yt-dlp using the Kivy framework
