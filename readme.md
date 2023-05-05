@@ -1,7 +1,5 @@
 User interface for yt-dlp using the Kivy framework
 
-Documentation assume you are using Python 3 with pip 3.
-
 # Usage
 
 * Past or enter video URL to download in the text field.
