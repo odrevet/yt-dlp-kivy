@@ -16,5 +16,5 @@ RUN pip3 install "kivy[full]" yt-dlp
 RUN echo "export PATH=$PATH:~/.local/bin/" >> ~/.bashrc
 
 # Start the VNC server
-RUN echo "python3 /app/main.py" > ~/.xinitrc && chmod +x ~/.xinitrc
+RUN echo "python3 /app/src/main.py" > ~/.xinitrc && chmod +x ~/.xinitrc
 CMD ["x11vnc", "-create", "-forever"]
