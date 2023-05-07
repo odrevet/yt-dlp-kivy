@@ -193,7 +193,7 @@ class DownloaderApp(App):
 
     def get_output_dir(self):
         if platform == "android":
-            return os.getenv("EXTERNAL_STORAGE")
+            return os.getenv("EXTERNAL_STORAGE") + "/Download"
         return expanduser("~")
 
     def build_config(self, config):
