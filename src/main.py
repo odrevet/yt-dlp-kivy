@@ -40,7 +40,7 @@ if platform == "android":
 
     cache_dir = os.path.join(app_storage_path(), 'cache')
     os.makedirs(cache_dir, exist_ok=True)
-    os.environ['KIVY_CACHE_DIR'] = cache_dir
+    os.environ['XDG_CACHE_HOME'] = cache_dir
 
 class RV(RecycleView):
     pass
