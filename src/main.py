@@ -56,9 +56,8 @@ class LogPopup(Popup):
 
     def __init__(self, log, index, **kwargs):
         super(LogPopup, self).__init__(**kwargs)
-        self.log = log
+        self.log = "\n".join(log.split("\n")[-300:]) # truncat log
         self.id = id
-
 
 class FormatSelectPopup(Popup):
     meta = {}
