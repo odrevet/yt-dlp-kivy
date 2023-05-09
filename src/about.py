@@ -17,11 +17,11 @@ class AboutPopup(Popup):
         try:
             self.ffmpeg_output = check_output("ffmpeg -version", shell=True)
         except Exception as e:
-            self.ffmpeg_output = str(e)
+            self.ffmpeg_output = "ffmpeg not found"
 
-        self.ids.about_label.text = f"""[ref=https://github.com/odrevet/youtube-dl-kivy][b]Youtube-Dl Kivy[/b][/ref]
+        self.ids.about_label.text = f"""[ref=https://github.com/odrevet/yt-dlp-kivy][b]Yt_dlp Kivy[/b][/ref]
 2023 Olivier Drevet
-Version 0.1.0
+Version 0.1.1
 Released Under the GPL-v3 License
 
 [ref=https://github.com/yt-dlp/yt-dlp][b]yt-dlp[/b][/ref]
