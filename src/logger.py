@@ -8,7 +8,7 @@ class YdlLogger(object):
 
     def debug(self, msg):
         m = re.search(
-            r"^\[download\]\s+(\d+\.\d+)%\s+of\s+(\d+\.\d+\w+)\s+at\s+(\d+\.\d+\w+\/s)\s+ETA\s+(\d{2}:\d{2})$",
+            r"^\[download\]\s+(\d+\.\d+)%\s+of\s+(\~?\s+\d+\.\d+\w+)\s+at\s+(\d+\.\d+\w+\/s)\s+ETA\s+(\d{2}:\d{2}).*",
             msg,
         )
 
