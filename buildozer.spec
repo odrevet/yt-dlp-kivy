@@ -12,7 +12,7 @@ source.dir = src
 source.include_exts = py,kv,png
 source.include_patterns = src/img/*.png
 
-version = 0.1.1
+version = 0.3.0
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
@@ -27,6 +27,8 @@ icon.filename = img/app.png
 presplash.filename = img/splash.png
 
 android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+
+android.arch = armeabi-v7a, arm64-v8a, x86_64
 
 android.release_artifact = apk
 
