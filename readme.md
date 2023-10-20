@@ -36,7 +36,7 @@ the image can be created with `bash docker/build_vnc.sh` and run with `bash dock
 
 In case of errors, exported shell variables in `utils/config.sh` may be set
 
-* To build the apk: `build.sh`. 
+* To build the apk: `build.sh`. Android SDK will be downloaded at first run. 
 
 * To signe the apk: `sign.sh`. The keystore included is needed to signe the app, **the password is 123456**
 
@@ -49,6 +49,13 @@ bash utils/build.sh
 bash utils/sign.sh
 bash utils/install.sh
 ```
+
+
+# troubleshooting
+
+* Requested API cannot be found
+
+`rm -rf .buildozer`
 
 # Sources
 
