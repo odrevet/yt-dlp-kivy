@@ -3,10 +3,10 @@
 title = yt-dlp-kivy
 
 # (str) Package name
-package.name = yt_dlp_kivy
+package.name = youtube_dl_kivy
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = fr.odrevet.yt_dlp_kivy
+package.domain = fr.odrevet.youtube_dl_kivy
 
 source.dir = src
 source.include_exts = py,kv,png
@@ -15,7 +15,6 @@ source.include_patterns = src/img/*.png
 version = 0.3.0
 
 # (list) Application requirements
-# comma seperated e.g. requirements = sqlite3,kivy
 requirements = openssl,requests,yt-dlp,kivy
 
 # (str) Supported orientation (one of landscape, portrait or all)
