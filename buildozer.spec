@@ -27,7 +27,7 @@ presplash.filename = img/splash.png
 
 android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
 
-android.arch = armeabi-v7a, arm64-v8a, x86_64
+android.arch = arm64-v8a
 
 android.release_artifact = apk
 
