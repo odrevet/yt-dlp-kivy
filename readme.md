@@ -34,20 +34,18 @@ the image can be created with `bash docker/build_vnc.sh` and run with `bash dock
 
 **Must be run using bash**
 
-In case of errors, exported shell variables in `utils/config.sh` may be set
+In case of errors, exported shell variables at the beggining of the script may be adujsted. 
 
-* To build the apk: `build.sh`. Android SDK will be downloaded at first run. 
+* To build the apk: `--build`. Android SDK will be downloaded at first run. 
 
-* To signe the apk: `sign.sh`. The keystore included is needed to signe the app, **the password is 123456**
+* To sign the apk: `--sign`. Keystore and pass may be passed after this argument, or will defaults to included test keystore
 
-* To install the apk on a phone: `install.sh`. 
+* To install the apk: `--install`. 
 
-A typical session is :
+Example: 
 
 ```bash
-bash utils/build.sh
-bash utils/sign.sh
-bash utils/install.sh
+bash utils.sh --build --sign --install
 ```
 
 
