@@ -48,7 +48,7 @@ while true; do
     RELEASE_ALIGNED=$BIN/$APP_NAME-aligned-unsigned.apk
     OUT=$BIN/$APP_NAME.apk
 
-    $BUILD_TOOLS_DIR/zipalign -v -p 4 $RELEASE_UNSIGNED $RELEASE_ALIGNED
+    $BUILD_TOOLS_DIR/zipalign -v -f -p 4 $RELEASE_UNSIGNED $RELEASE_ALIGNED
     $BUILD_TOOLS_DIR/apksigner sign --ks $KEYSTORE --ks-pass pass:"$PASS" --out $OUT $RELEASE_ALIGNED
 
     ;;
