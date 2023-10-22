@@ -21,7 +21,7 @@ class AboutPopup(Popup):
 
         self.ids.about_label.text = f"""[ref=https://github.com/odrevet/yt-dlp-kivy][b]Yt_dlp Kivy[/b][/ref]
 2023 Olivier Drevet
-Version 0.3.1
+Version 0.3.2
 Released Under the GPL-v3 License
 
 [ref=https://github.com/yt-dlp/yt-dlp][b]yt-dlp[/b][/ref]
