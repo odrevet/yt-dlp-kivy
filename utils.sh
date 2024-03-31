@@ -7,7 +7,7 @@ APP_NAME=$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -
 BIN='bin'
 ANDROID_SDK_DIR=~/.buildozer/android/platform/android-sdk
 PACKAGE=fr.odrevet.$APP_NAME
-BUILD_TOOLS_VERSION='34.0.0'
+BUILD_TOOLS_VERSION='35.0.0-rc2'
 BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 TARGET_ARCH=arm64-v8a
 
