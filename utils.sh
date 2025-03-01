@@ -7,10 +7,9 @@ APP_NAME=$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -
 BIN='bin'
 ANDROID_SDK_DIR=~/.buildozer/android/platform/android-sdk
 PACKAGE=fr.odrevet.$APP_NAME
-TARGET=arm64-v8a
-BUILD_TOOLS_VERSION=$(grep -oP "buildToolsVersion '\K[^']+" ./.buildozer/android/platform/build-$TARGET/dists/$APP_NAME/build.gradle)
-BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 TARGET_ARCH=arm64-v8a
+BUILD_TOOLS_VERSION=$(grep -oP "buildToolsVersion '\K[^']+" ./.buildozer/android/platform/build-$TARGET_ARCH/dists/$APP_NAME/build.gradle)
+BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 
 usage() {
   echo "arguments: "
