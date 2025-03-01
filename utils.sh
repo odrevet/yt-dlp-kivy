@@ -7,7 +7,8 @@ APP_NAME=$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -
 BIN='bin'
 ANDROID_SDK_DIR=~/.buildozer/android/platform/android-sdk
 PACKAGE=fr.odrevet.$APP_NAME
-BUILD_TOOLS_VERSION='35.0.0-rc2'
+TARGET=arm64-v8a
+BUILD_TOOLS_VERSION=$(grep -oP "buildToolsVersion '\K[^']+" ./.buildozer/android/platform/build-$TARGET/dists/$APP_NAME/build.gradle)
 BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 TARGET_ARCH=arm64-v8a
 
@@ -55,7 +56,7 @@ while true; do
   --install)
     shift
 
-    $PLATEFORM_TOOLS_DIR=$ANDROID_SDK_DIR/platform-tools
+    PLATEFORM_TOOLS_DIR=$ANDROID_SDK_DIR/platform-tools
     $PLATEFORM_TOOLS_DIR/adb uninstall $PACKAGE
     $PLATEFORM_TOOLS_DIR/adb install $BIN/$APP_NAME.apk
    
@@ -63,7 +64,7 @@ while true; do
   --logcat)
     shift
    
-    $PLATEFORM_TOOLS_DIR=$ANDROID_SDK_DIR/platform-tools
+    PLATEFORM_TOOLS_DIR=$ANDROID_SDK_DIR/platform-tools
     $PLATEFORM_TOOLS_DIR/adb logcat | grep $PACKAGE  
    
     ;;
