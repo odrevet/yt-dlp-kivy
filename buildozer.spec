@@ -12,7 +12,7 @@ source.dir = src
 source.include_exts = py,kv,png
 source.include_patterns = src/img/*.png
 
-version = 0.3.5
+version = 0.3.6
 
 # (list) Application requirements
 requirements = openssl,requests,yt-dlp,kivy
