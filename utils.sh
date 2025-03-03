@@ -8,8 +8,6 @@ BIN='bin'
 ANDROID_SDK_DIR=~/.buildozer/android/platform/android-sdk
 PACKAGE=fr.odrevet.$APP_NAME
 TARGET_ARCH=$(grep "android.arch =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')
-BUILD_TOOLS_VERSION=$(grep -oP "buildToolsVersion '\K[^']+" ./.buildozer/android/platform/build-$TARGET_ARCH/dists/$APP_NAME/build.gradle)
-BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 
 usage() {
   echo "arguments: "
@@ -47,6 +45,9 @@ while true; do
     RELEASE_UNSIGNED=$BIN/$APP_NAME-$APP_VERSION-$TARGET_ARCH-release-unsigned.apk
     RELEASE_ALIGNED=$BIN/$APP_NAME-aligned-unsigned.apk
     OUT=$BIN/$APP_NAME.apk
+
+    BUILD_TOOLS_VERSION=$(grep -oP "buildToolsVersion '\K[^']+" ./.buildozer/android/platform/build-$TARGET_ARCH/dists/$APP_NAME/build.gradle)
+    BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 
     $BUILD_TOOLS_DIR/zipalign -v -f -p 4 $RELEASE_UNSIGNED $RELEASE_ALIGNED
     $BUILD_TOOLS_DIR/apksigner sign --ks $KEYSTORE --ks-pass pass:"$PASS" --out $OUT $RELEASE_ALIGNED
