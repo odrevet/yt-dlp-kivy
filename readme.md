@@ -10,6 +10,10 @@ User interface for yt-dlp using the Kivy framework
 * Kivy (run)
 * Buildozer (build for android)
 
+```
+pip install -r requirements.txt
+```
+
 ## Docker
 
 There are two Dockerfiles in the `docker` directory
