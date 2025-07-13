@@ -12,7 +12,8 @@ source.dir = src
 source.include_exts = py,kv,png
 source.include_patterns = src/img/*.png
 
-version = 0.3.6
+version.regex = __version__ = ['"](.*)['"]
+version.filename = %(source.dir)s/_version.py
 
 # (list) Application requirements
 requirements = openssl,requests,yt-dlp,kivy

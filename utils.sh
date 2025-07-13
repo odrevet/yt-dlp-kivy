@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Read the buildozer.spec file and extract version and package.domain
-APP_VERSION=$(grep "version =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')
+APP_VERSION=$(grep -o "'[^']*'" src/_version.py | head -1 | tr -d "'")
 APP_NAME=$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')
 
 BIN='bin'

@@ -6,7 +6,7 @@ import yt_dlp
 import kivy
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
-
+from _version import __version__
 
 class AboutPopup(Popup):
     ffmpeg_output = ""
@@ -20,8 +20,8 @@ class AboutPopup(Popup):
             self.ffmpeg_output = "ffmpeg not found"
 
         self.ids.about_label.text = f"""[ref=https://github.com/odrevet/yt-dlp-kivy][b]Yt_dlp Kivy[/b][/ref]
-2023 Olivier Drevet
-Version 0.3.3
+2025 Olivier Drevet
+Version {__version__}
 Released Under the GPL-v3 License
 
 [ref=https://github.com/yt-dlp/yt-dlp][b]yt-dlp[/b][/ref]
