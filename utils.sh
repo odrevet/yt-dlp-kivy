@@ -23,7 +23,7 @@ while true; do
   --build)
     shift
     
-    buildozer android release
+    yes | buildozer android release
     ;;
   --sign)
     shift

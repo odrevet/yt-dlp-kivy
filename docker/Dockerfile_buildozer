@@ -6,6 +6,8 @@ RUN apt-get update && \
 RUN useradd -ms /bin/bash u
 USER u
 
+ENV PATH="/home/u/.local/bin:${PATH}"
+
 RUN pip3 install "kivy[full]" yt-dlp Cython==0.29.33 buildozer
 
 RUN echo "export PATH=$PATH:~/.local/bin/" >> ~/.bashrc

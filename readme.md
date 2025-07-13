@@ -24,9 +24,15 @@ to build / sign / install the android apk
 
 the image can be created with `bash docker/build_buildozer.sh`.
 
-The script `bash docker/run_buildozer.sh` can be used to run a bash in the container. 
+The script `bash docker/run_buildozer.sh` can be used to run interactivly a bash in the container. 
 
-Once inside the container, the app can be build normaly using the scripts under the `utils` directory (see `utils` section)
+Once inside the container, the app can be build normaly using the utils.sh script (see `utils` section)
+
+Or call the utils script directly: 
+
+```
+docker run --privileged -v /dev/bus/usb:/dev/bus/usb -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
+```
 
 ## Dockerfile_vnc
 
