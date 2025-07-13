@@ -22,9 +22,9 @@ There are two Dockerfiles in the `docker` directory
 
 to build / sign / install the android apk
 
-the image can be created with `bash docker/build_buildozer.sh`.
+the image can be created with `bash docker/build.sh`.
 
-The script `bash docker/run_buildozer.sh` can be used to run interactivly a bash in the container. 
+The script `bash docker/run.sh` can be used to run interactivly a bash in the container. 
 
 Once inside the container, the app can be build normaly using the utils.sh script (see `utils` section)
 

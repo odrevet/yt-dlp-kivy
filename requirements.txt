@@ -1,2 +1,5 @@
 yt-dlp == 2025.6.30
-kivy == 2.1.0
+kivy[full]
+yt-dlp
+Cython==0.29.33
+buildozer
