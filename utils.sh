@@ -28,20 +28,32 @@ while true; do
   --sign)
     shift
 
-    if [[ $1 != --* ]]; then
-      KEYSTORE=$1
-      shift
-    else
-      KEYSTORE=mykeystore.keystore
+   while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --key|-k)
+          KEYSTORE=$2
+          shift 2
+          ;;
+        --pass|-p)
+          PASS=$2
+          shift 2
+          ;;
+        *)
+          break
+          ;;
+      esac
+    done
+
+    if [[ -z "$KEYSTORE" ]]; then
+      KEYSTORE="mykeystore.keystore"
+      echo "No keystore specified, using default: $KEYSTORE"
     fi
 
-    if [[ $1 != --* ]]; then
-      PASS=$1
-      shift
-    else
-      PASS=123456
+    if [[ -z "$PASS" ]]; then
+      PASS="123456"
+      echo "No keystore password specified, using default: $PASS"
     fi
-
+    
     RELEASE_UNSIGNED=$BIN/$APP_NAME-$APP_VERSION-$TARGET_ARCH-release-unsigned.apk
     RELEASE_ALIGNED=$BIN/$APP_NAME-aligned-unsigned.apk
     OUT=$BIN/$APP_NAME.apk
@@ -50,7 +62,8 @@ while true; do
     BUILD_TOOLS_DIR=$ANDROID_SDK_DIR/build-tools/$BUILD_TOOLS_VERSION
 
     $BUILD_TOOLS_DIR/zipalign -v -f -p 4 $RELEASE_UNSIGNED $RELEASE_ALIGNED
-    $BUILD_TOOLS_DIR/apksigner sign --ks $KEYSTORE --ks-pass pass:"$PASS" --out $OUT $RELEASE_ALIGNED
+
+    $BUILD_TOOLS_DIR/apksigner sign --ks $KEYSTORE --ks-pass pass:"$PASS" --in $RELEASE_ALIGNED --out $OUT
 
     ;;
   --install)

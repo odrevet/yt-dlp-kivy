@@ -48,7 +48,11 @@ In case of errors, exported shell variables at the beggining of the script may b
 
 * To build the apk: `--build`. Android SDK will be downloaded at first run. 
 
-* To sign the apk: `--sign`. Keystore and pass may be passed after this argument, or will defaults to included test keystore
+* To sign the apk: `--sign`. Keystore (`--key` or `-k`)  and pass (`--pass` or `-p` ) may be passed after this argument. defaults to included test keystore and pass
+
+```
+bash utils.sh --sign --key mykeystore.keystore --pass 123456
+```
 
 * To install the apk: `--install`. 
 
