@@ -65,9 +65,15 @@ bash utils.sh --build --sign --install
 
 # troubleshooting
 
-* Requested API cannot be found
+* When build, if requested API cannot be found then the buildozer directory must be cleared
 
 `rm -rf .buildozer`
+
+* Debug
+
+`adb logcat --pid=$(adb shell pidof fr.odrevet.youtube_dl_kivy.youtube_dl_kivy) | grep -E "(ERROR|python|File|line)"`
+
+
 
 # Sources
 
