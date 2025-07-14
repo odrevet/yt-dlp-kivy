@@ -31,7 +31,7 @@ from about import AboutPopup
 from downloaderThread import DownloaderThread
 from logger import YdlLogger
 from settings_json import settings_json
-from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
+from status import STATUS_INIT, STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
 if platform == "android":
     from android.storage import primary_external_storage_path
@@ -66,14 +66,21 @@ class FormatSelectPopup(Popup):
     def __init__(self, meta, **kwargs):
         super(FormatSelectPopup, self).__init__(**kwargs)
         self.selected_format_id.clear()
-        formats_sorted = sorted(meta["formats"], key=lambda k: k["format"])
-        for format in formats_sorted:
+        
+        if not meta or "formats" not in meta:
+            print("Error: No formats found in metadata")
             grid = self.ids.layout
-            grid.add_widget(Label(text=format["format"] + " " + format["ext"]))
-            checkbox = CheckBox(active=False, size_hint_x=None, width=100)
-            callback = partial(self.on_checkbox_active, format["format_id"])
-            checkbox.bind(active=callback)
-            grid.add_widget(checkbox)
+            grid.add_widget(Label(text="No formats found"))
+            return
+        else:
+            formats_sorted = sorted(meta["formats"], key=lambda k: k["format"])
+            for format in formats_sorted:
+                grid = self.ids.layout
+                grid.add_widget(Label(text=format["format"] + " " + format["ext"]))
+                checkbox = CheckBox(active=False, size_hint_x=None, width=100)
+                callback = partial(self.on_checkbox_active, format["format_id"])
+                checkbox.bind(active=callback)
+                grid.add_widget(checkbox)
 
     def on_checkbox_active(self, format_id, instance, value):
         if value:
@@ -126,54 +133,59 @@ class DownloaderLayout(BoxLayout):
         self.ids.rv.data = sorted(downloads_array, key=lambda x: x['dt'], reverse=True)
         self.ids.rv.refresh_from_data()
 
-    def on_format_select_popup_dismiss(self, url, ydl_opts, meta, instance):
+    def on_format_select_popup_dismiss(self, url, ydl_opts, download_id, instance):
         if instance.selected_format_id:
             self.start_download(
                 url,
                 {**ydl_opts, **{"format": ",".join(instance.selected_format_id)}},
-                meta,
+                download_id,
             )
 
     def on_press_button_download(self):
         app = App.get_running_app()
+
+        download_id = uuid.uuid4()
+
+        # Add UI status bar for this download
+        self.downloads[download_id] = {
+            "id": download_id,
+            "dt": datetime.now(),
+            "url": app.url,
+            "log": "",
+            "title": "",
+            "status": STATUS_INIT,
+            "meta": {}
+            }
+        
         try:
             if not bool(app.meta):
                 with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
                     app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
+
+                format_method = app.config.get("general", "method")
+                if format_method == "Ask":
+                    self.popup = FormatSelectPopup(app.meta)
+                    callback = partial(
+                        self.on_format_select_popup_dismiss, app.url, app.ydl_opts, download_id
+                    )
+                    self.popup.bind(on_dismiss=callback)
+                    self.popup.open()
+                else:
+                    self.start_download(app.url, app.ydl_opts, download_id)
         except Exception as e:
-            app.meta["title"] = "Cannot retreive metadata, check logs"
+            self.downloads[download_id]["meta"]["title"] = "Cannot retreive metadata"
+            self.downloads[download_id]["log"] = str(e)
+            self.downloads[download_id]["status"] = STATUS_ERROR
+            
 
-        format_method = app.config.get("general", "method")
-        if format_method == "Ask":
-            self.popup = FormatSelectPopup(app.meta)
-            callback = partial(
-                self.on_format_select_popup_dismiss, app.url, app.ydl_opts, app.meta
-            )
-            self.popup.bind(on_dismiss=callback)
-            self.popup.open()
-
-        else:
-            self.start_download(app.url, app.ydl_opts, app.meta)
-
-    def start_download(self, url, ydl_opts, meta):
-        id = uuid.uuid4()
-
-        # Add UI status bar for this download
-        self.downloads[id] = {
-            "id": id,
-            "dt": datetime.now(),
-            "url": url,
-            "log": "",
-            "title": meta["title"],
-            "status": STATUS_IN_PROGRESS,
-        }
-
-
+    def start_download(self, url, ydl_opts, download_id):
+        self.downloads[download_id]["status"] = STATUS_IN_PROGRESS
+        
         # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.downloads[id], self.lock)
+        ydl_opts["logger"] = YdlLogger(self.downloads[download_id], self.lock)
 
         # Run in a thread so the UI do not freeze when download
-        t = DownloaderThread(url, ydl_opts, self.downloads[id], self.lock)
+        t = DownloaderThread(url, ydl_opts, self.downloads[download_id], self.lock)
         t.start()
 
 
