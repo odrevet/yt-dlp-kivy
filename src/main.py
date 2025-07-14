@@ -200,7 +200,7 @@ class StatusIcon(Label):
 
 class DownloaderApp(App):
     meta = {}
-    ydl_opts = {}
+    ydl_opts = {'no_color': True}
     url = StringProperty()
 
     def get_output_dir(self):
