@@ -7,6 +7,7 @@ from os.path import expanduser, join
 import uuid
 from datetime import datetime
 from collections import OrderedDict
+import time
 
 import yt_dlp
 
@@ -181,13 +182,35 @@ class DownloaderLayout(BoxLayout):
 
     def start_download(self, url, ydl_opts, download_id):
         self.downloads[download_id]["status"] = STATUS_IN_PROGRESS
-        
+
+        hook = self.make_hook(download_id)
+            
         # Create a logger
         ydl_opts["logger"] = YdlLogger(self.downloads[download_id], self.lock)
+        ydl_opts["progress_hooks"] = [hook]
 
         # Run in a thread so the UI do not freeze when download
         t = DownloaderThread(url, ydl_opts, self.downloads[download_id], self.lock)
         t.start()
+
+    def make_hook(self, download_id):
+        def hook(d):
+            if d['status'] == 'downloading':
+                if 'total_bytes' in d:
+                    percent = d['downloaded_bytes'] / d['total_bytes'] * 100
+                elif 'total_bytes_estimate' in d:
+                    percent = d['downloaded_bytes'] / d['total_bytes_estimate'] * 100
+                else:
+                    percent = 0.0
+                self.downloads[download_id]["percent"] = percent
+
+                self.downloads[download_id]["title"] = d['filename']
+                self.downloads[download_id]["ETA"] = time.strftime('%H:%M:%S', time.gmtime(d['eta']))
+
+                if d['status'] == 'finished':
+                    self.downloads[download_id]["status"] = STATUS_FINISHED
+                    
+        return hook
 
 
 class RootLayout(Label):
