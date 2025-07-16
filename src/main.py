@@ -1,12 +1,10 @@
 import os
 import sys
 import threading
-from threading import Lock
 from functools import partial
 from os.path import expanduser, join
 import uuid
 from datetime import datetime
-from collections import OrderedDict
 import time
 
 import yt_dlp
@@ -123,8 +121,7 @@ class DownloadStatusBar(BoxLayout):
 
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
-    lock = Lock()  # thread lock
-    downloads = OrderedDict()
+    downloads = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -186,11 +183,11 @@ class DownloaderLayout(BoxLayout):
         hook = self.make_hook(download_id)
             
         # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.downloads[download_id], self.lock)
+        ydl_opts["logger"] = YdlLogger(self.downloads[download_id])
         ydl_opts["progress_hooks"] = [hook]
 
         # Run in a thread so the UI do not freeze when download
-        t = DownloaderThread(url, ydl_opts, self.downloads[download_id], self.lock)
+        t = DownloaderThread(url, ydl_opts, self.downloads[download_id])
         t.start()
 
     def make_hook(self, download_id):
