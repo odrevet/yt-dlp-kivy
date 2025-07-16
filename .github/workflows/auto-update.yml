@@ -1,0 +1,173 @@
+name: Update yt-dlp and Build App
+
+on:
+  schedule:
+    # Run weekly
+    - cron: '0 2 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-and-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Get current yt-dlp version from requirements.txt
+      id: current_version
+      run: |
+        # Extract version from requirements.txt (handles both == and >= formats)
+        CURRENT_VERSION=$(grep -E "^yt-dlp\s*[=>]" requirements.txt | head -1 | sed -E 's/^yt-dlp\s*[=>]+\s*([0-9.]+).*/\1/')
+        echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "Current yt-dlp version: $CURRENT_VERSION"
+
+    - name: Get latest yt-dlp version from PyPI
+      id: latest_version
+      run: |
+        LATEST_VERSION=$(curl -s https://pypi.org/pypi/yt-dlp/json | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
+        echo "latest=$LATEST_VERSION" >> $GITHUB_OUTPUT
+        echo "Latest yt-dlp version: $LATEST_VERSION"
+
+    - name: Compare versions and update if needed
+      id: version_check
+      run: |
+        CURRENT="${{ steps.current_version.outputs.current }}"
+        LATEST="${{ steps.latest_version.outputs.latest }}"
+        
+        if [ "$CURRENT" != "$LATEST" ]; then
+          echo "needs_update=true" >> $GITHUB_OUTPUT
+          echo "yt-dlp needs update from $CURRENT to $LATEST"
+        else
+          echo "needs_update=false" >> $GITHUB_OUTPUT
+          echo "yt-dlp is already up to date ($CURRENT)"
+        fi
+
+    - name: Update requirements.txt
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        LATEST_VERSION="${{ steps.latest_version.outputs.latest }}"
+        # Update the versioned yt-dlp line
+        sed -i -E "s/^yt-dlp\s*==\s*[0-9.]+.*$/yt-dlp == $LATEST_VERSION/" requirements.txt
+        echo "Updated requirements.txt with yt-dlp == $LATEST_VERSION"
+
+    - name: Get current app version
+      if: steps.version_check.outputs.needs_update == 'true'
+      id: current_app_version
+      run: |
+        CURRENT_APP_VERSION=$(grep -E "^\*\*version\*\*" src/_version.py | sed -E "s/^\*\*version\*\*\s*=\s*'([^']+)'.*/\1/")
+        echo "current_app=$CURRENT_APP_VERSION" >> $GITHUB_OUTPUT
+        echo "Current app version: $CURRENT_APP_VERSION"
+
+    - name: Bump patch version
+      if: steps.version_check.outputs.needs_update == 'true'
+      id: bump_version
+      run: |
+        CURRENT_APP_VERSION="${{ steps.current_app_version.outputs.current_app }}"
+        
+        # Extract version parts
+        MAJOR=$(echo $CURRENT_APP_VERSION | cut -d. -f1)
+        MINOR=$(echo $CURRENT_APP_VERSION | cut -d. -f2)
+        PATCH=$(echo $CURRENT_APP_VERSION | cut -d. -f3)
+        
+        # Increment patch version
+        NEW_PATCH=$((PATCH + 1))
+        NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+        
+        # Update _version.py
+        sed -i -E "s/^\*\*version\*\*\s*=\s*'[^']+'/\*\*version\*\* = '$NEW_VERSION'/" src/_version.py
+        
+        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
+
+    - name: Create keystore file from secret
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
+        chmod 600 mykeystore.keystore
+
+    - name: Build app with Docker
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        # Build the Docker image
+        docker build -f docker/Dockerfile -t buildozer .
+        
+        # Run the build process
+        docker run -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign --key mykeystore.keystore --pass '${{ secrets.KEYSTORE_PASSPHRASE }}'"
+
+    - name: Clean up keystore
+      if: always()
+      run: |
+        rm -f mykeystore.keystore
+
+    - name: Commit and push changes
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        git add requirements.txt src/_version.py
+        git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
+        git push
+
+    - name: Find built APK
+      if: steps.version_check.outputs.needs_update == 'true'
+      id: find_apk
+      run: |
+        # Find the built APK file (adjust path as needed)
+        if [ "${{ env.ACT }}" == "true" ]; then
+          # For Act testing, use mock APK
+          APK_PATH="build/app-release.apk"
+        else
+          APK_PATH=$(find . -name "*.apk" -type f | head -1)
+        fi
+        
+        if [ -n "$APK_PATH" ] && [ -f "$APK_PATH" ]; then
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "Found APK at: $APK_PATH"
+        else
+          echo "No APK file found"
+          exit 1
+        fi
+
+    - name: Create Release
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: "v${{ steps.bump_version.outputs.new_version }}"
+        name: "Release v${{ steps.bump_version.outputs.new_version }}"
+        body: |
+          ## Changes
+          - Updated yt-dlp from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}
+          - Bumped app version to ${{ steps.bump_version.outputs.new_version }}
+          
+          ## Built with
+          - yt-dlp: ${{ steps.latest_version.outputs.latest }}
+          - Build date: ${{ github.run_id }}
+        files: |
+          ${{ steps.find_apk.outputs.apk_path }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Summary
+      run: |
+        if [ "${{ steps.version_check.outputs.needs_update }}" == "true" ]; then
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- yt-dlp updated from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}" >> $GITHUB_STEP_SUMMARY
+          echo "- App version bumped to ${{ steps.bump_version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- APK built and released successfully" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "## No Update Needed" >> $GITHUB_STEP_SUMMARY
+          echo "yt-dlp is already up to date (version ${{ steps.current_version.outputs.current }})" >> $GITHUB_STEP_SUMMARY
+          echo "Next check: Next Monday at 2 AM UTC" >> $GITHUB_STEP_SUMMARY
+        fi

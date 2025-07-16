@@ -31,7 +31,7 @@ Once inside the container, the app can be build normaly using the utils.sh scrip
 Or call the utils script directly: 
 
 ```
-docker run --privileged -v /dev/bus/usb:/dev/bus/usb -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
+docker run -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
 ```
 
 ## Dockerfile_vnc
@@ -74,6 +74,31 @@ bash utils.sh --build --sign --install
 `adb logcat --pid=$(adb shell pidof fr.odrevet.youtube_dl_kivy.youtube_dl_kivy) | grep -E "(ERROR|python|File|line)"`
 
 
+# CI testing with act
+
+## Create env file with dummy keystore
+
+```
+cat > .env.act << EOF
+GITHUB_TOKEN=dummy_token_for_testing
+KEYSTORE_BASE64=$(base64 -w 0 mykeystore.keystore)
+KEYSTORE_PASSPHRASE=123456
+EOF
+```
+
+## Run
+
+* check syntax
+
+```
+act workflow_dispatch --dry-run
+```
+
+* with verbose output
+
+```
+act workflow_dispatch --env-file .env.act --verbose
+```
 
 # Sources
 
