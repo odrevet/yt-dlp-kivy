@@ -49,16 +49,33 @@ class RV(RecycleView):
 class ActionBarMain(ActionBar):
     pass
 
-
 class LogPopup(Popup):
     log = StringProperty()
-    id = ObjectProperty()
+    download_id = ObjectProperty()
+    refresh_event = None
 
-    def __init__(self, log, index, **kwargs):
+    def __init__(self, log, download_id, downloads_dict, **kwargs):
         super(LogPopup, self).__init__(**kwargs)
-        self.log = "\n".join(log.split("\n")[-300:]) # truncat log
-        self.id = id
+        self.log = "\n".join(log.split("\n")[-300:])  # truncate log
+        self.download_id = download_id
+        self.downloads_dict = downloads_dict
+        
+        # Schedule periodic refresh
+        self.refresh_event = Clock.schedule_interval(self.refresh_log, 1.0)
 
+    def refresh_log(self, dt):
+        """Refresh log content from the downloads dictionary"""
+        if self.download_id in self.downloads_dict:
+            new_log = self.downloads_dict[self.download_id]["log"]
+            # Truncate to last 300 lines to prevent memory issues
+            self.log = "\n".join(new_log.split("\n")[-300:])
+
+    def on_dismiss(self):
+        """Clean up the refresh event when popup is closed"""
+        if self.refresh_event:
+            self.refresh_event.cancel()
+        super().on_dismiss()
+        
 class FormatSelectPopup(Popup):
     meta = {}
     selected_format_id = []
@@ -103,7 +120,10 @@ class DownloadStatusBar(BoxLayout):
     popup = None
 
     def on_release_show_log_button(self):
-        self.popup = LogPopup(self.log, self.id)
+        app = App.get_running_app()
+        downloader_layout = app.root.ids.main_layout
+        
+        self.popup = LogPopup(self.log, self.id, downloader_layout.downloads)
         self.popup.open()
 
     def on_status(self, instance, value):
@@ -113,11 +133,6 @@ class DownloadStatusBar(BoxLayout):
             self.status_icon = "img/correct.png"
         elif value == STATUS_ERROR:
             self.status_icon = "img/cancel.png"
-
-    def on_log(self, instance, value):
-        if self.popup is not None and instance.id == self.popup.id:
-            self.popup.log = value
-
 
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
