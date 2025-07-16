@@ -4,7 +4,7 @@ class YdlLogger(object):
         self.lock = lock
 
     def debug(self, msg):
-        self.data["log"] = msg
+        self.data["log"] += "{msg}\n"
         
     def warning(self, msg):
         with self.lock:
