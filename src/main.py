@@ -198,7 +198,7 @@ class DownloaderLayout(BoxLayout):
         hook = self.make_hook(download_id)
             
         # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.downloads[download_id])
+        ydl_opts["logger"] = YdlLogger(self.downloads[download_id], download_id)
         ydl_opts["progress_hooks"] = [hook]
 
         # Run in a thread so the UI do not freeze when download
