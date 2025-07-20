@@ -138,6 +138,7 @@ class DownloadStatusBar(BoxLayout):
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
     downloads = OrderedDict()
+    downloads = OrderedDict(sorted(downloads.items(), key=lambda x: x[1]['timestamp']))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
