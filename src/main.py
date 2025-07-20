@@ -6,6 +6,7 @@ from os.path import expanduser, join
 import uuid
 from datetime import datetime
 import time
+from collections import OrderedDict
 
 import yt_dlp
 
@@ -136,7 +137,7 @@ class DownloadStatusBar(BoxLayout):
 
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
-    downloads = {}
+    downloads = OrderedDict()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
