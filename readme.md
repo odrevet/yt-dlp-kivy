@@ -31,7 +31,7 @@ Once inside the container, the app can be build normaly using the utils.sh scrip
 Or call the utils script directly: 
 
 ```
-docker run -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
+docker run -rm -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
 ```
 
 ## Dockerfile_vnc
