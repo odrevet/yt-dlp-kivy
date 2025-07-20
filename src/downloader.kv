@@ -15,25 +15,25 @@
         ActionButton:
             on_release: app.url = Clipboard.paste()
             Image:
-                x: self.parent.x
-                y: self.parent.y
-                size: self.parent.size
+                x: self.parent.x + dp(8)
+                y: self.parent.y + dp(8)
+                size: self.parent.size[0] - dp(16), self.parent.size[1] - dp(16)
                 stretch: True
                 source: 'img/clipboard.png'
         ActionButton:
             on_release: app.open_settings()
             Image:
-                x: self.parent.x
-                y: self.parent.y
-                size: self.parent.size
+                x: self.parent.x + dp(8)
+                y: self.parent.y + dp(8)
+                size: self.parent.size[0] - dp(16), self.parent.size[1] - dp(16)
                 stretch: True
                 source: 'img/work.png'
         ActionButton:
             on_release: Factory.AboutPopup().open()
             Image:
-                x: self.parent.x
-                y: self.parent.y
-                size: self.parent.size
+                x: self.parent.x + dp(8)
+                y: self.parent.y + dp(8)
+                size: self.parent.size[0] - dp(16), self.parent.size[1] - dp(16)
                 stretch: True
                 source: 'img/info.png'
 
@@ -131,9 +131,9 @@
             size_hint_y: None
             height: url_textinput.minimum_height
             Image:
-                x: self.parent.x + 4
-                y: self.parent.y + 4
-                size: self.parent.width - 8, self.parent.height - 8
+                x: self.parent.x + dp(8)
+                y: self.parent.y + dp(8)
+                size: self.parent.width - dp(16), self.parent.height - dp(16)
                 stretch: True
                 source: 'img/down-arrow.png'
     RV:
@@ -183,9 +183,9 @@
                     size: self.width * self.value_normalized, self.height
                     radius: [2,]
     Image:
-        x: self.parent.x + 4
-        y: self.parent.y + 4
-        size: self.parent.height - 8, self.parent.height - 8
+        x: self.parent.x + dp(8)
+        y: self.parent.y + dp(8)
+        size: self.parent.height - dp(16), self.parent.height - dp(16)
         stretch: True
         source: root.status_icon
         size_hint_x: None
@@ -196,9 +196,9 @@
         width: '40dp'
         background_color: 0, 0, 0, 0
         Image:
-            x: self.parent.x + 4
-            y: self.parent.y + 4
-            size: self.parent.width - 8, self.parent.height - 8
+            x: self.parent.x + dp(8)
+            y: self.parent.y + dp(8)
+            size: self.parent.width - dp(16), self.parent.height - dp(16)
             stretch: True
             source: 'img/report.png'
 
