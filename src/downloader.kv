@@ -40,8 +40,11 @@
 <AboutPopup>:
     auto_dismiss: False
     title: 'About'
+    size_hint: 0.8, 0.7
     BoxLayout:
         orientation: 'vertical'
+        spacing: '10dp'
+        padding: '10dp'
         ScrollView:
             Label:
                 id: about_label
@@ -55,12 +58,16 @@
             text: 'Close'
             on_release: root.dismiss()
             size_hint_y: None
+            height: '48dp'
 
 <LogPopup>:
     auto_dismiss: False
     title: 'Log'
+    size_hint: 0.9, 0.8
     BoxLayout:
         orientation: 'vertical'
+        spacing: '10dp'
+        padding: '10dp'
         ScrollView:
             size_hint_y: .9
             Label:
@@ -75,33 +82,36 @@
             size_hint_y: .1
             text: 'Close'
             on_release: root.dismiss()
-            height: '30dp'
+            height: '48dp'
 
 <FormatSelectPopup>:
     auto_dismiss: False
     title: 'Format select'
+    size_hint: 0.8, 0.7
     BoxLayout:
         orientation: 'vertical'
+        spacing: '10dp'
+        padding: '10dp'
         ScrollView:
             size_hint_y: .9
             GridLayout:
                 id: layout
                 cols: 2
-                size_hint_y: None
-                height: self.minimum_height
-                row_default_height: '40dp'
-                row_force_default: True
+                spacing: '5dp'
         Button:
             size_hint_y: .1
             text: 'Close'
             on_release: root.dismiss()
-            height: '30dp'
+            height: '48dp'
 
 <DownloaderLayout>:
     orientation: 'vertical'
+    spacing: '8dp'
+    padding: '12dp'
     BoxLayout:
         size_hint_y: None
-        height: url_textinput.minimum_height
+        height: url_textinput.minimum_height + 16
+        spacing: '8dp'
         TextInput:
             id: url_textinput
             hint_text: 'Video URL'
@@ -111,79 +121,98 @@
             text: app.url
             on_text: app.url = self.text
             on_text: app.meta = {}
-    Button:
-        id: download_button
-        on_release: root.on_press_button_download()
-        size_hint_y: None
-        height: url_textinput.minimum_height
-        Image:
-            x: self.parent.x
-            y: self.parent.y
-            size: self.parent.size
-            stretch: True
-            source: 'img/down-arrow.png'
+            padding: '12dp', '8dp'
+            background_color: 1, 1, 1, 0.9
+        Button:
+            id: download_button
+            on_release: root.on_press_button_download()
+            size_hint_x: None
+            width: '60dp'
+            size_hint_y: None
+            height: url_textinput.minimum_height
+            Image:
+                x: self.parent.x + 4
+                y: self.parent.y + 4
+                size: self.parent.width - 8, self.parent.height - 8
+                stretch: True
+                source: 'img/down-arrow.png'
     RV:
         id: rv
 
 <DownloadStatusBar>:
     orientation: 'horizontal'
-    padding: 5
-    bcolor: .6, .6, .6, 1
+    padding: '8dp'
+    spacing: '8dp'
+    bcolor: 0.95, 0.95, 0.95, 1
     canvas.before:
         Color:
             rgba: self.bcolor
-        Rectangle:
+        RoundedRectangle:
             pos: self.pos
             size: self.size
+            radius: [4,]
     BoxLayout:
         orientation: 'vertical'
-        spacing: '10dp'
+        spacing: '4dp'
         Label:
             text: root.url
             text_size: self.width, None
             height: self.texture_size[1]
             halign: 'left'
             shorten: True
+            color: 0.2, 0.2, 0.2, 1
         Label:
             text: root.title
             text_size: self.width, None
             height: self.texture_size[1]
             halign: 'left'
             shorten: True
+            color: 0.3, 0.3, 0.3, 1
         Label:
             text: '{:5.2f}% {} {} {}'.format(root.percent, root.file_size, root.speed, root.ETA)
             text_size: self.width, None
             height: self.texture_size[1]
+            color: 0.4, 0.4, 0.4, 1
         ProgressBar:
             value: root.percent
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 1
+                RoundedRectangle:
+                    pos: self.x, self.y
+                    size: self.width * self.value_normalized, self.height
+                    radius: [2,]
     Image:
-        x: self.parent.x
-        y: self.parent.y
-        size: self.parent.size
+        x: self.parent.x + 4
+        y: self.parent.y + 4
+        size: self.parent.height - 8, self.parent.height - 8
         stretch: True
         source: root.status_icon
-        size_hint_x: .1
+        size_hint_x: None
+        width: '40dp'
     Button:
         on_release: root.on_release_show_log_button()
-        height: self.texture_size[1]
-        size_hint_x: .1
+        size_hint_x: None
+        width: '40dp'
+        background_color: 0, 0, 0, 0
         Image:
-            x: self.parent.x
-            y: self.parent.y
-            size: self.parent.size
+            x: self.parent.x + 4
+            y: self.parent.y + 4
+            size: self.parent.width - 8, self.parent.height - 8
             stretch: True
             source: 'img/report.png'
-
 
 <RV>:
     viewclass: 'DownloadStatusBar'
     RecycleBoxLayout:
         id: rbl
-        default_size: None, dp(60)
+        default_size: None, dp(75)
         default_size_hint: 1, None
         size_hint_y: None
         height: self.minimum_height
         orientation: 'vertical'
+        spacing: '4dp'
+        padding: '4dp'
 
 <RootLayout>:
     BoxLayout:
@@ -194,7 +223,7 @@
             id: action_bar_main
         DownloaderLayout:
             id: main_layout
-            bcolor: .75, .75, .75, .75
+            bcolor: 0.98, 0.98, 0.98, 1
             canvas.before:
                 Color:
                     rgba: self.bcolor
