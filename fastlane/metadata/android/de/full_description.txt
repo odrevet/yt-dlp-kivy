@@ -1,0 +1,7 @@
+<i>youtube-dl</i> ist eine Benutzerschnittstelle für youtube-dl, die das Kivy-Framework verwendet.
+
+<b>Verwendung:</b>
+
+* Kopiere die URL des Videos, das Du downloaden möchtest, aus dem Web-Browser
+* Gib die URL in das obere Eingabefeld ein
+* Betätige den 'Download' Button
