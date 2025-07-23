@@ -16,19 +16,23 @@ pip install -r requirements.txt
 
 ## Docker
 
-to build / sign / install the android apk
+see `Dockerfile`
 
-the image can be created with `bash docker/build.sh`.
+* Build with:
 
-The script `bash docker/run.sh` can be used to run interactivly a bash in the container. 
+`docker build -t buildozer .`
 
-Once inside the container, the app can be build normaly using the utils.sh script (see `utils` section)
+* Call the utils script to build or sign:
 
-Or call the utils script directly: 
+`docker run -it --user root -v $(pwd):/root -v ~/.buildozer:/root/.buildozer buildozer /bin/bash -c "bash utils.sh --build"`
 
-```
-docker run --rm -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
-```
+* or build directly using buildozer
+
+`docker run -it --user root -v $(pwd):/root -v ~/.buildozer:/root/.buildozer buildozer bash -c "yes | buildozer android release"`
+
+* To open a bash shell
+
+`docker run -it --user root -v $(pwd):/root -v ~/.buildozer:/root/.buildozer buildozer`
 
 ## Utils
 
