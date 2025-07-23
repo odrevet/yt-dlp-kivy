@@ -16,10 +16,6 @@ pip install -r requirements.txt
 
 ## Docker
 
-There are two Dockerfiles in the `docker` directory
-
-## Dockerfile_buildozer
-
 to build / sign / install the android apk
 
 the image can be created with `bash docker/build.sh`.
@@ -33,12 +29,6 @@ Or call the utils script directly:
 ```
 docker run --rm -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign"
 ```
-
-## Dockerfile_vnc
-
-to run yd_dlp_kivy from a docker container and access it from a vnc client
-
-the image can be created with `bash docker/build_vnc.sh` and run with `bash docker/run_vnc.sh`
 
 ## Utils
 
