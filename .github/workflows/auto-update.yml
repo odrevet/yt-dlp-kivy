@@ -98,7 +98,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         # Build the Docker image
-        docker build -f docker/Dockerfile -t buildozer .
+        docker build -t buildozer .
         
         # Run the build process
         docker run -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign --key mykeystore.keystore --pass '${{ secrets.KEYSTORE_PASSPHRASE }}'"
