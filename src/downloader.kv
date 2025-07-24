@@ -94,10 +94,16 @@
         padding: '10dp'
         ScrollView:
             size_hint_y: .9
+            do_scroll_x: False
+            do_scroll_y: True
             GridLayout:
                 id: layout
                 cols: 2
                 spacing: '5dp'
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: '40dp'
+                row_force_default: True
         Button:
             size_hint_y: .1
             text: 'Close'
