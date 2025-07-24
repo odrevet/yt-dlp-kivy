@@ -1,4 +1,12 @@
 import json
+import yt_dlp.utils as utils
+
+# Check if ffmpeg is available
+ffmpeg_available = utils.check_executable('ffmpeg', ['-version']) is not False
+
+format_options = ["Preset"]
+if ffmpeg_available:
+    format_options.append("Ask")
 
 settings_json = json.dumps(
     [
@@ -10,7 +18,7 @@ settings_json = json.dumps(
             "type": "options",
             "title": "Format method",
             "desc": "Use preset format or detect available formats and ask before download",
-            "options": ["Preset", "Ask"],
+            "options": format_options,
             "section": "general",
             "key": "method",
         },

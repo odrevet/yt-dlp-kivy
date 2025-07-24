@@ -175,17 +175,14 @@ class DownloaderLayout(BoxLayout):
         
         try:
             if not bool(app.meta):
-                with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
-                    app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
-
                 format_method = app.config.get("general", "method")
                 if format_method == "Ask":
-                    self.popup = FormatSelectPopup(app.meta)
-                    callback = partial(
-                        self.on_format_select_popup_dismiss, app.url, app.ydl_opts, download_id
-                    )
-                    self.popup.bind(on_dismiss=callback)
-                    self.popup.open()
+                    with yt_dlp.YoutubeDL(app.ydl_opts) as ydl:
+                        app.meta = ydl.sanitize_info(ydl.extract_info(app.url, download=False))
+                        self.popup = FormatSelectPopup(app.meta)
+                        callback = partial(self.on_format_select_popup_dismiss, app.url, app.ydl_opts, download_id)
+                        self.popup.bind(on_dismiss=callback)
+                        self.popup.open()
                 else:
                     self.start_download(app.url, app.ydl_opts, download_id)
         except Exception as e:
