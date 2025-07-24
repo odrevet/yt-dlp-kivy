@@ -1,26 +1,26 @@
 import sys
-from subprocess import check_output
 import pkg_resources
 import webbrowser
+import sys
+from subprocess import check_output, CalledProcessError, TimeoutExpired
+
 import yt_dlp
+import yt_dlp.utils as utils
+
 import kivy
-from kivy.properties import StringProperty
+from kivy.utils import platform
 from kivy.uix.popup import Popup
+
 from _version import __version__
 
 class AboutPopup(Popup):
-    ffmpeg_output = ""
-
     def __init__(self, **kwargs):
         super(AboutPopup, self).__init__(**kwargs)
-
-        try:
-            self.ffmpeg_output = check_output("ffmpeg -version", shell=True)
-        except Exception as e:
-            self.ffmpeg_output = "ffmpeg not found"
-
-        self.ids.about_label.text = f"""[ref=https://github.com/odrevet/yt-dlp-kivy][b]Yt_dlp Kivy[/b][/ref]
-2025 Olivier Drevet
+        
+        ffmpeg_location = self.get_ffmpeg_info()
+        
+        self.ids.about_label.text = f"""[ref=https://github.com/odrevet/yt-dlp-kivy][b]Yt_dlp Kivy[/b][/ref] on {platform}
+2018 2025 Olivier Drevet
 Version {__version__}
 Released Under the GPL-v3 License
 
@@ -40,7 +40,27 @@ by heroicons
 MIT License
 
 [ref=https://ffmpeg.org/][b]ffmpeg[/b][/ref]
-{self.ffmpeg_output}"""
+{ffmpeg_location}"""
 
     def on_ref_press(self, url):
         webbrowser.open(url)
+
+
+    def get_ffmpeg_info(self):
+        try:
+            ffmpeg_exe = utils.check_executable('ffmpeg')
+            if ffmpeg_exe:
+                buffer = f"{ffmpeg_exe} found via yt-dlp"
+                if platform in ('linux', 'win', 'macosx'):        
+                    try:
+                        output = check_output(f"{ffmpeg_exe} -version", shell=True, timeout=5)
+                        buffer += "\n"
+                        buffer += output.decode('utf-8').split('\n')[0]
+                    except (CalledProcessError, TimeoutExpired, FileNotFoundError):
+                        pass
+
+                return buffer
+        except:
+            pass
+            
+        return "ffmpeg not found or not accessible"   
