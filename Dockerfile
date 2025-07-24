@@ -1,5 +1,5 @@
 # Build with:
-# docker build -f docker/Dockerfile -t buildozer .
+# docker build -t buildozer .
 #
 # Call the utils script to build or sign:
 #
