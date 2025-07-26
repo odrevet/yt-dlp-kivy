@@ -7,6 +7,8 @@ import uuid
 from datetime import datetime
 import time
 from collections import OrderedDict
+import shutil
+import stat
 
 import yt_dlp
 
@@ -34,6 +36,7 @@ from logger import YdlLogger
 from settings_json import settings_json
 from status import STATUS_INIT, STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 
+
 if platform == "android":
     from android.storage import primary_external_storage_path
     from android.permissions import check_permission, request_permissions, Permission
@@ -43,9 +46,31 @@ if platform == "android":
     os.makedirs(cache_dir, exist_ok=True)
     os.environ['XDG_CACHE_HOME'] = cache_dir
 
+    
+    # Source: bundled ffmpeg (read-only)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    source_ffmpeg = os.path.join(script_dir, 'img', 'ffmpeg')
+    
+    # copy ffmpeg to filesystem to make it executable
+    dest_ffmpeg = os.path.join(cache_dir, 'ffmpeg')
+    
+    try:
+        # Copy if not exists or source is newer
+        if not os.path.exists(dest_ffmpeg) or \
+           os.path.getmtime(source_ffmpeg) > os.path.getmtime(dest_ffmpeg):
+            
+            print(f"Copying ffmpeg from {source_ffmpeg} to {dest_ffmpeg}")
+            shutil.copy2(source_ffmpeg, dest_ffmpeg)
+            
+        # Make executable
+        os.chmod(dest_ffmpeg, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP)  # 755
+        print(f"ffmpeg ready at: {dest_ffmpeg}")
+                    
+    except Exception as e:
+        print(f"Failed to setup ffmpeg: {e}")
+
 class RV(RecycleView):
     pass
-
 
 class ActionBarMain(ActionBar):
     pass

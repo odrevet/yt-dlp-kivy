@@ -1,8 +1,14 @@
 import json
 import yt_dlp.utils as utils
 
-# Check if ffmpeg is available
-ffmpeg_available = utils.check_executable('ffmpeg', ['-version']) is not False
+# android ffmpeg
+import os
+from android.storage import app_storage_path
+        
+cache_dir = os.path.join(app_storage_path(), 'cache')
+ffmpeg_path = os.path.join(cache_dir, 'ffmpeg')
+
+ffmpeg_available = utils.check_executable(ffmpeg_path, ['-version']) is not False
 
 format_options = ["Preset"]
 if ffmpeg_available:

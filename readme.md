@@ -68,7 +68,7 @@ rm -rf .buildozer
 * logcat
 
 ```sh
-adb logcat --pid=$(adb shell pidof fr.odrevet.youtube_dl_kivy.youtube_dl_kivy) | grep -E "(ERROR|python|File|line)"
+adb logcat --pid=$(adb shell pidof fr.odrevet.youtube_dl_kivy) | grep -E "(ERROR|python|File|line)"
 ```
 
 * access filesytem
@@ -78,7 +78,7 @@ buildozer android debug
 adb install bin/youtube_dl_kivy-0.5.0-arm64-v8a-debug.apk
 adb shell
 run-as fr.odrevet.youtube_dl_kivy
-cd /data/data/fr.odrevet.youtube_dl_kivy/files/app
+cd /data/data/fr.odrevet.youtube_dl_kivy/files
 ```
 
 # CI testing with act
