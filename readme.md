@@ -91,7 +91,7 @@ rm -rf .buildozer
 * logcat
 
 ```sh
-adb logcat --pid=$(adb shell pidof fr.odrevet.youtube_dl_kivy.youtube_dl_kivy) | grep -E "(ERROR|python|File|line)"
+adb logcat --pid=$(adb shell pidof fr.odrevet.youtube_dl_kivy) | grep -E "(ERROR|python|File|line)"
 ```
 
 * access filesytem
