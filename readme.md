@@ -14,7 +14,9 @@ User interface for yt-dlp using the Kivy framework
 pip install -r requirements.txt
 ```
 
-## Docker
+# Docker
+
+## Using the project Dockerfile
 
 see `Dockerfile`
 
@@ -33,6 +35,27 @@ see `Dockerfile`
 * To open a bash shell
 
 `docker run -it --user root -v $(pwd):/root -v ~/.buildozer:/root/.buildozer buildozer`
+
+
+## Using official buildozer Dockerfile
+
+* Build the image
+
+```
+git clone https://github.com/kivy/buildozer.git
+cd buildozer
+docker build --tag=kivy/buildozer .
+```
+
+* Run
+
+```
+docker run \
+  --volume "$HOME/.buildozer":/home/user/.buildozer \
+  --volume "$PWD":/home/user/hostcwd \
+  --volume "$HOME/.gradle":/home/user/.gradle \
+  kivy/buildozer --version
+```
 
 ## Utils
 

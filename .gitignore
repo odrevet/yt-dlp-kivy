@@ -4,3 +4,7 @@ __pycache__
 downloader.ini
 ydl_release.keystore
 .env.act
+.android/
+.gradle/
+.kivy/
+.local/
