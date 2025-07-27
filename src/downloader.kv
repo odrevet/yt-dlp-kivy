@@ -398,7 +398,7 @@
             font_size: sp(12)
         
         Label:
-            text: '{:5.1f}% • {} • {} • {}'.format(root.percent, root.file_size, root.speed, root.ETA) if root.percent > 0 else 'Preparing download...'
+            text: '{:5.1f}% • {} • {} • {}'.format(root.percent, root.file_size, root.speed, root.ETA) if root.percent > 0 else ''
             text_size: self.width, None
             height: self.texture_size[1]
             color: 0.4, 0.4, 0.4, 1
