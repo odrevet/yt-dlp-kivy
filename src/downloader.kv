@@ -4,203 +4,437 @@
 #:import Factory kivy.factory.Factory
 
 <ActionBarMain>:
-    background_color: 128, 128, 128, 0.75
+    background_color: 0.8, 0.2, 0.2, 0.95
     pos_hint: {'top':1}
+    size_hint_y: None
+    height: dp(56)
+    canvas.before:
+        Color:
+            rgba: 0.85, 0.15, 0.15, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0.3, 0.3, 0.3, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
     ActionView:
         use_separator: True
         ActionPrevious:
             app_icon: ''
             with_previous: False
+            title: 'YT-DLP Kivy'
+            color: 1, 1, 1, 1
         ActionOverflow:
         ActionButton:
             on_release: app.url = Clipboard.paste()
+            background_color: 0.3, 0.6, 0.9, 1
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.8 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             Image:
-                x: self.parent.x + dp(8)
-                y: self.parent.y + dp(8)
-                size: self.parent.size[0] - dp(16), self.parent.size[1] - dp(16)
+                x: self.parent.x + dp(12)
+                y: self.parent.y + dp(12)
+                size: self.parent.size[0] - dp(24), self.parent.size[1] - dp(24)
                 stretch: True
                 source: 'img/clipboard.png'
         ActionButton:
             on_release: app.open_settings()
+            background_color: 0.6, 0.6, 0.6, 1
+            canvas.before:
+                Color:
+                    rgba: 0.6, 0.6, 0.6, 0.8 if self.state == 'normal' else 0.5, 0.5, 0.5, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             Image:
-                x: self.parent.x + dp(8)
-                y: self.parent.y + dp(8)
-                size: self.parent.size[0] - dp(16), self.parent.size[1] - dp(16)
+                x: self.parent.x + dp(12)
+                y: self.parent.y + dp(12)
+                size: self.parent.size[0] - dp(24), self.parent.size[1] - dp(24)
                 stretch: True
                 source: 'img/work.png'
         ActionButton:
             on_release: Factory.AboutPopup().open()
+            background_color: 0.4, 0.7, 0.4, 1
+            canvas.before:
+                Color:
+                    rgba: 0.4, 0.7, 0.4, 0.8 if self.state == 'normal' else 0.3, 0.6, 0.3, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             Image:
-                x: self.parent.x + dp(8)
-                y: self.parent.y + dp(8)
-                size: self.parent.size[0] - dp(16), self.parent.size[1] - dp(16)
+                x: self.parent.x + dp(12)
+                y: self.parent.y + dp(12)
+                size: self.parent.size[0] - dp(24), self.parent.size[1] - dp(24)
                 stretch: True
                 source: 'img/info.png'
 
 <AboutPopup>:
     auto_dismiss: False
     title: 'About'
-    size_hint: 0.8, 0.7
+    title_color: 1, 1, 1, 1
+    size_hint: 0.85, 0.75
+    background_color: 0.95, 0.95, 0.95, 1
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        RoundedRectangle:
+            pos: self.x, self.top - dp(50)
+            size: self.width, dp(50)
+            radius: [dp(12), dp(12), 0, 0]
     BoxLayout:
         orientation: 'vertical'
-        spacing: '10dp'
-        padding: '10dp'
+        spacing: dp(16)
+        padding: dp(20)
         ScrollView:
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
             Label:
                 id: about_label
                 size: self.texture_size
-                text_size: self.width, None
+                text_size: self.width - dp(20), None
                 size_hint: 1, None
                 height: self.texture_size[1]
+                padding: dp(10), dp(10)
                 on_ref_press: root.on_ref_press(args[1])
                 markup: True
+                color: 0.2, 0.2, 0.2, 1
         Button:
             text: 'Close'
             on_release: root.dismiss()
             size_hint_y: None
-            height: '48dp'
+            height: dp(48)
+            background_color: 0.3, 0.6, 0.9, 1
+            color: 1, 1, 1, 1
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.9 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
 
 <LogPopup>:
     auto_dismiss: False
-    title: 'Log'
+    title: 'Download Log'
+    title_color: 1, 1, 1, 1
     size_hint: 0.9, 0.8
+    background_color: 0.95, 0.95, 0.95, 1
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        RoundedRectangle:
+            pos: self.x, self.top - dp(50)
+            size: self.width, dp(50)
+            radius: [dp(12), dp(12), 0, 0]
     BoxLayout:
         orientation: 'vertical'
-        spacing: '10dp'
-        padding: '10dp'
+        spacing: dp(16)
+        padding: dp(20)
         ScrollView:
-            size_hint_y: .9
+            size_hint_y: .85
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
             Label:
                 id: log_label
                 text: root.log
                 size: self.texture_size
-                text_size: self.width, None
+                text_size: self.width - dp(20), None
                 size_hint: 1, None
                 height: self.texture_size[1]
                 markup: True
+                color: 0.9, 0.9, 0.9, 1
+                font_name: 'RobotoMono-Regular' if 'RobotoMono-Regular' else 'DroidSansMono'
+                font_size: sp(12)
+                padding: dp(10), dp(10)
         Button:
-            size_hint_y: .1
+            size_hint_y: .15
             text: 'Close'
             on_release: root.dismiss()
-            height: '48dp'
+            height: dp(48)
+            background_color: 0.3, 0.6, 0.9, 1
+            color: 1, 1, 1, 1
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.9 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
 
 <FormatSelectPopup>:
     auto_dismiss: False
-    title: 'Format select'
-    size_hint: 0.8, 0.7
+    title: 'Select Format'
+    title_color: 1, 1, 1, 1
+    size_hint: 0.85, 0.75
+    background_color: 0.95, 0.95, 0.95, 1
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        RoundedRectangle:
+            pos: self.x, self.top - dp(50)
+            size: self.width, dp(50)
+            radius: [dp(12), dp(12), 0, 0]
     BoxLayout:
         orientation: 'vertical'
-        spacing: '10dp'
-        padding: '10dp'
+        spacing: dp(16)
+        padding: dp(20)
         ScrollView:
-            size_hint_y: .9
+            size_hint_y: .85
             do_scroll_x: False
             do_scroll_y: True
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
             GridLayout:
                 id: layout
-                cols: 2
-                spacing: '5dp'
+                cols: 1
+                spacing: dp(8)
                 size_hint_y: None
                 height: self.minimum_height
-                row_default_height: '40dp'
+                row_default_height: dp(48)
                 row_force_default: True
+                padding: dp(10)
         Button:
-            size_hint_y: .1
+            size_hint_y: .15
             text: 'Close'
             on_release: root.dismiss()
-            height: '48dp'
+            height: dp(48)
+            background_color: 0.3, 0.6, 0.9, 1
+            color: 1, 1, 1, 1
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.9 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
 
 <DownloaderLayout>:
     orientation: 'vertical'
-    spacing: '8dp'
-    padding: '12dp'
+    spacing: dp(16)
+    padding: dp(20)
+    canvas.before:
+        Color:
+            rgba: 0.98, 0.98, 0.98, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    # URL Input Section
     BoxLayout:
         size_hint_y: None
-        height: url_textinput.minimum_height + 16
-        spacing: '8dp'
+        height: self.minimum_height
+        spacing: dp(12)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(12)]
+            Color:
+                rgba: 0.9, 0.9, 0.9, 1
+            Line:
+                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(12))
+                width: 1
+        
         TextInput:
             id: url_textinput
-            hint_text: 'Video URL'
+            hint_text: 'Enter video URL here...'
             size_hint_y: None
             height: self.minimum_height
             multiline: False
             text: app.url
             on_text: app.url = self.text
             on_text: app.meta = {}
-            padding: '12dp', '8dp'
-            background_color: 1, 1, 1, 0.9
+            padding: dp(16), dp(12)
+            background_color: 0, 0, 0, 0
+            foreground_color: 0.2, 0.2, 0.2, 1
+            hint_text_color: 0.6, 0.6, 0.6, 1
+            cursor_color: 0.3, 0.6, 0.9, 1
+            selection_color: 0.3, 0.6, 0.9, 0.3
+            font_size: sp(16)
+
         Button:
             id: download_button
             on_release: root.on_press_button_download()
             size_hint_x: None
-            width: '60dp'
+            width: dp(60)
             size_hint_y: None
-            height: url_textinput.minimum_height
+            height: dp(48)
+            background_color: 0, 0, 0, 0
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.9 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
             Image:
-                x: self.parent.x + dp(8)
-                y: self.parent.y + dp(8)
-                size: self.parent.width - dp(16), self.parent.height - dp(16)
+                x: self.parent.x + dp(16)
+                y: self.parent.y + dp(16)
+                size: self.parent.width - dp(32), self.parent.height - dp(32)
                 stretch: True
                 source: 'img/down-arrow.png'
+    
+    # Downloads List Section
+    Label:
+        text: 'Downloads'
+        size_hint_y: None
+        height: dp(32)
+        text_size: self.width, None
+        halign: 'left'
+        color: 0.3, 0.3, 0.3, 1
+        font_size: sp(18)
+        bold: True
+    
     RV:
         id: rv
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(8)]
 
 <DownloadStatusBar>:
     orientation: 'horizontal'
-    padding: '8dp'
-    spacing: '8dp'
-    bcolor: 0.95, 0.95, 0.95, 1
+    padding: dp(16)
+    spacing: dp(12)
+    size_hint_y: None
+    height: dp(90)
+    bcolor: 1, 1, 1, 1
     canvas.before:
         Color:
             rgba: self.bcolor
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [4,]
+            radius: [dp(8)]
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(8))
+            width: 1
+    
+    # Status Icon
+    Widget:
+        size_hint_x: None
+        width: dp(48)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(6)]
+        Image:
+            x: self.parent.x + dp(8)
+            y: self.parent.y + dp(8)
+            size: dp(32), dp(32)
+            stretch: True
+            source: root.status_icon
+    
+    # Download Info
     BoxLayout:
         orientation: 'vertical'
-        spacing: '4dp'
+        spacing: dp(4)
+        
+        Label:
+            text: root.title if root.title else 'Loading...'
+            text_size: self.width, None
+            height: self.texture_size[1]
+            halign: 'left'
+            shorten: True
+            color: 0.2, 0.2, 0.2, 1
+            font_size: sp(14)
+            bold: True
+        
         Label:
             text: root.url
             text_size: self.width, None
             height: self.texture_size[1]
             halign: 'left'
             shorten: True
-            color: 0.2, 0.2, 0.2, 1
+            color: 0.5, 0.5, 0.5, 1
+            font_size: sp(12)
+        
         Label:
-            text: root.title
-            text_size: self.width, None
-            height: self.texture_size[1]
-            halign: 'left'
-            shorten: True
-            color: 0.3, 0.3, 0.3, 1
-        Label:
-            text: '{:5.2f}% {} {} {}'.format(root.percent, root.file_size, root.speed, root.ETA)
+            text: '{:5.1f}% • {} • {} • {}'.format(root.percent, root.file_size, root.speed, root.ETA) if root.percent > 0 else 'Preparing download...'
             text_size: self.width, None
             height: self.texture_size[1]
             color: 0.4, 0.4, 0.4, 1
-        ProgressBar:
-            value: root.percent
+            font_size: sp(11)
+        
+        # Progress Bar
+        Widget:
+            size_hint_y: None
+            height: dp(6)
             canvas.before:
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(3)]
                 Color:
                     rgba: 0.3, 0.6, 0.9, 1
                 RoundedRectangle:
                     pos: self.x, self.y
-                    size: self.width * self.value_normalized, self.height
-                    radius: [2,]
-    Image:
-        x: self.parent.x + dp(8)
-        y: self.parent.y + dp(8)
-        size: self.parent.height - dp(16), self.parent.height - dp(16)
-        stretch: True
-        source: root.status_icon
-        size_hint_x: None
-        width: '40dp'
+                    size: self.width * (root.percent / 100.0), self.height
+                    radius: [dp(3)]
+    
+    # Action Button
     Button:
         on_release: root.on_release_show_log_button()
         size_hint_x: None
-        width: '40dp'
+        width: dp(40)
         background_color: 0, 0, 0, 0
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1 if self.state == 'normal' else 0.85, 0.85, 0.85, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(6)]
         Image:
             x: self.parent.x + dp(8)
             y: self.parent.y + dp(8)
@@ -210,15 +444,19 @@
 
 <RV>:
     viewclass: 'DownloadStatusBar'
+    scroll_type: ['bars', 'content']
+    bar_width: dp(8)
+    bar_color: 0.3, 0.6, 0.9, 0.8
+    bar_inactive_color: 0.9, 0.9, 0.9, 0.5
     RecycleBoxLayout:
         id: rbl
-        default_size: None, dp(75)
+        default_size: None, dp(90)
         default_size_hint: 1, None
         size_hint_y: None
         height: self.minimum_height
         orientation: 'vertical'
-        spacing: '4dp'
-        padding: '4dp'
+        spacing: dp(8)
+        padding: dp(12)
 
 <RootLayout>:
     BoxLayout:
@@ -229,10 +467,3 @@
             id: action_bar_main
         DownloaderLayout:
             id: main_layout
-            bcolor: 0.98, 0.98, 0.98, 1
-            canvas.before:
-                Color:
-                    rgba: self.bcolor
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
