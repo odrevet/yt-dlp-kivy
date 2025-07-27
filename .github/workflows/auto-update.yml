@@ -94,14 +94,21 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
 
-    - name: Build app with Docker
+    - name: Build with Buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer
       if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        # Build the Docker image
-        docker build -t buildozer .
-        
-        # Run the build process
-        docker run -v $(pwd):/app buildozer bash -c "bash utils.sh --build --sign --key mykeystore.keystore --pass '${{ secrets.KEYSTORE_PASSPHRASE }}'"
+      env:
+        # Set keystore environment variables for signing
+        KEYSTORE_FILE: mykeystore.keystore
+        KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
+      with:
+        workdir: .
+        buildozer_version: stable
+        # Run your utils.sh script before buildozer, then build and sign
+        command: |
+          bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"; 
+          buildozer android release
 
     - name: Clean up keystore
       if: always()
