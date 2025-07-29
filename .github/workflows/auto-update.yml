@@ -92,7 +92,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
-        chmod 644 mykeystore.keystore
+        chmod 777 mykeystore.keystore
 
     - name: Build with Buildozer
       uses: ArtemSBulgakov/buildozer-action@v1
