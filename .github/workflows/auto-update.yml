@@ -92,7 +92,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
-        chmod 777 mykeystore.keystore
+        chmod 600 mykeystore.keystore
 
     - name: Build with Buildozer
       uses: ArtemSBulgakov/buildozer-action@v1
@@ -109,11 +109,6 @@ jobs:
         command: |
           bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"; 
           buildozer android release
-
-    - name: Clean up keystore
-      if: always()
-      run: |
-        rm -f mykeystore.keystore
 
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
