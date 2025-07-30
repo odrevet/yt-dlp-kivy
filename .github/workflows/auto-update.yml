@@ -9,13 +9,16 @@ on:
 jobs:
   update-and-build:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write
+      actions: read
+      security-events: write
+      
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -63,7 +66,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       id: current_app_version
       run: |
-        CURRENT_APP_VERSION=$(grep -E "^\*\*version\*\*" src/_version.py | sed -E "s/^\*\*version\*\*\s*=\s*'([^']+)'.*/\1/")
+        CURRENT_APP_VERSION=$(grep "**version**" src/_version.py | cut -d"'" -f2)
         echo "current_app=$CURRENT_APP_VERSION" >> $GITHUB_OUTPUT
         echo "Current app version: $CURRENT_APP_VERSION"
 
@@ -108,7 +111,6 @@ jobs:
         # Run your utils.sh script before buildozer, then build and sign
         command: |
           bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"; 
-          buildozer android release
 
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
