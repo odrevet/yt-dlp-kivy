@@ -113,6 +113,7 @@ jobs:
         # Set keystore environment variables for signing
         KEYSTORE_FILE: mykeystore.keystore
         KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
+        ANDROID_SDK_DIR: /github/workspace/.buildozer_global/android/platform/android-sdk
       with:
         workdir: .
         buildozer_version: stable

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Read the buildozer.spec file and extract version and package.domain
-APP_VERSION=$(grep -o "'[^']*'" src/_version.py | head -1 | tr -d "'")
-APP_NAME=$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')
-
-BIN='bin'
-ANDROID_SDK_DIR=~/.buildozer/android/platform/android-sdk
-PACKAGE=fr.odrevet.$APP_NAME
-TARGET_ARCH=$(grep "android.arch =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')
+# Allow environment variables to override default values
+APP_VERSION=${APP_VERSION:-$(grep -o "'[^']*'" src/_version.py | head -1 | tr -d "'")}
+APP_NAME=${APP_NAME:-$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')}
+BIN=${BIN:-'bin'}
+ANDROID_SDK_DIR=${ANDROID_SDK_DIR:-~/.buildozer/android/platform/android-sdk}
+PACKAGE=${PACKAGE:-fr.odrevet.$APP_NAME}
+TARGET_ARCH=${TARGET_ARCH:-$(grep "android.arch =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')}
 
 usage() {
   echo "arguments: "
