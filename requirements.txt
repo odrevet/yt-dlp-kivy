@@ -1,4 +1,4 @@
-yt-dlp == 2025.7.21
+yt-dlp == 2025.6.30
 kivy[full]
 Cython==0.29.33
 buildozer
