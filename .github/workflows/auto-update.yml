@@ -25,6 +25,14 @@ jobs:
       with:
         python-version: '3.x'
 
+    - name: Cache Buildozer global directory
+      uses: actions/cache@v3
+      with:
+        path: .buildozer_global
+        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          buildozer-global-${{ runner.os }}-
+
     - name: Get current yt-dlp version from requirements.txt
       id: current_version
       run: |
@@ -85,7 +93,7 @@ jobs:
         NEW_PATCH=$((PATCH + 1))
         NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
         
-        # Update _version.py
+        # Update _version.py by writing the entire file content
         echo "__version__ = '$NEW_VERSION'" > src/_version.py
         
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
