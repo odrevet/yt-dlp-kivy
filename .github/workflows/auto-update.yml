@@ -136,26 +136,6 @@ jobs:
         git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
         git push
 
-    - name: Find built APK
-      if: steps.version_check.outputs.needs_update == 'true'
-      id: find_apk
-      run: |
-        # Find the built APK file (adjust path as needed)
-        if [ "${{ env.ACT }}" == "true" ]; then
-          # For Act testing, use mock APK
-          APK_PATH="build/app-release.apk"
-        else
-          APK_PATH=$(find . -name "*.apk" -type f | head -1)
-        fi
-        
-        if [ -n "$APK_PATH" ] && [ -f "$APK_PATH" ]; then
-          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
-          echo "Found APK at: $APK_PATH"
-        else
-          echo "No APK file found"
-          exit 1
-        fi
-
     - name: Create Release
       if: steps.version_check.outputs.needs_update == 'true'
       uses: softprops/action-gh-release@v1
@@ -170,8 +150,7 @@ jobs:
           ## Built with
           - yt-dlp: ${{ steps.latest_version.outputs.latest }}
           - Build date: ${{ github.run_id }}
-        files: |
-          ${{ steps.find_apk.outputs.apk_path }}
+        files: "bin/youtube_dl_kivy.apk"
         draft: false
         prerelease: false
       env:
