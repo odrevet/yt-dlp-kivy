@@ -112,6 +112,11 @@ jobs:
         command: |
           bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"; 
 
+    - name: Fix git permissions
+      run: |
+        sudo chown -R $(whoami):$(whoami) .
+        sudo chmod -R 755 .git
+    
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
