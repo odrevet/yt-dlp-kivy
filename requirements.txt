@@ -1,4 +1,4 @@
-yt-dlp == 2025.6.30
+yt-dlp == 2025.7.21
 kivy[full]
 yt-dlp
 Cython==0.29.33
