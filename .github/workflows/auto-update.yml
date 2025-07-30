@@ -74,7 +74,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       id: bump_version
       run: |
-        CURRENT_APP_VERSION="${{ steps.current_app_version.outputs.current_app }}"
+        CURRENT_APP_VERSION=${{ steps.current_app_version.outputs.current_app }}
         
         # Extract version parts
         MAJOR=$(echo $CURRENT_APP_VERSION | cut -d. -f1)
@@ -115,8 +115,8 @@ jobs:
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
         
         git add requirements.txt src/_version.py
         git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
