@@ -5,6 +5,20 @@
         "desc": "Display available format to download",
         "section": "general",
         "key": "display_formats_popup"
+    },
+    {
+        "type": "path",
+        "title": "savedir",
+        "desc": "Directory where to save",
+        "section": "general",
+        "key": "savedir"
+    },
+    {
+        "type": "string",
+        "title": "File templete",
+        "desc": "Filename template",
+        "section": "general",
+        "key": "filetmpl"
     },    
     {
         "type": "bool",

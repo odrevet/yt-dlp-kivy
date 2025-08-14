@@ -61,6 +61,7 @@ class DownloaderLayout(BoxLayout):
 
         self.downloads[download_id]["log"] += f"download id {download_id}\n"
         self.downloads[download_id]["log"] += f"with options {app.ydl_opts}\n"
+        self.downloads[download_id]["log"] += f"saving to  {app.ydl_opts['outtmpl']}\n"
 
         try:
             if not bool(app.meta):

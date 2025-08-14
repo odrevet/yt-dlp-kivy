@@ -1,5 +1,6 @@
 import json
 from collections import defaultdict
+from os.path import expanduser, join
 
 from kivy.app import App
 from kivy.factory import Factory
@@ -73,6 +74,15 @@ class DownloaderApp(App):
         else:
             print("------------------")
             print("INI file not found")
+
+        savedir = self.config.get("general", "savedir")
+        if not savedir:
+            savedir = self.get_output_dir()
+
+        self.ydl_opts["outtmpl"] = join(
+            savedir,
+            self.config.get("general", "filetmpl"),
+        )
 
         return RootLayout()
 
