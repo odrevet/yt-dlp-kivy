@@ -1,7 +1,6 @@
 bin/
 __pycache__
 .buildozer
-downloader.ini
 ydl_release.keystore
 .env.act
 .android/
