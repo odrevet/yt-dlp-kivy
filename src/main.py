@@ -46,6 +46,7 @@ class DownloaderApp(App):
     ydl_opts = {"no_color": True}
     url = StringProperty()
     section_options = defaultdict(lambda: defaultdict(list))
+    use_kivy_settings = False
 
     def get_output_dir(self):
         if platform == "android":
