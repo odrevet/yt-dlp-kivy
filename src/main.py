@@ -66,7 +66,11 @@ class DownloaderApp(App):
 
         # Config
         config = ConfigParser()
-        Config.set("input", "mouse", "mouse,multitouch_on_demand")
+
+        # remove red dots on right clic on desktop
+        # also trigger on_release multiple time under android
+        if platform in ("linux", "win", "macosx"):
+            Config.set("input", "mouse", "mouse,multitouch_on_demand")
 
         # Find the resource file
         ini_file = resource_find("downloader.ini")
