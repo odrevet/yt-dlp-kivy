@@ -1,3 +1,6 @@
+import json
+from collections import defaultdict
+
 from kivy.app import App
 from kivy.factory import Factory
 from kivy.properties import (
@@ -42,259 +45,12 @@ class DownloaderApp(App):
     meta = {}
     ydl_opts = {"no_color": True}
     url = StringProperty()
-    section_options = {
-        "general": {
-            "bool": [
-                "ignore-errors",
-                "abort-on-error",
-                "ignore-config",
-                "flat-playlist",
-                "live-from-start",
-                "mark-watched",
-            ],
-            "str": [
-                "use-extractors",
-                "default-search",
-                "plugin-dirs",
-                "wait-for-video",
-                "color",
-                "compat-options",
-                "alias",
-                "preset-alias",
-            ],
-        },
-        "network": {
-            "bool": ["force_ipv4", "force_ipv6", "enable_file_urls"],
-            "str": ["proxy", "source_address", "impersonate"],
-            "int": ["socket_timeout"],
-        },
-        "geo": {"str": ["geo_verification_proxy", "xff"]},
-        "video_selection": {
-            "bool": [
-                "no_playlist",
-                "yes_playlist",
-                "break_match_filters",
-                "break_on_existing",
-                "break_per_input",
-            ],
-            "str": [
-                "playlist_items",
-                "min_filesize",
-                "max_filesize",
-                "date",
-                "datebefore",
-                "dateafter",
-                "match_filters",
-                "download_archive",
-            ],
-            "int": ["age_limit", "max_downloads", "skip_playlist_after_errors"],
-        },
-        "download": {
-            "bool": [
-                "skip_unavailable_fragments",
-                "keep_fragments",
-                "resize_buffer",
-                "playlist_random",
-                "lazy_playlist",
-                "xattr_set_filesize",
-                "hls_use_mpegts",
-            ],
-            "str": [
-                "limit_rate",
-                "throttled_rate",
-                "download_sections",
-                "external_downloader",
-                "external_downloader_args",
-                "buffer_size",
-                "http_chunk_size",
-            ],
-            "int": [
-                "concurrent_fragments",
-                "retries",
-                "file_access_retries",
-                "fragment_retries",
-                "retry_sleep",
-            ],
-        },
-        "filesystem": {
-            "bool": [
-                "restrict_filenames",
-                "no_overwrites",
-                "force_overwrites",
-                "continue",
-                "part",
-                "mtime",
-                "write_description",
-                "write_info_json",
-                "write_playlist_metafiles",
-                "clean_info_json",
-                "write_comments",
-                "rm_cache_dir",
-            ],
-            "str": [
-                "batch_file",
-                "paths",
-                "output",
-                "output_na_placeholder",
-                "load_info_json",
-                "cookies",
-                "cookies_from_browser",
-                "cache_dir",
-            ],
-            "int": ["windows_filenames", "trim_filenames"],
-        },
-        "format": {
-            "bool": [
-                "format_sort_force",
-                "video_multistreams",
-                "audio_multistreams",
-                "prefer_free_formats",
-                "check_formats",
-            ],
-            "str": ["format", "format_sort", "merge_output_format"],
-            "int": ["list_formats"],
-        },
-        "subtitles": {
-            "bool": ["write_subs", "write_auto_subs", "list_subs"],
-            "str": ["sub_format", "sub_langs"],
-        },
-        "authentication": {
-            "bool": ["netrc", "ap_list_mso"],
-            "str": [
-                "username",
-                "password",
-                "twofactor",
-                "netrc_location",
-                "netrc_cmd",
-                "video_password",
-                "ap_mso",
-                "ap_username",
-                "ap_password",
-                "client_certificate",
-                "client_certificate_key",
-                "client_certificate_password",
-            ],
-        },
-        "postprocessing": {
-            "bool": [
-                "keep_video",
-                "post_overwrites",
-                "embed_subs",
-                "embed_thumbnail",
-                "embed_metadata",
-                "embed_chapters",
-                "embed_info_json",
-                "xattrs",
-                "split_chapters",
-                "force_keyframes_at_cuts",
-            ],
-            "str": [
-                "audio_format",
-                "audio_quality",
-                "remux_video",
-                "recode_video",
-                "postprocessor_args",
-                "parse_metadata",
-                "replace_in_metadata",
-                "ffmpeg_location",
-                "exec",
-                "convert_subs",
-                "convert_thumbnails",
-                "remove_chapters",
-                "use_postprocessor",
-                "concat_playlist",
-                "fixup",
-            ],
-            "int": ["extract_audio"],
-        },
-        "sponsorblock": {
-            "bool": ["no_sponsorblock"],
-            "str": [
-                "sponsorblock_mark",
-                "sponsorblock_remove",
-                "sponsorblock_chapter_title",
-                "sponsorblock_api",
-            ],
-        },
-        "extractor": {
-            "bool": ["allow_dynamic_mpd", "hls_split_discontinuity"],
-            "str": ["extractor_retries", "extractor_args"],
-        },
-        "verbosity": {
-            "bool": [
-                "quiet",
-                "no_warnings",
-                "ignore_no_formats_error",
-                "skip_download",
-                "dump_json",
-                "dump_single_json",
-                "force_write_archive",
-                "newline",
-                "no_progress",
-                "console_title",
-                "verbose",
-                "dump_pages",
-                "write_pages",
-                "print_traffic",
-            ],
-            "str": ["print_template", "print_to_file", "progress_template"],
-            "int": ["simulate", "progress_delta"],
-        },
-        "workarounds": {
-            "bool": [
-                "legacy_server_connect",
-                "no_check_certificates",
-                "prefer_insecure",
-                "bidi_workaround",
-            ],
-            "str": [
-                "encoding",
-                "add_headers",
-                "sleep_requests",
-                "sleep_interval",
-                "max_sleep_interval",
-                "sleep_subtitles",
-            ],
-        },
-        "thumbnails": {
-            "bool": ["write_thumbnail", "write_all_thumbnails", "list_thumbnails"]
-        },
-    }
+    section_options = defaultdict(lambda: defaultdict(list))
 
     def get_output_dir(self):
         if platform == "android":
             return os.getenv("EXTERNAL_STORAGE") + "/Download"
         return expanduser("~")
-
-    def init_ydl_opts(self):
-        for section, opts in self.section_options.items():
-            for key_type, keys in opts.items():
-                for key in keys:
-                    print(f"get {key}")
-                    if not self.config.get(section, key):
-                        return
-
-                    if key_type == "bool":
-                        self.ydl_opts[key] = self.config.getboolean(section, key)
-                    elif key_type == "int":
-                        self.ydl_opts[key] = self.config.getint(section, key)
-                    elif key_type == "str":
-                        self.ydl_opts[key] = self.config.get(section, key)
-
-    def on_config_change(self, config, section, key, value):
-        if section not in self.section_options:
-            return
-
-        getters = {
-            "bool": config.getboolean,
-            "int": config.getint,
-            "str": lambda s, k: value,
-        }
-
-        for typ, keys in self.section_options[section].items():
-            if key in keys:
-                self.ydl_opts[key] = getters[typ](section, key)
-                break
 
     def build(self):
         if platform == "android" and not check_permission(
@@ -338,13 +94,57 @@ class DownloaderApp(App):
             ("Workarounds", f"{settings_dir}/workarounds.json"),
         ]
 
-        # Add each panel with proper path resolution
+        # Build section_options from all JSONs
+        section_options = defaultdict(lambda: defaultdict(list))
         for title, filename in settings_files:
             json_file = resource_find(filename)
             if json_file:
+                with open(json_file, "r", encoding="utf-8") as f:
+                    for item in json.load(f):
+                        section = item.get("section")
+                        typ = item.get("type")
+                        key = item.get("key")
+                        if section and typ and key:
+                            if typ == "string":
+                                typ = "str"
+                            section_options[section][typ].append(key)
                 settings.add_json_panel(title, self.config, json_file)
             else:
                 print(f"Warning: Settings file not found: {filename}")
+
+        self.section_options = dict(section_options)
+
+    def init_ydl_opts(self):
+        for section, opts in self.section_options.items():
+            for key_type, keys in opts.items():
+                for key in keys:
+                    if not self.config.get(section, key):
+                        continue
+                    if key_type == "bool":
+                        self.ydl_opts[key] = self.config.getboolean(section, key)
+                    elif key_type == "numeric":
+                        self.ydl_opts[key] = self.config.getint(section, key)
+                    elif (
+                        key_type == "string"
+                        or key_type == "path"
+                        or key_type == "options"
+                    ):
+                        self.ydl_opts[key] = self.config.get(section, key)
+
+    def on_config_change(self, config, section, key, value):
+        if section not in self.section_options:
+            return
+        getters = {
+            "bool": config.getboolean,
+            "numeric": config.getint,
+            "string": lambda s, k: value,
+            "path": lambda s, k: value,
+            "options": lambda s, k: value,
+        }
+        for typ, keys in self.section_options[section].items():
+            if key in keys:
+                self.ydl_opts[key] = getters[typ](section, key)
+                break
 
 
 class RV(RecycleView):
