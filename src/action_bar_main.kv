@@ -1,0 +1,72 @@
+#:import Factory kivy.factory.Factory
+#:include about_popup.kv
+
+<ActionBarMain>:
+    background_color: 0.8, 0.2, 0.2, 0.95
+    pos_hint: {'top':1}
+    size_hint_y: None
+    height: dp(56)
+    canvas.before:
+        Color:
+            rgba: 0.85, 0.15, 0.15, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0.3, 0.3, 0.3, 1
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: 1
+    ActionView:
+        use_separator: True
+        ActionPrevious:
+            app_icon: ''
+            with_previous: False
+            title: 'YT-DLP Kivy'
+            color: 1, 1, 1, 1
+        ActionOverflow:
+        ActionButton:
+            on_release: app.url = Clipboard.paste()
+            background_color: 0.3, 0.6, 0.9, 1
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.8 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Image:
+                x: self.parent.x + dp(12)
+                y: self.parent.y + dp(12)
+                size: self.parent.size[0] - dp(24), self.parent.size[1] - dp(24)
+                stretch: True
+                source: 'img/clipboard.png'
+        ActionButton:
+            on_release: app.open_settings()
+            background_color: 0.6, 0.6, 0.6, 1
+            canvas.before:
+                Color:
+                    rgba: 0.6, 0.6, 0.6, 0.8 if self.state == 'normal' else 0.5, 0.5, 0.5, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Image:
+                x: self.parent.x + dp(12)
+                y: self.parent.y + dp(12)
+                size: self.parent.size[0] - dp(24), self.parent.size[1] - dp(24)
+                stretch: True
+                source: 'img/gear.png'
+        ActionButton:
+            on_release: Factory.AboutPopup().open()
+            background_color: 0.4, 0.7, 0.4, 1
+            canvas.before:
+                Color:
+                    rgba: 0.4, 0.7, 0.4, 0.8 if self.state == 'normal' else 0.3, 0.6, 0.3, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Image:
+                x: self.parent.x + dp(12)
+                y: self.parent.y + dp(12)
+                size: self.parent.size[0] - dp(24), self.parent.size[1] - dp(24)
+                stretch: True
+                source: 'img/info.png'

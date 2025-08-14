@@ -4,6 +4,7 @@ from os.path import expanduser, join
 
 from kivy.app import App
 from kivy.factory import Factory
+from kivy.lang import Builder
 from kivy.properties import (
     DictProperty,
     NumericProperty,
@@ -31,6 +32,9 @@ from status import STATUS_INIT, STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 from downloader_layout import DownloaderLayout
 from download_status_bar import DownloadStatusBar
 from about_popup import AboutPopup
+
+Builder.load_file("download_status_bar.kv")
+Builder.load_file("log_popup.kv")
 
 if platform == "android":
     from android.storage import primary_external_storage_path

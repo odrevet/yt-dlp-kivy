@@ -1,0 +1,104 @@
+<DownloadStatusBar>:
+    orientation: 'horizontal'
+    padding: dp(16)
+    spacing: dp(12)
+    size_hint_y: None
+    height: dp(90)
+    bcolor: 1, 1, 1, 1
+    canvas.before:
+        Color:
+            rgba: self.bcolor
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(8))
+            width: 1
+    
+    # Download Info
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(4)
+        
+        Label:
+            text: root.title if root.title else 'Loading...'
+            text_size: self.width, None
+            height: self.texture_size[1]
+            halign: 'left'
+            shorten: True
+            color: 0.2, 0.2, 0.2, 1
+            font_size: sp(14)
+            bold: True
+        
+        Label:
+            text: root.url
+            text_size: self.width, None
+            height: self.texture_size[1]
+            halign: 'left'
+            shorten: True
+            color: 0.5, 0.5, 0.5, 1
+            font_size: sp(12)
+        
+        Label:
+            text: '{:5.1f}% • {} • {} • {}'.format(root.percent, root.file_size, root.speed, root.ETA) if root.percent > 0 else ''
+            text_size: self.width, None
+            height: self.texture_size[1]
+            color: 0.4, 0.4, 0.4, 1
+            font_size: sp(11)
+        
+        # Progress Bar
+        Widget:
+            size_hint_y: None
+            height: dp(6)
+            canvas.before:
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(3)]
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 1
+                RoundedRectangle:
+                    pos: self.x, self.y
+                    size: self.width * (root.percent / 100.0), self.height
+                    radius: [dp(3)]
+    
+    # Status/Log Button
+    Button:
+        on_release: root.on_release_show_log_button()
+        size_hint_x: None
+        width: dp(48)
+        background_color: 0, 0, 0, 0
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1 if self.state == 'normal' else 0.85, 0.85, 0.85, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(8)]
+        Image:
+            x: self.parent.x + dp(8)
+            y: self.parent.y + dp(8)
+            size: dp(32), dp(32)
+            stretch: True
+            source: root.status_icon
+
+<RV>:
+    viewclass: 'DownloadStatusBar'
+    scroll_type: ['bars', 'content']
+    bar_width: dp(8)
+    bar_color: 0.3, 0.6, 0.9, 0.8
+    bar_inactive_color: 0.9, 0.9, 0.9, 0.5
+    RecycleBoxLayout:
+        id: rbl
+        default_size: None, dp(90)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        spacing: dp(8)
+        padding: dp(12)

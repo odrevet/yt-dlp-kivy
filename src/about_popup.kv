@@ -1,0 +1,55 @@
+<AboutPopup>:
+    auto_dismiss: False
+    title: 'About'
+    title_color: 1, 1, 1, 1
+    size_hint: 0.85, 0.75
+    background_color: 0.95, 0.95, 0.95, 1
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        RoundedRectangle:
+            pos: self.x, self.top - dp(50)
+            size: self.width, dp(50)
+            radius: [dp(12), dp(12), 0, 0]
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(16)
+        padding: dp(20)
+        ScrollView:
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]
+            Label:
+                id: about_label
+                size: self.texture_size
+                text_size: self.width - dp(20), None
+                size_hint: 1, None
+                height: self.texture_size[1]
+                padding: dp(10), dp(10)
+                on_ref_press: root.on_ref_press(args[1])
+                markup: True
+                color: 0.2, 0.2, 0.2, 1
+        Button:
+            text: 'Close'
+            on_release: root.dismiss()
+            size_hint_y: None
+            height: dp(48)
+            background_color: 0.3, 0.6, 0.9, 1
+            color: 1, 1, 1, 1
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.6, 0.9, 0.9 if self.state == 'normal' else 0.25, 0.5, 0.8, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(8)]

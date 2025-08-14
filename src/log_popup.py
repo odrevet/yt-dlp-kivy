@@ -1,5 +1,3 @@
-
-
 from kivy.clock import Clock
 from kivy.properties import (
     StringProperty,

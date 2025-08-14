@@ -1,0 +1,93 @@
+#:kivy 2.3.0
+#:import Window kivy.core.window.Window
+#:import Clipboard kivy.core.clipboard.Clipboard
+
+<DownloaderLayout>:
+    orientation: 'vertical'
+    spacing: dp(16)
+    padding: dp(20)
+    canvas.before:
+        Color:
+            rgba: 0.98, 0.98, 0.98, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    # URL Input Section
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: dp(12)
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(12)]
+            Color:
+                rgba: 0.9, 0.9, 0.9, 1
+            Line:
+                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(12))
+                width: 1
+        
+        TextInput:
+            id: url_textinput
+            hint_text: 'Enter video URL here...'
+            size_hint_y: None
+            height: self.minimum_height
+            multiline: False
+            text: app.url
+            on_text: app.url = self.text
+            on_text: app.meta = {}
+            padding: dp(16), dp(12)
+            background_color: 0, 0, 0, 0
+            foreground_color: 0.2, 0.2, 0.2, 1
+            hint_text_color: 0.6, 0.6, 0.6, 1
+            cursor_color: 0.3, 0.6, 0.9, 1
+            selection_color: 0.3, 0.6, 0.9, 0.3
+            font_size: sp(16)
+
+        Button:
+            id: download_button
+            on_release: root.on_press_button_download()
+            size_hint_x: None
+            width: dp(60)
+            size_hint_y: None
+            height: dp(48)
+            background_color: 0, 0, 0, 0
+            canvas.before:
+                Color:
+                    rgba: 0.25, 0.5, 0.8, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+            Image:
+                x: self.parent.x + dp(16)
+                y: self.parent.y + dp(16)
+                size: self.parent.width - dp(32), self.parent.height - dp(32)
+                stretch: True
+                source: 'img/down-arrow.png'
+    
+    # Downloads List Section
+    Label:
+        text: 'Downloads'
+        size_hint_y: None
+        height: dp(32)
+        text_size: self.width, None
+        halign: 'left'
+        color: 0.3, 0.3, 0.3, 1
+        font_size: sp(18)
+        bold: True
+    
+    RV:
+        id: rv
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(8)]
+
