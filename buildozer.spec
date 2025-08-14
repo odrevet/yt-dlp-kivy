@@ -11,7 +11,6 @@ package.domain = fr.odrevet
 source.dir = src
 source.include_exts = py,kv,png,json,ini
 source.include_patterns = src/img/*.png,src/downloader.ini,src/settings/*.json
-source.include_dirs = src/settings
 
 version.regex = __version__ = ['"](.*)['"]
 version.filename = %(source.dir)s/_version.py
