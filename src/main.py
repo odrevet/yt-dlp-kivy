@@ -6,6 +6,7 @@ from kivy.properties import (
     StringProperty,
     ObjectProperty,
 )
+from kivy.resources import resource_find
 from kivy.uix.actionbar import ActionBar
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -304,40 +305,46 @@ class DownloaderApp(App):
         # Config
         config = ConfigParser()
         Config.set("input", "mouse", "mouse,multitouch_on_demand")
-        config.read("src/downloader.ini")
 
-        self.config = config
-        self.settings_cls = Settings
-
-        self.init_ydl_opts()
+        # Find the resource file
+        ini_file = resource_find("downloader.ini")
+        if ini_file:
+            config.read(ini_file)
+            self.config = config
+            self.settings_cls = Settings
+            self.init_ydl_opts()
+        else:
+            print("------------------")
+            print("INI file not found")
 
         return RootLayout()
 
     def build_settings(self, settings):
-        settings.add_json_panel("General", self.config, "settings/general.json")
-        settings.add_json_panel("Network", self.config, "settings/network.json")
-        settings.add_json_panel(
-            "Geo-restriction", self.config, "settings/geo_restriction.json"
-        )
-        settings.add_json_panel(
-            "Video Selection", self.config, "settings/video_selection.json"
-        )
-        settings.add_json_panel("Download", self.config, "settings/download.json")
-        settings.add_json_panel("Filesystem", self.config, "settings/filesystem.json")
-        settings.add_json_panel("Format", self.config, "settings/video_format.json")
-        settings.add_json_panel("Subtitles", self.config, "settings/subtitle.json")
-        settings.add_json_panel(
-            "Authentication", self.config, "settings/authentification.json"
-        )
-        settings.add_json_panel(
-            "Post-Processing", self.config, "settings/post_processing.json"
-        )
-        settings.add_json_panel(
-            "SponsorBlock", self.config, "settings/sponsor_block.json"
-        )
-        settings.add_json_panel("Extractor", self.config, "settings/extractor.json")
-        settings.add_json_panel("Verbosity", self.config, "settings/verbosity.json")
-        settings.add_json_panel("Workarounds", self.config, "settings/workarounds.json")
+        settings_dir = "settings"
+        settings_files = [
+            ("General", f"{settings_dir}/general.json"),
+            ("Network", f"{settings_dir}/network.json"),
+            ("Geo-restriction", f"{settings_dir}/geo_restriction.json"),
+            ("Video Selection", f"{settings_dir}/video_selection.json"),
+            ("Download", f"{settings_dir}/download.json"),
+            ("Filesystem", f"{settings_dir}/filesystem.json"),
+            ("Format", f"{settings_dir}/video_format.json"),
+            ("Subtitles", f"{settings_dir}/subtitle.json"),
+            ("Authentication", f"{settings_dir}/authentification.json"),
+            ("Post-Processing", f"{settings_dir}/post_processing.json"),
+            ("SponsorBlock", f"{settings_dir}/sponsor_block.json"),
+            ("Extractor", f"{settings_dir}/extractor.json"),
+            ("Verbosity", f"{settings_dir}/verbosity.json"),
+            ("Workarounds", f"{settings_dir}/workarounds.json"),
+        ]
+
+        # Add each panel with proper path resolution
+        for title, filename in settings_files:
+            json_file = resource_find(filename)
+            if json_file:
+                settings.add_json_panel(title, self.config, json_file)
+            else:
+                print(f"Warning: Settings file not found: {filename}")
 
 
 class RV(RecycleView):
