@@ -1,0 +1,188 @@
+[
+    {
+        "type": "bool",
+        "title": "Extract Audio",
+        "desc": "Convert video files to audio-only files",
+        "section": "postprocessing",
+        "key": "extract_audio"
+    },
+    {
+        "type": "options",
+        "title": "Audio Format",
+        "desc": "Format to convert audio to",
+        "section": "postprocessing",
+        "key": "audio_format",
+        "options": ["best", "aac", "alac", "flac", "m4a", "mp3", "opus", "vorbis", "wav"]
+    },
+    {
+        "type": "numeric",
+        "title": "Audio Quality",
+        "desc": "Audio quality (0-10 for VBR or specific bitrate)",
+        "section": "postprocessing",
+        "key": "audio_quality"
+    },
+    {
+        "type": "string",
+        "title": "Remux Video",
+        "desc": "Remux video into another container",
+        "section": "postprocessing",
+        "key": "remux_video"
+    },
+    {
+        "type": "string",
+        "title": "Recode Video",
+        "desc": "Re-encode video into another format",
+        "section": "postprocessing",
+        "key": "recode_video"
+    },
+    {
+        "type": "string",
+        "title": "Postprocessor Arguments",
+        "desc": "Arguments for postprocessors",
+        "section": "postprocessing",
+        "key": "postprocessor_args"
+    },
+    {
+        "type": "bool",
+        "title": "Keep Video",
+        "desc": "Keep intermediate video file after post-processing",
+        "section": "postprocessing",
+        "key": "keep_video"
+    },
+    {
+        "type": "bool",
+        "title": "Post Overwrites",
+        "desc": "Overwrite post-processed files",
+        "section": "postprocessing",
+        "key": "post_overwrites"
+    },
+    {
+        "type": "bool",
+        "title": "Embed Subtitles",
+        "desc": "Embed subtitles in the video",
+        "section": "postprocessing",
+        "key": "embed_subs"
+    },
+    {
+        "type": "bool",
+        "title": "Embed Thumbnail",
+        "desc": "Embed thumbnail in the video as cover art",
+        "section": "postprocessing",
+        "key": "embed_thumbnail"
+    },
+    {
+        "type": "bool",
+        "title": "Embed Metadata",
+        "desc": "Embed metadata to the video file",
+        "section": "postprocessing",
+        "key": "embed_metadata"
+    },
+    {
+        "type": "bool",
+        "title": "Embed Chapters",
+        "desc": "Add chapter markers to the video file",
+        "section": "postprocessing",
+        "key": "embed_chapters"
+    },
+    {
+        "type": "bool",
+        "title": "Embed Info JSON",
+        "desc": "Embed infojson as attachment to mkv/mka files",
+        "section": "postprocessing",
+        "key": "embed_info_json"
+    },
+    {
+        "type": "string",
+        "title": "Parse Metadata",
+        "desc": "Parse additional metadata from other fields",
+        "section": "postprocessing",
+        "key": "parse_metadata"
+    },
+    {
+        "type": "string",
+        "title": "Replace in Metadata",
+        "desc": "Replace text in metadata fields using regex",
+        "section": "postprocessing",
+        "key": "replace_in_metadata"
+    },
+    {
+        "type": "bool",
+        "title": "Write Extended Attributes",
+        "desc": "Write metadata to video file's xattrs",
+        "section": "postprocessing",
+        "key": "xattrs"
+    },
+    {
+        "type": "options",
+        "title": "Concatenate Playlist",
+        "desc": "Concatenate videos in a playlist",
+        "section": "postprocessing",
+        "key": "concat_playlist",
+        "options": ["never", "always", "multi_video"]
+    },
+    {
+        "type": "options",
+        "title": "Fixup Policy",
+        "desc": "Automatically correct known faults",
+        "section": "postprocessing",
+        "key": "fixup",
+        "options": ["never", "warn", "detect_or_warn", "force"]
+    },
+    {
+        "type": "path",
+        "title": "FFmpeg Location",
+        "desc": "Location of the ffmpeg binary",
+        "section": "postprocessing",
+        "key": "ffmpeg_location"
+    },
+    {
+        "type": "string",
+        "title": "Execute Command",
+        "desc": "Execute a command after download",
+        "section": "postprocessing",
+        "key": "exec"
+    },
+    {
+        "type": "options",
+        "title": "Convert Subtitles",
+        "desc": "Convert subtitles to another format",
+        "section": "postprocessing",
+        "key": "convert_subs",
+        "options": ["none", "ass", "lrc", "srt", "vtt"]
+    },
+    {
+        "type": "string",
+        "title": "Convert Thumbnails",
+        "desc": "Convert thumbnails to another format",
+        "section": "postprocessing",
+        "key": "convert_thumbnails"
+    },
+    {
+        "type": "bool",
+        "title": "Split Chapters",
+        "desc": "Split video into multiple files based on chapters",
+        "section": "postprocessing",
+        "key": "split_chapters"
+    },
+    {
+        "type": "string",
+        "title": "Remove Chapters",
+        "desc": "Remove chapters matching regex pattern",
+        "section": "postprocessing",
+        "key": "remove_chapters"
+    },
+    {
+        "type": "bool",
+        "title": "Force Keyframes at Cuts",
+        "desc": "Force keyframes when cutting/splitting sections",
+        "section": "postprocessing",
+        "key": "force_keyframes_at_cuts"
+    },
+    {
+        "type": "string",
+        "title": "Use Postprocessor",
+        "desc": "Enable plugin postprocessors",
+        "section": "postprocessing",
+        "key": "use_postprocessor"
+    }
+]

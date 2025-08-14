@@ -1,0 +1,135 @@
+[
+    {
+        "type": "bool",
+        "title": "Quiet Mode",
+        "desc": "Activate quiet mode",
+        "section": "verbosity",
+        "key": "quiet"
+    },
+    {
+        "type": "bool",
+        "title": "No Warnings",
+        "desc": "Ignore warnings",
+        "section": "verbosity",
+        "key": "no_warnings"
+    },
+    {
+        "type": "bool",
+        "title": "Simulate",
+        "desc": "Do not download, only simulate",
+        "section": "verbosity",
+        "key": "simulate"
+    },
+    {
+        "type": "bool",
+        "title": "Ignore No Formats Error",
+        "desc": "Continue even when no formats available",
+        "section": "verbosity",
+        "key": "ignore_no_formats_error"
+    },
+    {
+        "type": "bool",
+        "title": "Skip Download",
+        "desc": "Skip download but write related files",
+        "section": "verbosity",
+        "key": "skip_download"
+    },
+    {
+        "type": "string",
+        "title": "Print Template",
+        "desc": "Template to print to screen",
+        "section": "verbosity",
+        "key": "print_template"
+    },
+    {
+        "type": "string",
+        "title": "Print to File",
+        "desc": "Append template output to file",
+        "section": "verbosity",
+        "key": "print_to_file"
+    },
+    {
+        "type": "bool",
+        "title": "Dump JSON",
+        "desc": "Print JSON information for each video",
+        "section": "verbosity",
+        "key": "dump_json"
+    },
+    {
+        "type": "bool",
+        "title": "Dump Single JSON",
+        "desc": "Print JSON for each URL in single line",
+        "section": "verbosity",
+        "key": "dump_single_json"
+    },
+    {
+        "type": "bool",
+        "title": "Force Write Archive",
+        "desc": "Write archive entries even in simulation",
+        "section": "verbosity",
+        "key": "force_write_archive"
+    },
+    {
+        "type": "bool",
+        "title": "Newline Progress",
+        "desc": "Output progress as new lines",
+        "section": "verbosity",
+        "key": "newline"
+    },
+    {
+        "type": "bool",
+        "title": "No Progress",
+        "desc": "Do not print progress bar",
+        "section": "verbosity",
+        "key": "no_progress"
+    },
+    {
+        "type": "bool",
+        "title": "Console Title",
+        "desc": "Display progress in console title",
+        "section": "verbosity",
+        "key": "console_title"
+    },
+    {
+        "type": "string",
+        "title": "Progress Template",
+        "desc": "Template for progress outputs",
+        "section": "verbosity",
+        "key": "progress_template"
+    },
+    {
+        "type": "numeric",
+        "title": "Progress Delta",
+        "desc": "Time between progress output (seconds)",
+        "section": "verbosity",
+        "key": "progress_delta"
+    },
+    {
+        "type": "bool",
+        "title": "Verbose",
+        "desc": "Print debugging information",
+        "section": "verbosity",
+        "key": "verbose"
+    },
+    {
+        "type": "bool",
+        "title": "Dump Pages",
+        "desc": "Print downloaded pages (base64 encoded)",
+        "section": "verbosity",
+        "key": "dump_pages"
+    },
+    {
+        "type": "bool",
+        "title": "Write Pages",
+        "desc": "Write downloaded pages to files",
+        "section": "verbosity",
+        "key": "write_pages"
+    },
+    {
+        "type": "bool",
+        "title": "Print Traffic",
+        "desc": "Display HTTP traffic",
+        "section": "verbosity",
+        "key": "print_traffic"
+    }
+]

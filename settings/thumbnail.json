@@ -1,0 +1,23 @@
+[
+    {
+        "type": "bool",
+        "title": "Write Thumbnail",
+        "desc": "Write thumbnail image to disk",
+        "section": "thumbnails",
+        "key": "write_thumbnail"
+    },
+    {
+        "type": "bool",
+        "title": "Write All Thumbnails",
+        "desc": "Write all thumbnail formats to disk",
+        "section": "thumbnails",
+        "key": "write_all_thumbnails"
+    },
+    {
+        "type": "bool",
+        "title": "List Thumbnails",
+        "desc": "List available thumbnails",
+        "section": "thumbnails",
+        "key": "list_thumbnails"
+    }
+]

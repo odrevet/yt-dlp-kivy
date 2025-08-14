@@ -1,0 +1,30 @@
+[
+    {
+        "type": "string",
+        "title": "Extractor Retries",
+        "desc": "Number of retries for known extractor errors",
+        "section": "extractor",
+        "key": "extractor_retries"
+    },
+    {
+        "type": "bool",
+        "title": "Allow Dynamic MPD",
+        "desc": "Process dynamic DASH manifests",
+        "section": "extractor",
+        "key": "allow_dynamic_mpd"
+    },
+    {
+        "type": "bool",
+        "title": "HLS Split Discontinuity",
+        "desc": "Split HLS playlists at discontinuities",
+        "section": "extractor",
+        "key": "hls_split_discontinuity"
+    },
+    {
+        "type": "string",
+        "title": "Extractor Arguments",
+        "desc": "Pass arguments to specific extractors",
+        "section": "extractor",
+        "key": "extractor_args"
+    }
+]

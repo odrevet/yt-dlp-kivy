@@ -1,0 +1,135 @@
+[
+    {
+        "type": "numeric",
+        "title": "Concurrent Fragments",
+        "desc": "Number of fragments to download concurrently",
+        "section": "download",
+        "key": "concurrent_fragments"
+    },
+    {
+        "type": "string",
+        "title": "Limit Rate",
+        "desc": "Maximum download rate (e.g., '50K', '4.2M')",
+        "section": "download",
+        "key": "limit_rate"
+    },
+    {
+        "type": "string",
+        "title": "Throttled Rate",
+        "desc": "Minimum rate below which throttling is assumed",
+        "section": "download",
+        "key": "throttled_rate"
+    },
+    {
+        "type": "string",
+        "title": "Retries",
+        "desc": "Number of retries (or 'infinite')",
+        "section": "download",
+        "key": "retries"
+    },
+    {
+        "type": "string",
+        "title": "File Access Retries",
+        "desc": "Number of file access retries",
+        "section": "download",
+        "key": "file_access_retries"
+    },
+    {
+        "type": "string",
+        "title": "Fragment Retries",
+        "desc": "Number of fragment retries",
+        "section": "download",
+        "key": "fragment_retries"
+    },
+    {
+        "type": "string",
+        "title": "Retry Sleep",
+        "desc": "Sleep time between retries",
+        "section": "download",
+        "key": "retry_sleep"
+    },
+    {
+        "type": "bool",
+        "title": "Skip Unavailable Fragments",
+        "desc": "Skip unavailable fragments",
+        "section": "download",
+        "key": "skip_unavailable_fragments"
+    },
+    {
+        "type": "bool",
+        "title": "Keep Fragments",
+        "desc": "Keep downloaded fragments after completion",
+        "section": "download",
+        "key": "keep_fragments"
+    },
+    {
+        "type": "string",
+        "title": "Buffer Size",
+        "desc": "Download buffer size (e.g., '1024', '16K')",
+        "section": "download",
+        "key": "buffer_size"
+    },
+    {
+        "type": "bool",
+        "title": "Resize Buffer",
+        "desc": "Automatically resize buffer",
+        "section": "download",
+        "key": "resize_buffer"
+    },
+    {
+        "type": "string",
+        "title": "HTTP Chunk Size",
+        "desc": "Size of HTTP download chunks",
+        "section": "download",
+        "key": "http_chunk_size"
+    },
+    {
+        "type": "bool",
+        "title": "Playlist Random",
+        "desc": "Download playlist videos in random order",
+        "section": "download",
+        "key": "playlist_random"
+    },
+    {
+        "type": "bool",
+        "title": "Lazy Playlist",
+        "desc": "Process playlist entries as received",
+        "section": "download",
+        "key": "lazy_playlist"
+    },
+    {
+        "type": "bool",
+        "title": "Set File Size Attribute",
+        "desc": "Set file xattribute with expected file size",
+        "section": "download",
+        "key": "xattr_set_filesize"
+    },
+    {
+        "type": "bool",
+        "title": "HLS Use MPEGTS",
+        "desc": "Use MPEGTS container for HLS videos",
+        "section": "download",
+        "key": "hls_use_mpegts"
+    },
+    {
+        "type": "string",
+        "title": "Download Sections",
+        "desc": "Download only matching chapters/time ranges",
+        "section": "download",
+        "key": "download_sections"
+    },
+    {
+        "type": "string",
+        "title": "External Downloader",
+        "desc": "External downloader to use",
+        "section": "download",
+        "key": "external_downloader"
+    },
+    {
+        "type": "string",
+        "title": "Downloader Arguments",
+        "desc": "Arguments for external downloader",
+        "section": "download",
+        "key": "external_downloader_args"
+    }
+]

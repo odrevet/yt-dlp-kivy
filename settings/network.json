@@ -1,0 +1,51 @@
+[
+    {
+        "type": "string",
+        "title": "Proxy URL",
+        "desc": "HTTP/HTTPS/SOCKS proxy URL",
+        "section": "network",
+        "key": "proxy"
+    },
+    {
+        "type": "numeric",
+        "title": "Socket Timeout",
+        "desc": "Time to wait before giving up (seconds)",
+        "section": "network",
+        "key": "socket_timeout"
+    },
+    {
+        "type": "string",
+        "title": "Source Address",
+        "desc": "Client-side IP address to bind to",
+        "section": "network",
+        "key": "source_address"
+    },
+    {
+        "type": "string",
+        "title": "Impersonate Client",
+        "desc": "Client to impersonate for requests",
+        "section": "network",
+        "key": "impersonate"
+    },
+    {
+        "type": "bool",
+        "title": "Force IPv4",
+        "desc": "Make all connections via IPv4",
+        "section": "network",
+        "key": "force_ipv4"
+    },
+    {
+        "type": "bool",
+        "title": "Force IPv6",
+        "desc": "Make all connections via IPv6",
+        "section": "network",
+        "key": "force_ipv6"
+    },
+    {
+        "type": "bool",
+        "title": "Enable File URLs",
+        "desc": "Enable file:// URLs",
+        "section": "network",
+        "key": "enable_file_urls"
+    }
+]

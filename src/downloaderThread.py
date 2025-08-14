@@ -3,7 +3,7 @@ import traceback
 
 import yt_dlp
 
-from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
+from status import STATUS_DONE, STATUS_ERROR
 
 
 class DownloaderThread(threading.Thread):
@@ -23,9 +23,7 @@ class DownloaderThread(threading.Thread):
         except SystemExit:
             self.logger.debug("System Exit")
             self.meta["status"] = STATUS_ERROR
-            pass
         except Exception as inst:
             self.logger.error(inst)
             self.logger.error(traceback.format_exc())
             self.meta["status"] = STATUS_ERROR
-            pass

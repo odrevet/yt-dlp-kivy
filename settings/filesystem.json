@@ -1,0 +1,156 @@
+[
+    {
+        "type": "path",
+        "title": "Batch File",
+        "desc": "File containing URLs to download",
+        "section": "filesystem",
+        "key": "batch_file"
+    },
+    {
+        "type": "string",
+        "title": "Paths",
+        "desc": "Download paths for different file types",
+        "section": "filesystem",
+        "key": "paths"
+    },
+    {
+        "type": "string",
+        "title": "Output Template",
+        "desc": "Output filename template",
+        "section": "filesystem",
+        "key": "output"
+    },
+    {
+        "type": "string",
+        "title": "Output NA Placeholder",
+        "desc": "Placeholder for unavailable fields",
+        "section": "filesystem",
+        "key": "output_na_placeholder"
+    },
+    {
+        "type": "bool",
+        "title": "Restrict Filenames",
+        "desc": "Restrict to ASCII characters only",
+        "section": "filesystem",
+        "key": "restrict_filenames"
+    },
+    {
+        "type": "bool",
+        "title": "Windows Filenames",
+        "desc": "Force Windows-compatible filenames",
+        "section": "filesystem",
+        "key": "windows_filenames"
+    },
+    {
+        "type": "numeric",
+        "title": "Trim Filename Length",
+        "desc": "Limit filename length to specified characters",
+        "section": "filesystem",
+        "key": "trim_filenames"
+    },
+    {
+        "type": "bool",
+        "title": "No Overwrites",
+        "desc": "Do not overwrite existing files",
+        "section": "filesystem",
+        "key": "no_overwrites"
+    },
+    {
+        "type": "bool",
+        "title": "Force Overwrites",
+        "desc": "Overwrite all video and metadata files",
+        "section": "filesystem",
+        "key": "force_overwrites"
+    },
+    {
+        "type": "bool",
+        "title": "Continue Downloads",
+        "desc": "Resume partially downloaded files",
+        "section": "filesystem",
+        "key": "continue"
+    },
+    {
+        "type": "bool",
+        "title": "Use Part Files",
+        "desc": "Use .part files during download",
+        "section": "filesystem",
+        "key": "part"
+    },
+    {
+        "type": "bool",
+        "title": "Use Modified Time",
+        "desc": "Set file modification time from Last-Modified header",
+        "section": "filesystem",
+        "key": "mtime"
+    },
+    {
+        "type": "bool",
+        "title": "Write Description",
+        "desc": "Write video description to .description file",
+        "section": "filesystem",
+        "key": "write_description"
+    },
+    {
+        "type": "bool",
+        "title": "Write Info JSON",
+        "desc": "Write video metadata to .info.json file",
+        "section": "filesystem",
+        "key": "write_info_json"
+    },
+    {
+        "type": "bool",
+        "title": "Write Playlist Metafiles",
+        "desc": "Write playlist metadata files",
+        "section": "filesystem",
+        "key": "write_playlist_metafiles"
+    },
+    {
+        "type": "bool",
+        "title": "Clean Info JSON",
+        "desc": "Remove internal metadata from infojson",
+        "section": "filesystem",
+        "key": "clean_info_json"
+    },
+    {
+        "type": "bool",
+        "title": "Write Comments",
+        "desc": "Retrieve and write video comments",
+        "section": "filesystem",
+        "key": "write_comments"
+    },
+    {
+        "type": "path",
+        "title": "Load Info JSON",
+        "desc": "JSON file with video information",
+        "section": "filesystem",
+        "key": "load_info_json"
+    },
+    {
+        "type": "path",
+        "title": "Cookies File",
+        "desc": "Netscape formatted cookie file",
+        "section": "filesystem",
+        "key": "cookies"
+    },
+    {
+        "type": "string",
+        "title": "Cookies from Browser",
+        "desc": "Extract cookies from browser",
+        "section": "filesystem",
+        "key": "cookies_from_browser"
+    },
+    {
+        "type": "path",
+        "title": "Cache Directory",
+        "desc": "Location for yt-dlp cache",
+        "section": "filesystem",
+        "key": "cache_dir"
+    },
+    {
+        "type": "bool",
+        "title": "Remove Cache Directory",
+        "desc": "Delete all cache files",
+        "section": "filesystem",
+        "key": "rm_cache_dir"
+    }
+]

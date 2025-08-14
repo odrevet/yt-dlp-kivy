@@ -1,0 +1,114 @@
+[
+    {
+        "type": "string",
+        "title": "Playlist Items",
+        "desc": "Playlist items to download (e.g., '1:5,7')",
+        "section": "video_selection",
+        "key": "playlist_items"
+    },
+    {
+        "type": "string",
+        "title": "Min File Size",
+        "desc": "Minimum file size (e.g., '50k', '44.6M')",
+        "section": "video_selection",
+        "key": "min_filesize"
+    },
+    {
+        "type": "string",
+        "title": "Max File Size",
+        "desc": "Maximum file size (e.g., '50k', '44.6M')",
+        "section": "video_selection",
+        "key": "max_filesize"
+    },
+    {
+        "type": "string",
+        "title": "Date",
+        "desc": "Download videos uploaded on this date (YYYYMMDD)",
+        "section": "video_selection",
+        "key": "date"
+    },
+    {
+        "type": "string",
+        "title": "Date Before",
+        "desc": "Download videos uploaded before this date",
+        "section": "video_selection",
+        "key": "datebefore"
+    },
+    {
+        "type": "string",
+        "title": "Date After",
+        "desc": "Download videos uploaded after this date",
+        "section": "video_selection",
+        "key": "dateafter"
+    },
+    {
+        "type": "string",
+        "title": "Match Filters",
+        "desc": "Generic video filter expressions",
+        "section": "video_selection",
+        "key": "match_filters"
+    },
+    {
+        "type": "string",
+        "title": "Break Match Filters",
+        "desc": "Stop download when video is rejected",
+        "section": "video_selection",
+        "key": "break_match_filters"
+    },
+    {
+        "type": "bool",
+        "title": "No Playlist",
+        "desc": "Download only the video, not the playlist",
+        "section": "video_selection",
+        "key": "no_playlist"
+    },
+    {
+        "type": "bool",
+        "title": "Yes Playlist",
+        "desc": "Download the playlist if URL refers to both",
+        "section": "video_selection",
+        "key": "yes_playlist"
+    },
+    {
+        "type": "numeric",
+        "title": "Age Limit",
+        "desc": "Download only videos suitable for given age",
+        "section": "video_selection",
+        "key": "age_limit"
+    },
+    {
+        "type": "path",
+        "title": "Download Archive",
+        "desc": "File to record downloaded video IDs",
+        "section": "video_selection",
+        "key": "download_archive"
+    },
+    {
+        "type": "numeric",
+        "title": "Max Downloads",
+        "desc": "Maximum number of files to download",
+        "section": "video_selection",
+        "key": "max_downloads"
+    },
+    {
+        "type": "bool",
+        "title": "Break on Existing",
+        "desc": "Stop when encountering archived file",
+        "section": "video_selection",
+        "key": "break_on_existing"
+    },
+    {
+        "type": "bool",
+        "title": "Break per Input",
+        "desc": "Reset counters per input URL",
+        "section": "video_selection",
+        "key": "break_per_input"
+    },
+    {
+        "type": "numeric",
+        "title": "Skip Playlist After Errors",
+        "desc": "Number of failures before skipping playlist",
+        "section": "video_selection",
+        "key": "skip_playlist_after_errors"
+    }
+]

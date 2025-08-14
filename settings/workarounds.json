@@ -1,0 +1,72 @@
+[
+    {
+        "type": "string",
+        "title": "Encoding",
+        "desc": "Force specified encoding",
+        "section": "workarounds",
+        "key": "encoding"
+    },
+    {
+        "type": "bool",
+        "title": "Legacy Server Connect",
+        "desc": "Allow connections to non-RFC 5746 servers",
+        "section": "workarounds",
+        "key": "legacy_server_connect"
+    },
+    {
+        "type": "bool",
+        "title": "No Check Certificates",
+        "desc": "Suppress HTTPS certificate validation",
+        "section": "workarounds",
+        "key": "no_check_certificates"
+    },
+    {
+        "type": "bool",
+        "title": "Prefer Insecure",
+        "desc": "Use unencrypted connection for video info",
+        "section": "workarounds",
+        "key": "prefer_insecure"
+    },
+    {
+        "type": "string",
+        "title": "Add Headers",
+        "desc": "Custom HTTP headers (FIELD:VALUE)",
+        "section": "workarounds",
+        "key": "add_headers"
+    },
+    {
+        "type": "bool",
+        "title": "Bidi Workaround",
+        "desc": "Work around terminals lacking bidi support",
+        "section": "workarounds",
+        "key": "bidi_workaround"
+    },
+    {
+        "type": "numeric",
+        "title": "Sleep Requests",
+        "desc": "Sleep between requests (seconds)",
+        "section": "workarounds",
+        "key": "sleep_requests"
+    },
+    {
+        "type": "numeric",
+        "title": "Sleep Interval",
+        "desc": "Sleep before each download (seconds)",
+        "section": "workarounds",
+        "key": "sleep_interval"
+    },
+    {
+        "type": "numeric",
+        "title": "Max Sleep Interval",
+        "desc": "Maximum sleep interval (seconds)",
+        "section": "workarounds",
+        "key": "max_sleep_interval"
+    },
+    {
+        "type": "numeric",
+        "title": "Sleep Subtitles",
+        "desc": "Sleep before subtitle download (seconds)",
+        "section": "workarounds",
+        "key": "sleep_subtitles"
+    }
+]

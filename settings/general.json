@@ -1,0 +1,109 @@
+[
+    {
+        "type": "bool",
+        "title": "display format selection popup",
+        "desc": "Display available format to download",
+        "section": "general",
+        "key": "display_formats_popup"
+    },    
+    {
+        "type": "bool",
+        "title": "Ignore Errors",
+        "desc": "Ignore download and postprocessing errors",
+        "section": "general",
+        "key": "ignore-errors"
+    },
+    {
+        "type": "bool",
+        "title": "Abort on Error",
+        "desc": "Abort downloading of further videos if an error occurs",
+        "section": "general",
+        "key": "abort-on-error"
+    },
+    {
+        "type": "string",
+        "title": "Use Extractors",
+        "desc": "Extractor names to use separated by commas",
+        "section": "general",
+        "key": "use-extractors"
+    },
+    {
+        "type": "string",
+        "title": "Default Search",
+        "desc": "Prefix for unqualified URLs (e.g. 'ytsearch:')",
+        "section": "general",
+        "key": "default-search"
+    },
+    {
+        "type": "bool",
+        "title": "Ignore Config",
+        "desc": "Don't load any configuration files",
+        "section": "general",
+        "key": "ignore-config"
+    },
+    {
+        "type": "path",
+        "title": "Plugin Directories",
+        "desc": "Additional directory to search for plugins",
+        "section": "general",
+        "key": "plugin-dirs"
+    },
+    {
+        "type": "bool",
+        "title": "Flat Playlist",
+        "desc": "Do not extract playlist entries",
+        "section": "general",
+        "key": "flat-playlist"
+    },
+    {
+        "type": "bool",
+        "title": "Live from Start",
+        "desc": "Download livestreams from the start",
+        "section": "general",
+        "key": "live-from-start"
+    },
+    {
+        "type": "numeric",
+        "title": "Wait for Video (seconds)",
+        "desc": "Wait for scheduled streams to become available",
+        "section": "general",
+        "key": "wait-for-video"
+    },
+    {
+        "type": "bool",
+        "title": "Mark Watched",
+        "desc": "Mark videos watched",
+        "section": "general",
+        "key": "mark-watched"
+    },
+    {
+        "type": "options",
+        "title": "Color Output",
+        "desc": "Whether to emit color codes in output",
+        "section": "general",
+        "key": "color",
+        "options": ["always", "auto", "never", "no-color"]
+    },
+    {
+        "type": "string",
+        "title": "Compatibility Options",
+        "desc": "Options for compatibility with youtube-dl",
+        "section": "general",
+        "key": "compat-options"
+    },
+    {
+        "type": "string",
+        "title": "Aliases",
+        "desc": "Create aliases for option strings",
+        "section": "general",
+        "key": "alias"
+    },
+    {
+        "type": "options",
+        "title": "Preset Alias",
+        "desc": "Apply a predefined set of options",
+        "section": "general",
+        "key": "preset-alias",
+        "options": ["mp3", "aac", "mp4", "mkv", "sleep"]
+    }
+]

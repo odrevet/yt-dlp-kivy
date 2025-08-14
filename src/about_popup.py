@@ -4,7 +4,6 @@ import webbrowser
 import sys
 from subprocess import check_output, CalledProcessError, TimeoutExpired
 
-import yt_dlp
 import yt_dlp.utils as utils
 
 import kivy

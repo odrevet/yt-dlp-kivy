@@ -1,0 +1,100 @@
+[
+    {
+        "type": "string",
+        "title": "Username",
+        "desc": "Login with this account ID",
+        "section": "authentication",
+        "key": "username"
+    },
+    {
+        "type": "string",
+        "title": "Password",
+        "desc": "Account password",
+        "section": "authentication",
+        "key": "password"
+    },
+    {
+        "type": "string",
+        "title": "Two Factor",
+        "desc": "Two-factor authentication code",
+        "section": "authentication",
+        "key": "twofactor"
+    },
+    {
+        "type": "bool",
+        "title": "Use Netrc",
+        "desc": "Use .netrc authentication data",
+        "section": "authentication",
+        "key": "netrc"
+    },
+    {
+        "type": "path",
+        "title": "Netrc Location",
+        "desc": "Location of .netrc authentication data",
+        "section": "authentication",
+        "key": "netrc_location"
+    },
+    {
+        "type": "string",
+        "title": "Netrc Command",
+        "desc": "Command to execute to get credentials",
+        "section": "authentication",
+        "key": "netrc_cmd"
+    },
+    {
+        "type": "string",
+        "title": "Video Password",
+        "desc": "Video-specific password",
+        "section": "authentication",
+        "key": "video_password"
+    },
+    {
+        "type": "string",
+        "title": "Adobe Pass MSO",
+        "desc": "Adobe Pass multiple-system operator identifier",
+        "section": "authentication",
+        "key": "ap_mso"
+    },
+    {
+        "type": "string",
+        "title": "Adobe Pass Username",
+        "desc": "Multiple-system operator account login",
+        "section": "authentication",
+        "key": "ap_username"
+    },
+    {
+        "type": "string",
+        "title": "Adobe Pass Password",
+        "desc": "Multiple-system operator account password",
+        "section": "authentication",
+        "key": "ap_password"
+    },
+    {
+        "type": "bool",
+        "title": "List Adobe Pass MSOs",
+        "desc": "List all supported multiple-system operators",
+        "section": "authentication",
+        "key": "ap_list_mso"
+    },
+    {
+        "type": "path",
+        "title": "Client Certificate",
+        "desc": "Path to client certificate file in PEM format",
+        "section": "authentication",
+        "key": "client_certificate"
+    },
+    {
+        "type": "path",
+        "title": "Client Certificate Key",
+        "desc": "Path to private key file for client certificate",
+        "section": "authentication",
+        "key": "client_certificate_key"
+    },
+    {
+        "type": "string",
+        "title": "Client Certificate Password",
+        "desc": "Password for client certificate private key",
+        "section": "authentication",
+        "key": "client_certificate_password"
+    }
+]

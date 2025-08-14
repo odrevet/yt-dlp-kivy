@@ -1,0 +1,37 @@
+[
+    {
+        "type": "bool",
+        "title": "Write Subtitles",
+        "desc": "Write subtitle files",
+        "section": "subtitles",
+        "key": "write_subs"
+    },
+    {
+        "type": "bool",
+        "title": "Write Auto Subtitles",
+        "desc": "Write auto-generated subtitle files",
+        "section": "subtitles",
+        "key": "write_auto_subs"
+    },
+    {
+        "type": "bool",
+        "title": "List Subtitles",
+        "desc": "List available subtitles",
+        "section": "subtitles",
+        "key": "list_subs"
+    },
+    {
+        "type": "string",
+        "title": "Subtitle Format",
+        "desc": "Subtitle format preference",
+        "section": "subtitles",
+        "key": "sub_format"
+    },
+    {
+        "type": "string",
+        "title": "Subtitle Languages",
+        "desc": "Languages to download (comma-separated)",
+        "section": "subtitles",
+        "key": "sub_langs"
+    }
+]

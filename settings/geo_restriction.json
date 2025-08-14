@@ -1,0 +1,16 @@
+[
+    {
+        "type": "string",
+        "title": "Geo Verification Proxy",
+        "desc": "Proxy to verify IP address for geo-restricted sites",
+        "section": "geo",
+        "key": "geo_verification_proxy"
+    },
+    {
+        "type": "string",
+        "title": "X-Forwarded-For",
+        "desc": "How to fake X-Forwarded-For HTTP header",
+        "section": "geo",
+        "key": "xff"
+    }
+]

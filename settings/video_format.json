@@ -1,0 +1,65 @@
+[
+    {
+        "type": "string",
+        "title": "Format",
+        "desc": "Video format code or selection",
+        "section": "format",
+        "key": "format"
+    },
+    {
+        "type": "string",
+        "title": "Format Sort",
+        "desc": "Sort order for formats",
+        "section": "format",
+        "key": "format_sort"
+    },
+    {
+        "type": "bool",
+        "title": "Format Sort Force",
+        "desc": "Force user sort order precedence",
+        "section": "format",
+        "key": "format_sort_force"
+    },
+    {
+        "type": "bool",
+        "title": "Video Multistreams",
+        "desc": "Allow multiple video streams",
+        "section": "format",
+        "key": "video_multistreams"
+    },
+    {
+        "type": "bool",
+        "title": "Audio Multistreams",
+        "desc": "Allow multiple audio streams",
+        "section": "format",
+        "key": "audio_multistreams"
+    },
+    {
+        "type": "bool",
+        "title": "Prefer Free Formats",
+        "desc": "Prefer free containers over non-free",
+        "section": "format",
+        "key": "prefer_free_formats"
+    },
+    {
+        "type": "bool",
+        "title": "Check Formats",
+        "desc": "Verify formats are downloadable",
+        "section": "format",
+        "key": "check_formats"
+    },
+    {
+        "type": "bool",
+        "title": "List Formats",
+        "desc": "List available formats",
+        "section": "format",
+        "key": "list_formats"
+    },
+    {
+        "type": "string",
+        "title": "Merge Output Format",
+        "desc": "Container for merged formats",
+        "section": "format",
+        "key": "merge_output_format"
+    }
+]

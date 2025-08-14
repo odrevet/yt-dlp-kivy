@@ -1,0 +1,37 @@
+[
+    {
+        "type": "string",
+        "title": "SponsorBlock Mark",
+        "desc": "Categories to create chapters for (comma-separated)",
+        "section": "sponsorblock",
+        "key": "sponsorblock_mark"
+    },
+    {
+        "type": "string",
+        "title": "SponsorBlock Remove",
+        "desc": "Categories to remove from video (comma-separated)",
+        "section": "sponsorblock",
+        "key": "sponsorblock_remove"
+    },
+    {
+        "type": "string",
+        "title": "SponsorBlock Chapter Title",
+        "desc": "Template for SponsorBlock chapter titles",
+        "section": "sponsorblock",
+        "key": "sponsorblock_chapter_title"
+    },
+    {
+        "type": "bool",
+        "title": "No SponsorBlock",
+        "desc": "Disable both mark and remove",
+        "section": "sponsorblock",
+        "key": "no_sponsorblock"
+    },
+    {
+        "type": "string",
+        "title": "SponsorBlock API URL",
+        "desc": "SponsorBlock API location",
+        "section": "sponsorblock",
+        "key": "sponsorblock_api"
+    }
+]

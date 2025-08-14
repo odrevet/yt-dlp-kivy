@@ -1,0 +1,41 @@
+
+
+from kivy.app import App
+from kivy.properties import (
+    NumericProperty,
+    StringProperty,
+    ObjectProperty,
+)
+from kivy.uix.boxlayout import BoxLayout
+
+from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
+from log_popup import LogPopup
+
+
+class DownloadStatusBar(BoxLayout):
+    url = StringProperty("")
+    status = NumericProperty(STATUS_IN_PROGRESS)
+    log = StringProperty("")
+    id = ObjectProperty()
+    status_icon = StringProperty("img/loader.png")
+    title = StringProperty("")
+    percent = NumericProperty(0)
+    ETA = StringProperty("")
+    speed = StringProperty("")
+    file_size = StringProperty("")
+    popup = None
+
+    def on_release_show_log_button(self):
+        app = App.get_running_app()
+        downloader_layout = app.root.ids.main_layout
+
+        self.popup = LogPopup(self.log, self.id, downloader_layout.downloads)
+        self.popup.open()
+
+    def on_status(self, instance, value):
+        if value == STATUS_IN_PROGRESS:
+            self.status_icon = "img/loader.png"
+        elif value == STATUS_DONE:
+            self.status_icon = "img/correct.png"
+        elif value == STATUS_ERROR:
+            self.status_icon = "img/cancel.png"
