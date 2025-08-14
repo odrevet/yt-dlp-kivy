@@ -31,7 +31,9 @@ docker run \
   --volume "$HOME/.buildozer":/home/user/.buildozer \
   --volume "$PWD":/home/user/hostcwd \
   --volume "$HOME/.gradle":/home/user/.gradle \
-  kivy/buildozer /bin/bash -c "bash utils.sh --build"`
+  --entrypoint /bin/bash \
+  kivy/buildozer \
+  -c "bash utils.sh --build"
 ```
 
 ## Utils
