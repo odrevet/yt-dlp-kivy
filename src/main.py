@@ -105,8 +105,6 @@ class DownloaderApp(App):
                         typ = item.get("type")
                         key = item.get("key")
                         if section and typ and key:
-                            if typ == "string":
-                                typ = "str"
                             section_options[section][typ].append(key)
                 settings.add_json_panel(title, self.config, json_file)
             else:
