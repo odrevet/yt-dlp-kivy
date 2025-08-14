@@ -42,6 +42,10 @@ class DownloaderLayout(BoxLayout):
     def on_press_button_download(self):
         app = App.get_running_app()
 
+        # Prevent duplicate URLs
+        if any(d["url"] == app.url for d in self.downloads.values()):
+            return  # skip if already in list
+
         download_id = uuid.uuid4()
 
         # Add UI status bar for this download
