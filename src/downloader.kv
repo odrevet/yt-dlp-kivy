@@ -355,24 +355,6 @@
             rounded_rectangle: (self.x, self.y, self.width, self.height, dp(8))
             width: 1
     
-    # Status Icon
-    Widget:
-        size_hint_x: None
-        width: dp(48)
-        canvas.before:
-            Color:
-                rgba: 0.95, 0.95, 0.95, 1
-            RoundedRectangle:
-                pos: self.pos
-                size: self.size
-                radius: [dp(6)]
-        Image:
-            x: self.parent.x + dp(8)
-            y: self.parent.y + dp(8)
-            size: dp(32), dp(32)
-            stretch: True
-            source: root.status_icon
-    
     # Download Info
     BoxLayout:
         orientation: 'vertical'
@@ -422,11 +404,11 @@
                     size: self.width * (root.percent / 100.0), self.height
                     radius: [dp(3)]
     
-    # Action Button
+    # Merged Status/Log Button
     Button:
         on_release: root.on_release_show_log_button()
         size_hint_x: None
-        width: dp(40)
+        width: dp(48)
         background_color: 0, 0, 0, 0
         canvas.before:
             Color:
@@ -434,13 +416,13 @@
             RoundedRectangle:
                 pos: self.pos
                 size: self.size
-                radius: [dp(6)]
+                radius: [dp(8)]
         Image:
             x: self.parent.x + dp(8)
             y: self.parent.y + dp(8)
-            size: self.parent.width - dp(16), self.parent.height - dp(16)
+            size: dp(32), dp(32)
             stretch: True
-            source: 'img/report.png'
+            source: root.status_icon
 
 <RV>:
     viewclass: 'DownloadStatusBar'
