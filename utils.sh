@@ -2,7 +2,7 @@
 
 # Read the buildozer.spec file and extract version and package.domain
 # Allow environment variables to override default values
-APP_VERSION=${APP_VERSION:-$(grep -o "'[^']*'" src/_version.py | head -1 | tr -d "'")}
+APP_VERSION=${APP_VERSION:-$(sed -n 's/.*["'\'']\([0-9.]*\)["'\''].*/\1/p' src/_version.py)}
 APP_NAME=${APP_NAME:-$(grep "package.name =" buildozer.spec | awk -F "=" '{print $2}' | tr -d '[:space:]')}
 BIN=${BIN:-'bin'}
 ANDROID_SDK_DIR=${ANDROID_SDK_DIR:-~/.buildozer/android/platform/android-sdk}
