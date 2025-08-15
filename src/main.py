@@ -52,6 +52,23 @@ class DownloaderApp(App):
     url = StringProperty()
     section_options = defaultdict(lambda: defaultdict(list))
     use_kivy_settings = False
+    settings_dir = "settings"
+    settings_files = [
+        ("General", f"{settings_dir}/general.json"),
+        ("Network", f"{settings_dir}/network.json"),
+        ("Geo-restriction", f"{settings_dir}/geo_restriction.json"),
+        ("Video Selection", f"{settings_dir}/video_selection.json"),
+        ("Download", f"{settings_dir}/download.json"),
+        ("Filesystem", f"{settings_dir}/filesystem.json"),
+        ("Format", f"{settings_dir}/video_format.json"),
+        ("Subtitles", f"{settings_dir}/subtitle.json"),
+        ("Authentication", f"{settings_dir}/authentification.json"),
+        ("Post-Processing", f"{settings_dir}/post_processing.json"),
+        ("SponsorBlock", f"{settings_dir}/sponsor_block.json"),
+        ("Extractor", f"{settings_dir}/extractor.json"),
+        ("Verbosity", f"{settings_dir}/verbosity.json"),
+        ("Workarounds", f"{settings_dir}/workarounds.json"),
+    ]
 
     def get_output_dir(self):
         if platform == "android":
@@ -95,27 +112,16 @@ class DownloaderApp(App):
         return RootLayout()
 
     def build_settings(self, settings):
-        settings_dir = "settings"
-        settings_files = [
-            ("General", f"{settings_dir}/general.json"),
-            ("Network", f"{settings_dir}/network.json"),
-            ("Geo-restriction", f"{settings_dir}/geo_restriction.json"),
-            ("Video Selection", f"{settings_dir}/video_selection.json"),
-            ("Download", f"{settings_dir}/download.json"),
-            ("Filesystem", f"{settings_dir}/filesystem.json"),
-            ("Format", f"{settings_dir}/video_format.json"),
-            ("Subtitles", f"{settings_dir}/subtitle.json"),
-            ("Authentication", f"{settings_dir}/authentification.json"),
-            ("Post-Processing", f"{settings_dir}/post_processing.json"),
-            ("SponsorBlock", f"{settings_dir}/sponsor_block.json"),
-            ("Extractor", f"{settings_dir}/extractor.json"),
-            ("Verbosity", f"{settings_dir}/verbosity.json"),
-            ("Workarounds", f"{settings_dir}/workarounds.json"),
-        ]
+        for title, filename in self.settings_files:
+            json_file = resource_find(filename)
+            if json_file:
+                settings.add_json_panel(title, self.config, json_file)
+            else:
+                print(f"Warning: Settings file not found: {filename}")
 
-        # Build section_options from all JSONs
+    def init_ydl_opts(self):
         section_options = defaultdict(lambda: defaultdict(list))
-        for title, filename in settings_files:
+        for title, filename in self.settings_files:
             json_file = resource_find(filename)
             if json_file:
                 with open(json_file, "r", encoding="utf-8") as f:
@@ -125,16 +131,15 @@ class DownloaderApp(App):
                         key = item.get("key")
                         if section and typ and key:
                             section_options[section][typ].append(key)
-                settings.add_json_panel(title, self.config, json_file)
             else:
                 print(f"Warning: Settings file not found: {filename}")
 
         self.section_options = dict(section_options)
 
-    def init_ydl_opts(self):
         for section, opts in self.section_options.items():
             for key_type, keys in opts.items():
                 for key in keys:
+                    print(key)
                     if not self.config.get(section, key):
                         continue
                     if key_type == "bool":
