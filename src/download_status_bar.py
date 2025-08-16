@@ -15,7 +15,7 @@ class DownloadStatusBar(BoxLayout):
     status = NumericProperty(STATUS_INIT)
     log = StringProperty("")
     id = ObjectProperty()
-    title = StringProperty("")
+    title = StringProperty("VALUE")
     status_icon = StringProperty("img/loader.png")
     percent = NumericProperty(0)
     ETA = StringProperty("")
@@ -35,9 +35,10 @@ class DownloadStatusBar(BoxLayout):
             self.title = "Init"
             self.status_icon = "img/loader.png"
         elif value == STATUS_DONE:
-            self.title = "Done"
+            self.title = "Done " + App.get_running_app().root.ids.main_layout.downloads[self.id]["filename"]
             self.status_icon = "img/correct.png"
         elif value == STATUS_IN_PROGRESS:
+            self.title = "Downloading " + App.get_running_app().root.ids.main_layout.downloads[self.id]["filename"]
             self.status_icon = "img/loader.png"
         elif value == STATUS_ERROR:
             self.title = "Error"

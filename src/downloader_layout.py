@@ -49,14 +49,15 @@ class DownloaderLayout(BoxLayout):
             "dt": datetime.now(),
             "url": app.url,
             "log": "",
-            "title": "",
+            "filename": "",
             "status": STATUS_INIT,
             "meta": {},
+            "ydl_opts" : {}
         }
 
         self.downloads[download_id]["log"] += f"download id {download_id}\n"
         self.downloads[download_id]["log"] += f"with options {app.ydl_opts}\n"
-        self.downloads[download_id]["log"] += f"saving to  {app.ydl_opts['outtmpl']}\n"
+        self.downloads[download_id]["log"] += f"saving to {app.ydl_opts['savedir']}\n"
 
         try:
             if not bool(app.meta):
@@ -82,21 +83,20 @@ class DownloaderLayout(BoxLayout):
                 else:
                     self.start_download(app.url, app.ydl_opts, download_id)
         except Exception as e:
-            self.downloads[download_id]["title"] = "Cannot retreive metadata"
-            self.downloads[download_id]["log"] = str(e)
+            self.downloads[download_id]["log"] += str(e)
             self.downloads[download_id]["status"] = STATUS_ERROR
 
     def start_download(self, url, ydl_opts, download_id):
+        # Update the status
         self.downloads[download_id]["status"] = STATUS_IN_PROGRESS
 
-        hook = self.make_hook(download_id)
-
-        # Create a logger
-        ydl_opts["logger"] = YdlLogger(self.downloads[download_id], download_id)
-        ydl_opts["progress_hooks"] = [hook]
+        # Copy options then create the logger and progress hook
+        self.downloads[download_id]["ydl_opts"] = ydl_opts.copy()
+        self.downloads[download_id]["ydl_opts"]["logger"] = YdlLogger(self.downloads[download_id], download_id)
+        self.downloads[download_id]["ydl_opts"]["progress_hooks"] = [self.make_hook(download_id)]
 
         # Run in a thread so the UI do not freeze when download
-        t = DownloaderThread(url, ydl_opts, self.downloads[download_id])
+        t = DownloaderThread(url, self.downloads[download_id])
         t.start()
 
     def make_hook(self, download_id):
@@ -109,12 +109,15 @@ class DownloaderLayout(BoxLayout):
                 else:
                     percent = 0.0
                 self.downloads[download_id]["percent"] = percent
-
-                self.downloads[download_id]["title"] = d["filename"]
+                self.downloads[download_id]["filename"] = d["filename"]
                 self.downloads[download_id]["ETA"] = time.strftime(
                     "%H:%M:%S", time.gmtime(d["eta"])
                 )
+                self.downloads[download_id]["status"] = STATUS_IN_PROGRESS
             elif d["status"] == "finished":
                 self.downloads[download_id]["status"] = STATUS_DONE
+            elif d["status"] == "error":
+                self.downloads[download_id]["status"] = STATUS_ERROR
+                self.downloads[download_id]["percent"] = 0.0
 
         return hook
