@@ -107,7 +107,9 @@ class DownloaderApp(App):
         savedir = self.config.get("general", "savedir")
         if not savedir:
             savedir = self.get_output_dir()
-            # Save the default directory back to config
+            
+            # Save the default directory to options and config
+            self.ydl_opts["savedir"] = savedir
             self.config.set("general", "savedir", savedir)
             self.config.write()
 
