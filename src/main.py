@@ -172,11 +172,6 @@ class DownloaderApp(App):
                 self.ydl_opts[key] = getters[typ](section, key)
                 break
 
-
-class RV(RecycleView):
-    pass
-
-
 class ActionBarMain(ActionBar):
     pass
 

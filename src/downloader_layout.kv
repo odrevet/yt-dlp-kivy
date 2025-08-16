@@ -47,7 +47,7 @@
             cursor_color: 0.3, 0.6, 0.9, 1
             selection_color: 0.3, 0.6, 0.9, 0.3
             font_size: sp(16)
-
+        
         Button:
             id: download_button
             on_release: root.on_press_button_download()
@@ -68,9 +68,14 @@
                 y: self.parent.y + dp(16)
                 size: self.parent.width - dp(32), self.parent.height - dp(32)
                 stretch: True
-                source: 'img/down-arrow.png'    
-    RV:
-        id: rv
+                source: 'img/down-arrow.png'
+    
+    ScrollView:
+        id: download_scroll
+        scroll_type: ['bars', 'content']
+        bar_width: dp(8)
+        bar_color: 0.3, 0.6, 0.9, 0.8
+        bar_inactive_color: 0.9, 0.9, 0.9, 0.5
         canvas.before:
             Color:
                 rgba: 1, 1, 1, 1
@@ -78,4 +83,11 @@
                 pos: self.pos
                 size: self.size
                 radius: [dp(8)]
-
+        
+        BoxLayout:
+            id: downloads_layout
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(8)
+            padding: dp(12)

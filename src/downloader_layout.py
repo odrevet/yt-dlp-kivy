@@ -2,7 +2,6 @@ from functools import partial
 import uuid
 from datetime import datetime
 import time
-from collections import OrderedDict
 
 import yt_dlp
 
@@ -16,20 +15,49 @@ from logger import YdlLogger
 from downloaderThread import DownloaderThread
 from format_select_popup import FormatSelectPopup
 
+from download_status_bar import DownloadStatusBar
 
 class DownloaderLayout(BoxLayout):
     popup = None  # info display popup
-    downloads = OrderedDict()
-    downloads = OrderedDict(sorted(downloads.items(), key=lambda x: x[1]["timestamp"]))
-
+    downloads = {}
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_interval(self.refresh_rv, 1)
-
-    def refresh_rv(self, dt):
-        downloads_array = list(self.downloads.values())
-        self.ids.rv.data = sorted(downloads_array, key=lambda x: x["dt"], reverse=True)
-        self.ids.rv.refresh_from_data()
+        Clock.schedule_interval(self.refresh_downloads, 1)
+    
+    def refresh_downloads(self, dt):
+        """Refresh the downloads display - now only updates existing widgets"""
+        downloads_layout = self.ids.downloads_layout
+        
+        # Update existing widgets instead of recreating them
+        current_download_ids = set()
+        for download_id, download_data in self.downloads.items():
+            current_download_ids.add(download_id)
+            
+            # Find existing widget or create new one
+            existing_widget = None
+            for widget in downloads_layout.children:
+                if hasattr(widget, 'id') and widget.id == download_id:
+                    existing_widget = widget
+                    break
+            print(download_data)
+            if existing_widget:
+                # Update existing widget
+                existing_widget.update_from_data(download_data)
+            else:
+                # Create new widget
+                download_widget = DownloadStatusBar()
+                download_widget.update_from_data(download_data)
+                downloads_layout.add_widget(download_widget)
+        
+        # Remove widgets for downloads that no longer exist
+        widgets_to_remove = []
+        for widget in downloads_layout.children:
+            if hasattr(widget, 'id') and widget.id not in current_download_ids:
+                widgets_to_remove.append(widget)
+        
+        for widget in widgets_to_remove:
+            downloads_layout.remove_widget(widget)
 
     def on_format_select_popup_dismiss(self, url, ydl_opts, download_id, instance):
         if instance.selected_format_id:

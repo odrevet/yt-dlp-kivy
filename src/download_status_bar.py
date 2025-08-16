@@ -43,3 +43,15 @@ class DownloadStatusBar(BoxLayout):
         elif value == STATUS_ERROR:
             self.title = "Error"
             self.status_icon = "img/cancel.png"
+
+    def update_from_data(self, data):
+        """Update the widget with download data - add this to your DownloadStatusBar class"""
+        # Update all the properties based on the data dictionary
+        self.id = data.get('id')
+        self.url = data.get('url', '')
+        self.status = data.get('status', STATUS_INIT)
+        self.log = data.get('log', '')
+        self.percent = data.get('percent', 0)
+        self.ETA = data.get('ETA', '')
+        self.speed = data.get('speed', '')
+        self.file_size = data.get('file_size', '')

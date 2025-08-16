@@ -86,19 +86,3 @@
             size: dp(32), dp(32)
             stretch: True
             source: root.status_icon
-
-<RV>:
-    viewclass: 'DownloadStatusBar'
-    scroll_type: ['bars', 'content']
-    bar_width: dp(8)
-    bar_color: 0.3, 0.6, 0.9, 0.8
-    bar_inactive_color: 0.9, 0.9, 0.9, 0.5
-    RecycleBoxLayout:
-        id: rbl
-        default_size: None, dp(90)
-        default_size_hint: 1, None
-        size_hint_y: None
-        height: self.minimum_height
-        orientation: 'vertical'
-        spacing: dp(8)
-        padding: dp(12)
