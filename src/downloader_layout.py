@@ -40,7 +40,6 @@ class DownloaderLayout(BoxLayout):
                 if hasattr(widget, 'id') and widget.id == download_id:
                     existing_widget = widget
                     break
-            print(download_data)
             if existing_widget:
                 # Update existing widget
                 existing_widget.update_from_data(download_data)
