@@ -101,12 +101,15 @@ class DownloaderApp(App):
 
             self.init_ydl_opts()
         else:
-            print("------------------")
-            print("INI file not found")
+            print("Error: ini file not found")
 
+        # set the save directory if not set (typically at first run)
         savedir = self.config.get("general", "savedir")
         if not savedir:
             savedir = self.get_output_dir()
+            # Save the default directory back to config
+            self.config.set("general", "savedir", savedir)
+            self.config.write()
 
         self.ydl_opts["outtmpl"] = join(
             savedir,
