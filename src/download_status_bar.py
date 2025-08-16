@@ -15,7 +15,7 @@ class DownloadStatusBar(BoxLayout):
     status = NumericProperty(STATUS_INIT)
     log = StringProperty("")
     id = ObjectProperty()
-    title = StringProperty("VALUE")
+    title = StringProperty("")
     status_icon = StringProperty("img/loader.png")
     percent = NumericProperty(0)
     ETA = StringProperty("")
