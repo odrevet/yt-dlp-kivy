@@ -21,6 +21,8 @@ class DownloadStatusBar(BoxLayout):
     speed = StringProperty("")
     file_size = StringProperty("")
     popup = None
+    title = StringProperty("")
+    display_title = StringProperty("")
 
     def on_release_show_log_button(self):
         app = App.get_running_app()
@@ -31,13 +33,13 @@ class DownloadStatusBar(BoxLayout):
 
     def on_status(self, instance, value):
         if value == STATUS_INIT:
-            self.title = "Init"
+            self.display_title = "Init"
             self.status_icon = "img/loader.png"
         elif value == STATUS_DONE:
-            self.title = "Done"
+            self.display_title = "Done"
             self.status_icon = "img/correct.png"
         elif value == STATUS_IN_PROGRESS:
             self.status_icon = "img/loader.png"
         elif value == STATUS_ERROR:
-            self.title = "Error"
+            self.display_title = "Error"
             self.status_icon = "img/cancel.png"
