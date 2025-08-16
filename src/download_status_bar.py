@@ -8,13 +8,13 @@ from kivy.properties import (
 )
 from kivy.uix.boxlayout import BoxLayout
 
-from status import STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
+from status import STATUS_INIT, STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
 from log_popup import LogPopup
 
 
 class DownloadStatusBar(BoxLayout):
     url = StringProperty("")
-    status = NumericProperty(STATUS_IN_PROGRESS)
+    status = NumericProperty(STATUS_INIT)
     log = StringProperty("")
     id = ObjectProperty()
     status_icon = StringProperty("img/loader.png")
