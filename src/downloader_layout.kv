@@ -68,19 +68,7 @@
                 y: self.parent.y + dp(16)
                 size: self.parent.width - dp(32), self.parent.height - dp(32)
                 stretch: True
-                source: 'img/down-arrow.png'
-    
-    # Downloads List Section
-    Label:
-        text: 'Downloads'
-        size_hint_y: None
-        height: dp(32)
-        text_size: self.width, None
-        halign: 'left'
-        color: 0.3, 0.3, 0.3, 1
-        font_size: sp(18)
-        bold: True
-    
+                source: 'img/down-arrow.png'    
     RV:
         id: rv
         canvas.before:
