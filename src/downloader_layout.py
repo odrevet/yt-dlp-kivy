@@ -82,7 +82,7 @@ class DownloaderLayout(BoxLayout):
                 else:
                     self.start_download(app.url, app.ydl_opts, download_id)
         except Exception as e:
-            self.downloads[download_id]["meta"]["title"] = "Cannot retreive metadata"
+            self.downloads[download_id]["title"] = "Cannot retreive metadata"
             self.downloads[download_id]["log"] = str(e)
             self.downloads[download_id]["status"] = STATUS_ERROR
 
