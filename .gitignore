@@ -7,3 +7,4 @@ ydl_release.keystore
 .gradle/
 .kivy/
 .local/
+src/downloader.ini
