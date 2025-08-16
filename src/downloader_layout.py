@@ -50,7 +50,6 @@ class DownloaderLayout(BoxLayout):
             "url": app.url,
             "log": "",
             "title": "",
-            "display_title": "",
             "status": STATUS_INIT,
             "meta": {},
         }
@@ -83,7 +82,7 @@ class DownloaderLayout(BoxLayout):
                 else:
                     self.start_download(app.url, app.ydl_opts, download_id)
         except Exception as e:
-            self.downloads[download_id]["display_title"] = "Cannot retreive metadata"
+            self.downloads[download_id]["meta"]["title"] = "Cannot retreive metadata"
             self.downloads[download_id]["log"] = str(e)
             self.downloads[download_id]["status"] = STATUS_ERROR
 
@@ -110,7 +109,8 @@ class DownloaderLayout(BoxLayout):
                 else:
                     percent = 0.0
                 self.downloads[download_id]["percent"] = percent
-                self.downloads[download_id]["display_title"] = d["filename"]
+
+                self.downloads[download_id]["title"] = d["filename"]
                 self.downloads[download_id]["ETA"] = time.strftime(
                     "%H:%M:%S", time.gmtime(d["eta"])
                 )
