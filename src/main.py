@@ -24,7 +24,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.recycleview import RecycleView
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import platform
-from kivy.uix.settings import Settings
+from kivy.uix.settings import Settings, SettingsWithSpinner
 from kivy.config import Config, ConfigParser
 
 from status import STATUS_INIT, STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
@@ -94,7 +94,11 @@ class DownloaderApp(App):
         if ini_file:
             config.read(ini_file)
             self.config = config
-            self.settings_cls = Settings
+            if platform in ("linux", "win", "macosx"):
+                self.settings_cls = Settings
+            else:
+                self.settings_cls = SettingsWithSpinner
+
             self.init_ydl_opts()
         else:
             print("------------------")
