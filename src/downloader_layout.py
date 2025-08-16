@@ -114,8 +114,7 @@ class DownloaderLayout(BoxLayout):
                 self.downloads[download_id]["ETA"] = time.strftime(
                     "%H:%M:%S", time.gmtime(d["eta"])
                 )
-
-                if d["status"] == "finished":
-                    self.downloads[download_id]["status"] = STATUS_DONE
+            elif d["status"] == "finished":
+                self.downloads[download_id]["status"] = STATUS_DONE
 
         return hook

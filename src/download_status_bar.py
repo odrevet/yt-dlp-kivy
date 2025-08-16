@@ -1,5 +1,3 @@
-
-
 from kivy.app import App
 from kivy.properties import (
     NumericProperty,
@@ -8,7 +6,7 @@ from kivy.properties import (
 )
 from kivy.uix.boxlayout import BoxLayout
 
-from status import STATUS_INIT, STATUS_DONE, STATUS_ERROR, STATUS_IN_PROGRESS
+from status import STATUS_INIT, STATUS_DONE, STATUS_IN_PROGRESS, STATUS_ERROR
 from log_popup import LogPopup
 
 
@@ -18,7 +16,6 @@ class DownloadStatusBar(BoxLayout):
     log = StringProperty("")
     id = ObjectProperty()
     status_icon = StringProperty("img/loader.png")
-    title = StringProperty("")
     percent = NumericProperty(0)
     ETA = StringProperty("")
     speed = StringProperty("")
@@ -33,9 +30,14 @@ class DownloadStatusBar(BoxLayout):
         self.popup.open()
 
     def on_status(self, instance, value):
-        if value == STATUS_IN_PROGRESS:
+        if value == STATUS_INIT:
+            self.title = "Init"
             self.status_icon = "img/loader.png"
         elif value == STATUS_DONE:
+            self.title = "Done"
             self.status_icon = "img/correct.png"
+        elif value == STATUS_IN_PROGRESS:
+            self.status_icon = "img/loader.png"
         elif value == STATUS_ERROR:
+            self.title = "Error"
             self.status_icon = "img/cancel.png"
