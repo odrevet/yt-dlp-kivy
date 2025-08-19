@@ -74,7 +74,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       id: current_app_version
       run: |
-        CURRENT_APP_VERSION=$(grep "**version**" src/_version.py | cut -d"'" -f2)
+        CURRENT_APP_VERSION=$(sed -n 's/.*["'\'']\([0-9.]*\)["'\''].*/\1/p' src/_version.py)
         echo "current_app=$CURRENT_APP_VERSION" >> $GITHUB_OUTPUT
         echo "Current app version: $CURRENT_APP_VERSION"
 
