@@ -105,21 +105,31 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
 
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+      if: steps.version_check.outputs.needs_update == 'true'
+
+    - name: Create virtual environment and install buildozer
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install buildozer
+
     - name: Build with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
       id: buildozer
       if: steps.version_check.outputs.needs_update == 'true'
       env:
-        # Set keystore environment variables for signing
         KEYSTORE_FILE: mykeystore.keystore
         KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
-        ANDROID_SDK_DIR: /github/workspace/.buildozer_global/android/platform/android-sdk
-      with:
-        workdir: .
-        buildozer_version: stable
-        # Run your utils.sh script before buildozer, then build and sign
-        command: |
-          bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"; 
+        ANDROID_SDK_DIR: ${{ github.workspace }}/.buildozer_global/android/platform/android-sdk
+      run: |
+        source venv/bin/activate
+        cd .
+        bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
 
     - name: Fix git permissions
       run: |
