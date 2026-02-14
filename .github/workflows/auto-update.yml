@@ -114,6 +114,12 @@ jobs:
       with:
         command: buildozer android release
 
+    - name: Fix git permissions
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        sudo chown -R $(whoami):$(whoami) .
+        sudo chmod -R 755 .git
+        
     - name: Create keystore file from secret
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
@@ -153,12 +159,6 @@ jobs:
         apksigner verify bin/youtube_dl_kivy.apk
         
         echo "✅ APK signed successfully"
-
-    - name: Fix git permissions
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        sudo chown -R $(whoami):$(whoami) .
-        sudo chmod -R 755 .git
     
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
