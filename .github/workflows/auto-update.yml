@@ -5,6 +5,12 @@ on:
     # Run weekly
     - cron: '0 2 * * 1'
   workflow_dispatch: # Allow manual trigger
+    inputs:
+      force_update:
+        description: 'Force build regardless of yt-dlp version'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
   update-and-build:
@@ -20,10 +26,10 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up Python
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
 
     - name: Cache Buildozer global directory
       uses: actions/cache@v3
@@ -48,22 +54,34 @@ jobs:
         echo "latest=$LATEST_VERSION" >> $GITHUB_OUTPUT
         echo "Latest yt-dlp version: $LATEST_VERSION"
 
-    - name: Compare versions and update if needed
+    - name: Compare versions and check force update
       id: version_check
       run: |
         CURRENT="${{ steps.current_version.outputs.current }}"
         LATEST="${{ steps.latest_version.outputs.latest }}"
+        FORCE="${{ github.event.inputs.force_update || 'false' }}"
+        
+        VERSION_CHANGED="false"
+        NEEDS_BUILD="false"
         
         if [ "$CURRENT" != "$LATEST" ]; then
-          echo "needs_update=true" >> $GITHUB_OUTPUT
+          VERSION_CHANGED="true"
+          NEEDS_BUILD="true"
           echo "yt-dlp needs update from $CURRENT to $LATEST"
         else
-          echo "needs_update=false" >> $GITHUB_OUTPUT
           echo "yt-dlp is already up to date ($CURRENT)"
         fi
+        
+        if [ "$FORCE" == "true" ]; then
+          NEEDS_BUILD="true"
+          echo "Force update is enabled. Build will proceed."
+        fi
+        
+        echo "version_changed=$VERSION_CHANGED" >> $GITHUB_OUTPUT
+        echo "needs_update=$NEEDS_BUILD" >> $GITHUB_OUTPUT
 
     - name: Update requirements.txt
-      if: steps.version_check.outputs.needs_update == 'true'
+      if: steps.version_check.outputs.version_changed == 'true'
       run: |
         LATEST_VERSION="${{ steps.latest_version.outputs.latest }}"
         # Update the versioned yt-dlp line
@@ -105,11 +123,11 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+    - name: Install Buildozer System Dependencies
       if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libffi-dev libssl-dev autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake
 
     - name: Create virtual environment and install buildozer
       if: steps.version_check.outputs.needs_update == 'true'
@@ -128,10 +146,10 @@ jobs:
         ANDROID_SDK_DIR: ${{ github.workspace }}/.buildozer_global/android/platform/android-sdk
       run: |
         source venv/bin/activate
-        cd .
         bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
 
     - name: Fix git permissions
+      if: steps.version_check.outputs.needs_update == 'true'
       run: |
         sudo chown -R $(whoami):$(whoami) .
         sudo chmod -R 755 .git
@@ -142,8 +160,13 @@ jobs:
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         
-        git add requirements.txt src/_version.py
-        git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
+        # Only add requirements.txt if it actually changed
+        if [ "${{ steps.version_check.outputs.version_changed }}" == "true" ]; then
+          git add requirements.txt
+        fi
+        
+        git add src/_version.py
+        git commit -m "chore: build release ${{ steps.bump_version.outputs.new_version }}"
         git push
 
     - name: Create Release
@@ -154,7 +177,7 @@ jobs:
         name: "Release v${{ steps.bump_version.outputs.new_version }}"
         body: |
           ## Changes
-          - Updated yt-dlp from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}
+          ${{ steps.version_check.outputs.version_changed == 'true' && format('- Updated yt-dlp from {0} to {1}', steps.current_version.outputs.current, steps.latest_version.outputs.latest) || '- No yt-dlp version change (Forced build)' }}
           - Bumped app version to ${{ steps.bump_version.outputs.new_version }}
           
           ## Built with
@@ -170,7 +193,11 @@ jobs:
       run: |
         if [ "${{ steps.version_check.outputs.needs_update }}" == "true" ]; then
           echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- yt-dlp updated from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.version_check.outputs.version_changed }}" == "true" ]; then
+            echo "- yt-dlp updated from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Force build triggered (no yt-dlp version change)" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "- App version bumped to ${{ steps.bump_version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- APK built and released successfully" >> $GITHUB_STEP_SUMMARY
         else
