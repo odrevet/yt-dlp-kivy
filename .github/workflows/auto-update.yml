@@ -13,7 +13,7 @@ on:
         type: boolean
 jobs:
   update-and-build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       actions: write
@@ -122,11 +122,13 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+    - name: install build deps
       if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        apt install -y git zip unzip openjdk-17-jdk python3-pip \
+        python3-virtualenv autoconf libtool pkg-config zlib1g-dev \
+        libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev \
+        libssl-dev automake autopoint gettext
 
     - name: Create virtual environment and install buildozer
       if: steps.version_check.outputs.needs_update == 'true'
@@ -134,8 +136,7 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
-        pip install Cython
-        pip install buildozer
+        pip install buildozer, setuptools, cython==0.29.34
 
     - name: Build with Buildozer
       id: buildozer
@@ -164,8 +165,21 @@ jobs:
         git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
         git push
 
-    - name: Create Release
+    - name: Verify APK exists
       if: steps.version_check.outputs.needs_update == 'true'
+      id: verify_apk
+      run: |
+        if [ -f "bin/youtube_dl_kivy.apk" ]; then
+          echo "apk_exists=true" >> $GITHUB_OUTPUT
+          echo "✅ APK file found"
+        else
+          echo "apk_exists=false" >> $GITHUB_OUTPUT
+          echo "❌ APK file not found"
+          exit 1
+        fi
+
+    - name: Create Release
+      if: steps.version_check.outputs.needs_update == 'true' && steps.verify_apk.outputs.apk_exists == 'true'
       uses: softprops/action-gh-release@v1
       with:
         tag_name: "v${{ steps.bump_version.outputs.new_version }}"
