@@ -176,7 +176,9 @@ jobs:
         alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
         keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
-
+      env:
+        BUILD_TOOLS_VERSION: "34.0.0"
+        
     - name: Fix git permissions
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
