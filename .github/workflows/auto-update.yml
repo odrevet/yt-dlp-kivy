@@ -104,25 +104,25 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
-    - name: Setup Android SDK
+    - name: Build with Buildozer Action
       if: steps.version_check.outputs.needs_update == 'true'
-      uses: android-actions/setup-android@v3
-
-    - name: Build with Buildozer
-      if: steps.version_check.outputs.needs_update == 'true'
-      uses: n8marti/buildozer-action@fix-user-doesnt-exist
-      id: buildozer
+      uses: ArtemSBulgakov/buildozer-action@v1
       env:
-        USER: runner
+        USER: root
+        PIP_BREAK_SYSTEM_PACKAGES: 1
+        HOME: /root
       with:
         command: buildozer android release
-        buildozer_version: stable
 
     - name: Create keystore file from secret
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
+
+    - name: Setup Android SDK
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: android-actions/setup-android@v3
 
     - name: Sign APK with zipalign
       if: steps.version_check.outputs.needs_update == 'true'
