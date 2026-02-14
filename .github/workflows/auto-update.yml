@@ -11,7 +11,6 @@ on:
         required: true
         default: 'false'
         type: boolean
-
 jobs:
   update-and-build:
     runs-on: ubuntu-latest
@@ -26,11 +25,18 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    # Python is still needed for the version checking steps
-    - name: Set up Python 3.11
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.x'
+
+    - name: Cache Buildozer global directory
+      uses: actions/cache@v3
+      with:
+        path: .buildozer_global
+        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          buildozer-global-${{ runner.os }}-
 
     - name: Get current yt-dlp version from requirements.txt
       id: current_version
@@ -74,7 +80,7 @@ jobs:
         echo "needs_update=$NEEDS_BUILD" >> $GITHUB_OUTPUT
 
     - name: Update requirements.txt
-      if: steps.version_check.outputs.version_changed == 'true'
+      if: steps.version_check.outputs.needs_update == 'true'
       run: |
         LATEST_VERSION="${{ steps.latest_version.outputs.latest }}"
         # Update the versioned yt-dlp line
@@ -110,54 +116,25 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
-    - name: Cache Buildozer global directory
-      if: steps.version_check.outputs.needs_update == 'true'
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.buildozer
-          .buildozer
-        key: buildozer-${{ hashFiles('requirements.txt') }}-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          buildozer-${{ hashFiles('requirements.txt') }}-
-          buildozer-
-
-    - name: Cache Android SDK & NDK
-      if: steps.version_check.outputs.needs_update == 'true'
-      uses: actions/cache@v4
-      with:
-        path: ~/.android
-        key: android-sdk-ndk-${{ runner.os }}
-
-    - name: Build with Buildozer Action
-      if: steps.version_check.outputs.needs_update == 'true'
-      uses: ArtemSBulgakov/buildozer-action@v1
-      env:
-        # Fix for "chown: invalid user: 'user'" error
-        USER: root
-        # Fix for PEP 668 "externally-managed-environment" error in Python 3.12+
-        PIP_BREAK_SYSTEM_PACKAGES: 1
-        # Fix for path mismatch: ensure HOME points to where root installs tools
-        HOME: /root
-      with:
-        # Build unsigned release. Signing happens in the next step.
-        command: buildozer android release
-
-    - name: Fix Permissions for bin directory
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        # Fix permissions so the host runner can write to bin/ for signing
-        sudo chown -R $(whoami):$(whoami) bin
-
-    - name: Set up Android SDK
-      if: steps.version_check.outputs.needs_update == 'true'
-      uses: android-actions/setup-android@v3
-
     - name: Create keystore file from secret
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+      if: steps.version_check.outputs.needs_update == 'true'
+
+    - name: Create virtual environment and install buildozer
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install buildozer
 
     - name: Build with Buildozer
       id: buildozer
@@ -172,7 +149,6 @@ jobs:
         bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
 
     - name: Fix git permissions
-      if: steps.version_check.outputs.needs_update == 'true'
       run: |
         sudo chown -R $(whoami):$(whoami) .
         sudo chmod -R 755 .git
@@ -183,13 +159,8 @@ jobs:
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         
-        # Only add requirements.txt if it actually changed
-        if [ "${{ steps.version_check.outputs.version_changed }}" == "true" ]; then
-          git add requirements.txt
-        fi
-        
-        git add src/_version.py
-        git commit -m "chore: build release ${{ steps.bump_version.outputs.new_version }}"
+        git add requirements.txt src/_version.py
+        git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
         git push
 
     - name: Create Release
@@ -200,14 +171,13 @@ jobs:
         name: "Release v${{ steps.bump_version.outputs.new_version }}"
         body: |
           ## Changes
-          ${{ steps.version_check.outputs.version_changed == 'true' && format('- Updated yt-dlp from {0} to {1}', steps.current_version.outputs.current, steps.latest_version.outputs.latest) || '- No yt-dlp version change (Forced build)' }}
+          - Updated yt-dlp from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}
           - Bumped app version to ${{ steps.bump_version.outputs.new_version }}
           
           ## Built with
           - yt-dlp: ${{ steps.latest_version.outputs.latest }}
           - Build date: ${{ github.run_id }}
-        # The signing action renames the file to *-signed-release.apk
-        files: "bin/*-signed-release.apk" 
+        files: "bin/youtube_dl_kivy.apk"
         draft: false
         prerelease: false
       env:
@@ -217,11 +187,7 @@ jobs:
       run: |
         if [ "${{ steps.version_check.outputs.needs_update }}" == "true" ]; then
           echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.version_check.outputs.version_changed }}" == "true" ]; then
-            echo "- yt-dlp updated from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- Force build triggered (no yt-dlp version change)" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "- yt-dlp updated from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}" >> $GITHUB_STEP_SUMMARY
           echo "- App version bumped to ${{ steps.bump_version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- APK built and released successfully" >> $GITHUB_STEP_SUMMARY
         else
