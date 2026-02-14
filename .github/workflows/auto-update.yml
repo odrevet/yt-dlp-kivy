@@ -106,7 +106,8 @@ jobs:
 
     - name: Build with Buildozer Action
       if: steps.version_check.outputs.needs_update == 'true'
-      uses: ArtemSBulgakov/buildozer-action@v1
+      uses: ArtemSBulgakov/buildozer-action@v1.2.0
+      id: buildozer
       env:
         USER: root
         PIP_BREAK_SYSTEM_PACKAGES: 1
@@ -119,7 +120,7 @@ jobs:
       run: |
         sudo chown -R $(whoami):$(whoami) .
         sudo chmod -R 755 .git
-        
+
     - name: Create keystore file from secret
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
