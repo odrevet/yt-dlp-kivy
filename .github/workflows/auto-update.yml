@@ -11,6 +11,7 @@ on:
         required: true
         default: 'false'
         type: boolean
+
 jobs:
   update-and-build:
     runs-on: ubuntu-24.04
@@ -25,14 +26,6 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Cache Buildozer global directory
-      uses: actions/cache@v3
-      with:
-        path: .buildozer_global
-        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          buildozer-global-${{ runner.os }}-
-
     - name: Get current yt-dlp version from requirements.txt
       id: current_version
       run: |
@@ -44,7 +37,7 @@ jobs:
     - name: Get latest yt-dlp version from PyPI
       id: latest_version
       run: |
-        LATEST_VERSION=$(curl -s https://pypi.org/pypi/yt-dlp/json | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
+        LATEST_VERSION=$(curl -s https://pypi.org/pypi/yt-dlp/json | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
         echo "latest=$LATEST_VERSION" >> $GITHUB_OUTPUT
         echo "Latest yt-dlp version: $LATEST_VERSION"
 
@@ -111,44 +104,53 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
+    - name: Setup Android SDK
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: android-actions/setup-android@v3
+
+    - name: Build with Buildozer
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: ArtemSBulgakov/buildozer-action@v1
+      id: buildozer
+      with:
+        command: buildozer android debug
+        buildozer_version: stable
+
     - name: Create keystore file from secret
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
 
-    - name: install build deps
+    - name: Sign APK with zipalign
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
-        sudo apt-get update
-        sudo apt install -y --no-install-recommends git zip unzip openjdk-17-jdk python3-pip \
-        python3-virtualenv autoconf libtool pkg-config zlib1g-dev \
-        libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev \
-        libssl-dev automake autopoint gettext
-
-    - name: Create virtual environment and install buildozer
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-        pip install buildozer 
-        pip install setuptools
-        pip install cython==0.29.34
-
-    - name: Build with Buildozer
-      id: buildozer
-      if: steps.version_check.outputs.needs_update == 'true'
-      env:
-        KEYSTORE_FILE: mykeystore.keystore
-        KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
-        ANDROID_SDK_DIR: ${{ github.workspace }}/.buildozer_global/android/platform/android-sdk
-      run: |
-        source venv/bin/activate
-        cd .
-        bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
+        # Find the unsigned APK
+        UNSIGNED_APK=$(find .buildozer/android/platform/build-*/build/outputs/apk/debug -name "*.apk" | head -1)
+        
+        if [ -z "$UNSIGNED_APK" ]; then
+          echo "Error: Could not find unsigned APK"
+          exit 1
+        fi
+        
+        echo "Found unsigned APK: $UNSIGNED_APK"
+        
+        # Align the APK
+        zipalign -v -p 4 "$UNSIGNED_APK" youtube_dl_kivy-aligned.apk
+        
+        # Sign the aligned APK
+        apksigner sign --ks mykeystore.keystore \
+          --ks-pass pass:${{ secrets.KEYSTORE_PASSPHRASE }} \
+          --out bin/youtube_dl_kivy.apk \
+          youtube_dl_kivy-aligned.apk
+        
+        # Verify the signature
+        apksigner verify bin/youtube_dl_kivy.apk
+        
+        echo "✅ APK signed successfully"
 
     - name: Fix git permissions
+      if: steps.version_check.outputs.needs_update == 'true'
       run: |
         sudo chown -R $(whoami):$(whoami) .
         sudo chmod -R 755 .git
