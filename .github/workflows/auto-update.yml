@@ -125,7 +125,8 @@ jobs:
     - name: install build deps
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
-        apt install -y git zip unzip openjdk-17-jdk python3-pip \
+        sudo apt-get update
+        sudo apt install -y --no-install-recommends git zip unzip openjdk-17-jdk python3-pip \
         python3-virtualenv autoconf libtool pkg-config zlib1g-dev \
         libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev \
         libssl-dev automake autopoint gettext
