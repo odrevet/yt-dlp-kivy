@@ -161,6 +161,7 @@ jobs:
         signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
         alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
+        keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
       env:
         BUILD_TOOLS_VERSION: "34.0.0"
 
