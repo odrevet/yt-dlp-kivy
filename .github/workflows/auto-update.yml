@@ -130,6 +130,10 @@ jobs:
         # Fix permissions so the host runner can write to bin/ for signing
         sudo chown -R $(whoami):$(whoami) bin
 
+    - name: Set up Android SDK
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: android-actions/setup-android@v3
+
     - name: Sign APK
       if: steps.version_check.outputs.needs_update == 'true'
       uses: r0adkll/sign-android-release@v1.0.4
