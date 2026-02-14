@@ -110,6 +110,39 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
+    - name: Check available Android build tools (diagnostic)
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        echo "=== Android SDK Configuration ==="
+        echo "ANDROID_HOME: ${ANDROID_HOME:-not set}"
+        echo "ANDROID_SDK_ROOT: ${ANDROID_SDK_ROOT:-not set}"
+        echo ""
+        if [ -d "$ANDROID_HOME/build-tools" ]; then
+          echo "=== Available build-tools versions ==="
+          ls -la $ANDROID_HOME/build-tools/
+        else
+          echo "Build-tools directory not found"
+        fi
+
+    - name: Cache Buildozer global directory
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.buildozer
+          .buildozer
+        key: buildozer-${{ hashFiles('requirements.txt') }}-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          buildozer-${{ hashFiles('requirements.txt') }}-
+          buildozer-
+
+    - name: Cache Android SDK & NDK
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: actions/cache@v4
+      with:
+        path: ~/.android
+        key: android-sdk-ndk-${{ runner.os }}
+
     - name: Build with Buildozer Action
       if: steps.version_check.outputs.needs_update == 'true'
       uses: ArtemSBulgakov/buildozer-action@v1
