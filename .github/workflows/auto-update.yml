@@ -132,7 +132,7 @@ jobs:
 
     - name: Sign APK
       if: steps.version_check.outputs.needs_update == 'true'
-      uses: r0adkll/sign-android-release@v1
+      uses: r0adkll/sign-android-release@v1.0.4
       with:
         releaseDirectory: bin
         signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
