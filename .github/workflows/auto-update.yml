@@ -115,7 +115,7 @@ jobs:
       env:
         USER: runner
       with:
-        command: buildozer android debug
+        command: buildozer android release
         buildozer_version: stable
 
     - name: Create keystore file from secret
@@ -127,15 +127,18 @@ jobs:
     - name: Sign APK with zipalign
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
-        # Find the unsigned APK
-        UNSIGNED_APK=$(find .buildozer/android/platform/build-*/build/outputs/apk/debug -name "*.apk" | head -1)
+        # Use the output from buildozer action
+        UNSIGNED_APK="${{ steps.buildozer.outputs.filename }}"
         
-        if [ -z "$UNSIGNED_APK" ]; then
-          echo "Error: Could not find unsigned APK"
+        if [ -z "$UNSIGNED_APK" ] || [ ! -f "$UNSIGNED_APK" ]; then
+          echo "Error: Could not find unsigned APK at $UNSIGNED_APK"
           exit 1
         fi
         
         echo "Found unsigned APK: $UNSIGNED_APK"
+        
+        # Create bin directory if it doesn't exist
+        mkdir -p bin
         
         # Align the APK
         zipalign -v -p 4 "$UNSIGNED_APK" youtube_dl_kivy-aligned.apk
