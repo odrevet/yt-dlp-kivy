@@ -122,6 +122,8 @@ jobs:
       env:
         # Fix for "chown: invalid user: 'user'" error
         USER: root
+        # Fix for PEP 668 "externally-managed-environment" error in Python 3.12+
+        PIP_BREAK_SYSTEM_PACKAGES: 1
         KEYSTORE_FILE: mykeystore.keystore
         KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
       with:
