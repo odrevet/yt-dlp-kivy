@@ -110,20 +110,6 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
-    - name: Check available Android build tools (diagnostic)
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        echo "=== Android SDK Configuration ==="
-        echo "ANDROID_HOME: ${ANDROID_HOME:-not set}"
-        echo "ANDROID_SDK_ROOT: ${ANDROID_SDK_ROOT:-not set}"
-        echo ""
-        if [ -d "$ANDROID_HOME/build-tools" ]; then
-          echo "=== Available build-tools versions ==="
-          ls -la $ANDROID_HOME/build-tools/
-        else
-          echo "Build-tools directory not found"
-        fi
-
     - name: Cache Buildozer global directory
       if: steps.version_check.outputs.needs_update == 'true'
       uses: actions/cache@v4
@@ -173,12 +159,11 @@ jobs:
       with:
         releaseDirectory: bin
         signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
-        alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
         keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
       env:
         BUILD_TOOLS_VERSION: "34.0.0"
-        
+
     - name: Fix git permissions
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
