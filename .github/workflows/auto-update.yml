@@ -124,10 +124,24 @@ jobs:
         USER: root
         # Fix for PEP 668 "externally-managed-environment" error in Python 3.12+
         PIP_BREAK_SYSTEM_PACKAGES: 1
-        KEYSTORE_FILE: mykeystore.keystore
-        KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
+        # Fix for path mismatch: ensure HOME points to where root installs tools
+        HOME: /root
       with:
-        command: bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
+        # Build unsigned release first
+        command: buildozer android release
+
+    - name: Sign APK
+      if: steps.version_check.outputs.needs_update == 'true'
+      uses: r0adkll/sign-android-release@v1
+      with:
+        releaseDirectory: bin
+        signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
+        alias: ${{ secrets.KEYSTORE_ALIAS }} # Ensure this secret is set in your repo
+        keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
+        keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
+      env:
+        # Override build tools version if necessary, or let the action find it
+        BUILD_TOOLS_VERSION: "34.0.0" # Adjust this version if needed, or remove to let action detect
 
     - name: Fix git permissions
       if: steps.version_check.outputs.needs_update == 'true'
@@ -164,7 +178,9 @@ jobs:
           ## Built with
           - yt-dlp: ${{ steps.latest_version.outputs.latest }}
           - Build date: ${{ github.run_id }}
-        files: "bin/youtube_dl_kivy.apk"
+        # The signing action renames the file, usually to *-signed-release.apk
+        # We use a wildcard to catch the name change
+        files: "bin/*-release.apk" 
         draft: false
         prerelease: false
       env:
