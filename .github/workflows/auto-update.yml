@@ -137,7 +137,9 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
-        pip install buildozer, setuptools, cython==0.29.34
+        pip install buildozer 
+        pip install setuptools
+        pip install cython==0.29.34
 
     - name: Build with Buildozer
       id: buildozer
