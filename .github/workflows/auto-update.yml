@@ -153,17 +153,23 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       uses: android-actions/setup-android@v3
 
-    - name: Sign APK
+    - name: Create keystore file from secret
       if: steps.version_check.outputs.needs_update == 'true'
-      uses: r0adkll/sign-android-release@v1.0.4
-      with:
-        releaseDirectory: bin
-        signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
-        alias: ${{ secrets.KEYSTORE_ALIAS }}
-        keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
-        keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
+        chmod 600 mykeystore.keystore
+
+    - name: Build with Buildozer
+      id: buildozer
+      if: steps.version_check.outputs.needs_update == 'true'
       env:
-        BUILD_TOOLS_VERSION: "34.0.0"
+        KEYSTORE_FILE: mykeystore.keystore
+        KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
+        ANDROID_SDK_DIR: ${{ github.workspace }}/.buildozer_global/android/platform/android-sdk
+      run: |
+        source venv/bin/activate
+        cd .
+        bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
 
     - name: Fix git permissions
       if: steps.version_check.outputs.needs_update == 'true'
