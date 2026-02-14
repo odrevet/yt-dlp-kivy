@@ -157,7 +157,7 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       uses: r0adkll/sign-android-release@v1.0.4
       with:
-        releaseDirectory: .
+        releaseDirectory: bin
         signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
         alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
