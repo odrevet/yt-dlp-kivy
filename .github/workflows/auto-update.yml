@@ -26,6 +26,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
+    # Python is still needed for the version checking steps
     - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
@@ -119,6 +120,8 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       uses: ArtemSBulgakov/buildozer-action@v1
       env:
+        # Fix for "chown: invalid user: 'user'" error
+        USER: root
         KEYSTORE_FILE: mykeystore.keystore
         KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
       with:
