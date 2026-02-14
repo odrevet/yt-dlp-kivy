@@ -31,14 +31,6 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Cache Buildozer global directory
-      uses: actions/cache@v3
-      with:
-        path: .buildozer_global
-        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          buildozer-global-${{ runner.os }}-
-
     - name: Get current yt-dlp version from requirements.txt
       id: current_version
       run: |
@@ -123,30 +115,14 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
         chmod 600 mykeystore.keystore
 
-    - name: Install Buildozer System Dependencies
+    - name: Build with Buildozer Action
       if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential libffi-dev libssl-dev autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake
-
-    - name: Create virtual environment and install buildozer
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-        pip install buildozer
-
-    - name: Build with Buildozer
-      id: buildozer
-      if: steps.version_check.outputs.needs_update == 'true'
+      uses: ArtemSBulgakov/buildozer-action@v1
       env:
         KEYSTORE_FILE: mykeystore.keystore
         KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
-        ANDROID_SDK_DIR: ${{ github.workspace }}/.buildozer_global/android/platform/android-sdk
-      run: |
-        source venv/bin/activate
-        bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
+      with:
+        command: bash utils.sh --build --sign --key mykeystore.keystore --pass "$KEYSTORE_PASSPHRASE"
 
     - name: Fix git permissions
       if: steps.version_check.outputs.needs_update == 'true'
