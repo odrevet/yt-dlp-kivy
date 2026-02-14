@@ -130,6 +130,12 @@ jobs:
         # Build unsigned release first
         command: buildozer android release
 
+    - name: Fix git permissions
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        sudo chown -R $(whoami):$(whoami) .
+        sudo chmod -R 755 .git
+        
     - name: Sign APK
       if: steps.version_check.outputs.needs_update == 'true'
       uses: r0adkll/sign-android-release@v1
@@ -142,12 +148,6 @@ jobs:
       env:
         # Override build tools version if necessary, or let the action find it
         BUILD_TOOLS_VERSION: "34.0.0" # Adjust this version if needed, or remove to let action detect
-
-    - name: Fix git permissions
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        sudo chown -R $(whoami):$(whoami) .
-        sudo chmod -R 755 .git
     
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
