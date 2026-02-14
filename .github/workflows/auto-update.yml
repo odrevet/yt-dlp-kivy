@@ -159,6 +159,7 @@ jobs:
       with:
         releaseDirectory: bin
         signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
+        alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
         keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
       env:
