@@ -110,12 +110,6 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
-    - name: Create keystore file from secret
-      if: steps.version_check.outputs.needs_update == 'true'
-      run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > mykeystore.keystore
-        chmod 600 mykeystore.keystore
-
     - name: Build with Buildozer Action
       if: steps.version_check.outputs.needs_update == 'true'
       uses: ArtemSBulgakov/buildozer-action@v1
@@ -127,27 +121,30 @@ jobs:
         # Fix for path mismatch: ensure HOME points to where root installs tools
         HOME: /root
       with:
-        # Build unsigned release first
+        # Build unsigned release. Signing happens in the next step.
         command: buildozer android release
 
-    - name: Fix git permissions
+    - name: Fix Permissions for bin directory
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
-        sudo chown -R $(whoami):$(whoami) .
-        sudo chmod -R 755 .git
-        
+        # Fix permissions so the host runner can write to bin/ for signing
+        sudo chown -R $(whoami):$(whoami) bin
+
     - name: Sign APK
       if: steps.version_check.outputs.needs_update == 'true'
       uses: r0adkll/sign-android-release@v1
       with:
         releaseDirectory: bin
         signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
-        alias: ${{ secrets.KEYSTORE_ALIAS }} # Ensure this secret is set in your repo
+        alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
         keyPassword: ${{ secrets.KEYSTORE_PASSPHRASE }}
-      env:
-        # Override build tools version if necessary, or let the action find it
-        BUILD_TOOLS_VERSION: "34.0.0" # Adjust this version if needed, or remove to let action detect
+
+    - name: Fix git permissions
+      if: steps.version_check.outputs.needs_update == 'true'
+      run: |
+        sudo chown -R $(whoami):$(whoami) .
+        sudo chmod -R 755 .git
     
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
@@ -178,9 +175,8 @@ jobs:
           ## Built with
           - yt-dlp: ${{ steps.latest_version.outputs.latest }}
           - Build date: ${{ github.run_id }}
-        # The signing action renames the file, usually to *-signed-release.apk
-        # We use a wildcard to catch the name change
-        files: "bin/*-release.apk" 
+        # The signing action renames the file to *-signed-release.apk
+        files: "bin/*-signed-release.apk" 
         draft: false
         prerelease: false
       env:
