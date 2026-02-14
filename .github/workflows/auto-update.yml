@@ -110,7 +110,7 @@ jobs:
 
     - name: Build with Buildozer
       if: steps.version_check.outputs.needs_update == 'true'
-      uses: ArtemSBulgakov/buildozer-action@v1.2.0
+      uses: n8marti/buildozer-action@fix-user-doesnt-exist
       id: buildozer
       env:
         USER: runner
