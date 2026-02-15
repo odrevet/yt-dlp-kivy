@@ -177,8 +177,9 @@ jobs:
         $ZIPALIGN -v -p 4 "$UNSIGNED_APK" youtube_dl_kivy-aligned.apk
         
         # Sign the aligned APK
-        $APKSIGNER sign --ks mykeystore.keystore \
-          --ks-pass pass:${{ secrets.KEYSTORE_PASSPHRASE }} \
+        $APKSIGNER sign \
+          --ks mykeystore.keystore \
+          --ks-pass "pass:${{ secrets.KEYSTORE_PASSPHRASE }}" \
           --out bin/youtube_dl_kivy.apk \
           youtube_dl_kivy-aligned.apk
         
