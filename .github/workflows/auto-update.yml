@@ -147,19 +147,45 @@ jobs:
         # Create bin directory if it doesn't exist
         mkdir -p bin
         
+        # Set Android SDK paths
+        export ANDROID_HOME=/usr/local/lib/android/sdk
+        export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+        
+        # Find the latest build-tools version
+        BUILD_TOOLS_VERSION=$(ls -1 $ANDROID_HOME/build-tools | sort -V | tail -n 1)
+        echo "Using build-tools version: $BUILD_TOOLS_VERSION"
+        
+        # Set full paths to zipalign and apksigner
+        ZIPALIGN="$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/zipalign"
+        APKSIGNER="$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner"
+        
+        echo "Using zipalign: $ZIPALIGN"
+        echo "Using apksigner: $APKSIGNER"
+        
+        # Verify the tools exist
+        if [ ! -f "$ZIPALIGN" ]; then
+          echo "Error: zipalign not found at $ZIPALIGN"
+          exit 1
+        fi
+        
+        if [ ! -f "$APKSIGNER" ]; then
+          echo "Error: apksigner not found at $APKSIGNER"
+          exit 1
+        fi
+        
         # Align the APK
-        zipalign -v -p 4 "$UNSIGNED_APK" youtube_dl_kivy-aligned.apk
+        $ZIPALIGN -v -p 4 "$UNSIGNED_APK" youtube_dl_kivy-aligned.apk
         
         # Sign the aligned APK
-        apksigner sign --ks mykeystore.keystore \
+        $APKSIGNER sign --ks mykeystore.keystore \
           --ks-pass pass:${{ secrets.KEYSTORE_PASSPHRASE }} \
           --out bin/youtube_dl_kivy.apk \
           youtube_dl_kivy-aligned.apk
         
         # Verify the signature
-        apksigner verify bin/youtube_dl_kivy.apk
+        $APKSIGNER verify bin/youtube_dl_kivy.apk
         
-        echo "✅ APK signed successfully"
+        echo "✅ APK signed successfully: bin/youtube_dl_kivy.apk"
     
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
