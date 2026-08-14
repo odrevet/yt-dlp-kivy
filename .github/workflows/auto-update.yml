@@ -19,7 +19,7 @@ jobs:
       contents: write
       actions: write
       security-events: write
-      
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -29,7 +29,6 @@ jobs:
     - name: Get current yt-dlp version from requirements.txt
       id: current_version
       run: |
-        # Extract version from requirements.txt (handles both == and >= formats)
         CURRENT_VERSION=$(grep -E "^yt-dlp\s*[=>]" requirements.txt | head -1 | sed -E 's/^yt-dlp\s*[=>]+\s*([0-9.]+).*/\1/')
         echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
         echo "Current yt-dlp version: $CURRENT_VERSION"
@@ -47,10 +46,10 @@ jobs:
         CURRENT="${{ steps.current_version.outputs.current }}"
         LATEST="${{ steps.latest_version.outputs.latest }}"
         FORCE="${{ github.event.inputs.force_update || 'false' }}"
-        
+
         VERSION_CHANGED="false"
         NEEDS_BUILD="false"
-        
+
         if [ "$CURRENT" != "$LATEST" ]; then
           VERSION_CHANGED="true"
           NEEDS_BUILD="true"
@@ -58,12 +57,12 @@ jobs:
         else
           echo "yt-dlp is already up to date ($CURRENT)"
         fi
-        
+
         if [ "$FORCE" == "true" ]; then
           NEEDS_BUILD="true"
           echo "Force update is enabled. Build will proceed."
         fi
-        
+
         echo "version_changed=$VERSION_CHANGED" >> $GITHUB_OUTPUT
         echo "needs_update=$NEEDS_BUILD" >> $GITHUB_OUTPUT
 
@@ -71,7 +70,6 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         LATEST_VERSION="${{ steps.latest_version.outputs.latest }}"
-        # Update the versioned yt-dlp line
         sed -i -E "s/^yt-dlp\s*==\s*[0-9.]+.*$/yt-dlp == $LATEST_VERSION/" requirements.txt
         echo "Updated requirements.txt with yt-dlp == $LATEST_VERSION"
 
@@ -88,32 +86,34 @@ jobs:
       id: bump_version
       run: |
         CURRENT_APP_VERSION=${{ steps.current_app_version.outputs.current_app }}
-        
-        # Extract version parts
+
         MAJOR=$(echo $CURRENT_APP_VERSION | cut -d. -f1)
         MINOR=$(echo $CURRENT_APP_VERSION | cut -d. -f2)
         PATCH=$(echo $CURRENT_APP_VERSION | cut -d. -f3)
-        
-        # Increment patch version
+
         NEW_PATCH=$((PATCH + 1))
         NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
-        
-        # Update _version.py by writing the entire file content
+
         echo "__version__ = '$NEW_VERSION'" > src/_version.py
-        
+
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
-    - name: Build with Buildozer Action
+    - name: Build with Buildozer
       if: steps.version_check.outputs.needs_update == 'true'
-      uses: ArtemSBulgakov/buildozer-action@v1.2.0
       id: buildozer
-      env:
-        USER: root
-        PIP_BREAK_SYSTEM_PACKAGES: 1
-        HOME: /root
-      with:
-        command: buildozer android release
+      run: |
+        docker run --rm \
+          -v "${{ github.workspace }}:/home/user/hostcwd" \
+          ghcr.io/kivy/buildozer@sha256:60df51d2bcb537c3eb7894eeb9b9b12d93a3d615fb8f08e760195e887298f200 \
+          android release
+
+        APK_PATH=$(find bin -name "*-release-unsigned.apk" -o -name "*-release.apk" | head -1)
+        if [ -z "$APK_PATH" ]; then
+          echo "Error: no APK found in bin/"
+          exit 1
+        fi
+        echo "filename=$APK_PATH" >> $GITHUB_OUTPUT
 
     - name: Fix git permissions
       if: steps.version_check.outputs.needs_update == 'true'
@@ -134,66 +134,57 @@ jobs:
     - name: Sign APK with zipalign
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
-        # Use the output from buildozer action
         UNSIGNED_APK="${{ steps.buildozer.outputs.filename }}"
-        
+
         if [ -z "$UNSIGNED_APK" ] || [ ! -f "$UNSIGNED_APK" ]; then
           echo "Error: Could not find unsigned APK at $UNSIGNED_APK"
           exit 1
         fi
-        
+
         echo "Found unsigned APK: $UNSIGNED_APK"
-        
-        # Create bin directory if it doesn't exist
+
         mkdir -p bin
-        
-        # Set Android SDK paths
+
         export ANDROID_HOME=/usr/local/lib/android/sdk
         export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-        
-        # Find the latest build-tools version
+
         BUILD_TOOLS_VERSION=$(ls -1 $ANDROID_HOME/build-tools | sort -V | tail -n 1)
         echo "Using build-tools version: $BUILD_TOOLS_VERSION"
-        
-        # Set full paths to zipalign and apksigner
+
         ZIPALIGN="$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/zipalign"
         APKSIGNER="$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner"
-        
+
         echo "Using zipalign: $ZIPALIGN"
         echo "Using apksigner: $APKSIGNER"
-        
-        # Verify the tools exist
+
         if [ ! -f "$ZIPALIGN" ]; then
           echo "Error: zipalign not found at $ZIPALIGN"
           exit 1
         fi
-        
+
         if [ ! -f "$APKSIGNER" ]; then
           echo "Error: apksigner not found at $APKSIGNER"
           exit 1
         fi
-        
-        # Align the APK
+
         $ZIPALIGN -v -p 4 "$UNSIGNED_APK" youtube_dl_kivy-aligned.apk
-        
-        # Sign the aligned APK
+
         $APKSIGNER sign \
           --ks mykeystore.keystore \
           --ks-pass "pass:${{ secrets.KEYSTORE_PASSPHRASE }}" \
           --out bin/youtube_dl_kivy.apk \
           youtube_dl_kivy-aligned.apk
-        
-        # Verify the signature
+
         $APKSIGNER verify bin/youtube_dl_kivy.apk
-        
+
         echo "✅ APK signed successfully: bin/youtube_dl_kivy.apk"
-    
+
     - name: Commit and push changes
       if: steps.version_check.outputs.needs_update == 'true'
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
-        
+
         git add requirements.txt src/_version.py
         git commit -m "chore: update yt-dlp to ${{ steps.latest_version.outputs.latest }} and bump version to ${{ steps.bump_version.outputs.new_version }}"
         git push
@@ -221,7 +212,7 @@ jobs:
           ## Changes
           - Updated yt-dlp from ${{ steps.current_version.outputs.current }} to ${{ steps.latest_version.outputs.latest }}
           - Bumped app version to ${{ steps.bump_version.outputs.new_version }}
-          
+
           ## Built with
           - yt-dlp: ${{ steps.latest_version.outputs.latest }}
           - Build date: ${{ github.run_id }}
