@@ -14,6 +14,10 @@ User interface for yt-dlp using the Kivy framework
 pip install -r requirements.txt
 ```
 
+# Download from youtube 
+
+The 'ignore errors' option should be on. 
+
 # Build using official buildozer Dockerfile
 
 * Build the image
