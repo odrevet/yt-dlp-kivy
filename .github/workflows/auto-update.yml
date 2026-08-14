@@ -99,14 +99,20 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Bumped version from $CURRENT_APP_VERSION to $NEW_VERSION"
 
-    - name: Build with Buildozer
+    # buildozer-action@v1.2.0 construit sa propre image Docker (FROM
+    # ghcr.io/kivy/buildozer:latest + apt-get install software-properties-common),
+    # ce qui tire systemd et casse le build (postinst systemd dans un conteneur).
+    # On contourne en appelant buildozer directement via docker run, sur une
+    # image kivy/buildozer pinnée à un digest connu qui fonctionne.
+    - name: Build with Buildozer (docker run direct, image pinnée)
       if: steps.version_check.outputs.needs_update == 'true'
       id: buildozer
       run: |
         docker run --rm \
           -v "${{ github.workspace }}:/home/user/hostcwd" \
+          --entrypoint bash \
           ghcr.io/kivy/buildozer@sha256:60df51d2bcb537c3eb7894eeb9b9b12d93a3d615fb8f08e760195e887298f200 \
-          android release
+          -c "yes | buildozer android release"
 
         APK_PATH=$(find bin -name "*-release-unsigned.apk" -o -name "*-release.apk" | head -1)
         if [ -z "$APK_PATH" ]; then
