@@ -108,8 +108,11 @@ jobs:
       if: steps.version_check.outputs.needs_update == 'true'
       id: buildozer
       run: |
+        echo "charset-normalizer<3.5.0" > pip-constraints.txt
+
         docker run --rm \
           -v "${{ github.workspace }}:/home/user/hostcwd" \
+          -e PIP_CONSTRAINT=/home/user/hostcwd/pip-constraints.txt \
           --entrypoint bash \
           ghcr.io/kivy/buildozer@sha256:60df51d2bcb537c3eb7894eeb9b9b12d93a3d615fb8f08e760195e887298f200 \
           -c "yes | buildozer android release"
