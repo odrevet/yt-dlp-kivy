@@ -16,7 +16,7 @@ version.regex = __version__ = ['"](.*)['"]
 version.filename = %(source.dir)s/_version.py
 
 # (list) Application requirements
-requirements = openssl,requests,yt-dlp,kivy
+requirements = openssl,requests,yt-dlp,kivy,charset-normalizer==3.4.5
 
 # (str) Supported orientation (one of landscape, portrait or all)
 orientation = portrait
